@@ -28,3 +28,44 @@ const.cmi :
 file.cmi :
 main.cmo : file.cmi budget.cmo
 main.cmx : file.cmi budget.cmx
+a_entree.cmi : rtN.cmi
+b_pointage.cmi : rtN.cmi
+budget.cmo : state.cmi show.cmi rtN.cmi ../.././rt/rt.cmi file.cmi \
+    d_transf.cmi d_soldeRed.cmi d_repartPoste.cmi d_repartMois.cmi \
+    d_nouvMois.cmi d_modifAuto.cmi d_modif.cmi d_majPostes.cmi \
+    d_majComptes.cmi d_majCartes.cmi d_listeMois.cmi d_infoPostes.cmi \
+    d_infoComptes.cmi d_infoCartes.cmi d_calculat.cmi d_blocnotes.cmi \
+    d_ajoutAuto.cmi d_ajout.cmi c_popup.cmi b_pointage.cmi a_entree.cmi
+budget.cmx : state.cmi show.cmi rtN.cmi ../.././rt/rt.cmx file.cmi \
+    d_transf.cmi d_soldeRed.cmi d_repartPoste.cmi d_repartMois.cmi \
+    d_nouvMois.cmi d_modifAuto.cmi d_modif.cmi d_majPostes.cmi \
+    d_majComptes.cmi d_majCartes.cmi d_listeMois.cmi d_infoPostes.cmi \
+    d_infoComptes.cmi d_infoCartes.cmi d_calculat.cmi d_blocnotes.cmi \
+    d_ajoutAuto.cmi d_ajout.cmi c_popup.cmi b_pointage.cmi a_entree.cmi
+c_popup.cmi : rtN.cmi
+const.cmi :
+d_ajout.cmi : rtN.cmi
+d_ajoutAuto.cmi : rtN.cmi
+d_blocnotes.cmi : rtN.cmi
+d_calculat.cmi : rtN.cmi
+d_infoCartes.cmi : rtN.cmi
+d_infoComptes.cmi : rtN.cmi
+d_infoPostes.cmi : rtN.cmi
+d_listeMois.cmi : rtN.cmi
+d_majCartes.cmi : rtN.cmi
+d_majComptes.cmi : rtN.cmi
+d_majPostes.cmi : rtN.cmi
+d_modif.cmi : rtN.cmi
+d_modifAuto.cmi : rtN.cmi
+d_nouvMois.cmi : rtN.cmi
+d_repartMois.cmi : rtN.cmi
+d_repartPoste.cmi : rtN.cmi
+d_soldeRed.cmi : rtN.cmi
+d_transf.cmi : rtN.cmi
+file.cmi :
+jmage.cmi : rtN.cmi
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
+rtN.cmi : ../.././rt/rt.cmi
+show.cmi : rtN.cmi
+state.cmi : rtN.cmi ../.././rt/rt.cmi jmage.cmi file.cmi

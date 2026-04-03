@@ -17,7 +17,7 @@ value main () = do {
 Printexc.catch
   (fun () ->
      try main () with
-     [ Exc_located _ exc -> do {
+     [ Ploc.Exc _ exc -> do {
          Printf.printf "At some location...\n";
          flush Pervasives.stdout;
          raise exc
