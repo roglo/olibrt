@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if ocamlc -v 2>&1; then	:
+else
+  echo "You need the command ocamlc accessible in the path!"
+  echo "Configuration script failed!"
+  exit 1
+fi
+
+if camlp5 -v >/dev/null 2>&1; then :
+else
+  echo "You need the command camlp5 accessible in the path!"
+  echo "Configuration script failed!"
+  exit 1
+fi
+
+OLIBDIR=`ocamlc -v | sed -n -e 's/Standard library directory: //p'`
+OLIBDIR=`echo $OLIBDIR | sed -e s=\\\\\\\\=/=g`
+echo "Ocaml library directory is $OLIBDIR"
+
+(
+echo OLIBDIR=$OLIBDIR
+) > config/Makefile.cnf
+
+touch config/Imake.tmpl
