@@ -1,0 +1,30 @@
+budget.cmo :
+budget.cmx :
+const.cmi :
+file.cmi :
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
+budget.cmo :
+budget.cmx :
+const.cmi :
+file.cmi :
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
+budget.cmo :
+budget.cmx :
+const.cmi :
+file.cmi :
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
+budget.cmo : ../.././rt/rt.cmi file.cmi
+budget.cmx : ../.././rt/rt.cmx file.cmi
+const.cmi :
+file.cmi :
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
+budget.cmo : ../.././rt/rt.cmi file.cmi
+budget.cmx : ../.././rt/rt.cmx file.cmi
+const.cmi :
+file.cmi :
+main.cmo : file.cmi budget.cmo
+main.cmx : file.cmi budget.cmx
