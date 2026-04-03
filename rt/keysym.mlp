@@ -1,0 +1,401 @@
+(* $Id: keysym.mlp,v 1.9 2008/12/09 20:57:06 deraugla Exp $ *)
+
+#define XK_MISCELLANY
+#include <X11/keysymdef.h>
+
+open Rtdecl;
+open Util;
+open Xlib;
+
+type keysym =
+  [ K_Ascii of char
+  | K_Alt_L
+  | K_Alt_R
+  | K_BackSpace
+  | K_Begin
+  | K_Break
+  | K_Cancel
+  | K_Caps_Lock
+  | K_Clear
+  | K_Control_L
+  | K_Control_R
+  | K_Delete
+  | K_Down
+  | K_End
+  | K_Escape
+  | K_Execute
+  | K_F of int
+  | K_Find
+  | K_Help
+  | K_Home
+  | K_Hyper_L
+  | K_Hyper_R
+  | K_Insert
+  | K_KP_Add
+  | K_KP_Decimal
+  | K_KP_Divide
+  | K_KP_Enter
+  | K_KP_Equal
+  | K_KP_F of int
+  | K_KP_Multiply
+  | K_KP_N of int
+  | K_KP_Separator
+  | K_KP_Space
+  | K_KP_Subtract
+  | K_KP_Tab
+  | K_Left
+  | K_Linefeed
+  | K_Menu
+  | K_Meta_L
+  | K_Meta_R
+  | K_Mode_switch
+  | K_Multi_key
+  | K_Next
+  | K_Num_Lock
+  | K_Pause
+  | K_Print
+  | K_Prior
+  | K_Redo
+  | K_Return
+  | K_Right
+  | K_Scroll_Lock
+  | K_Select
+  | K_Shift_L
+  | K_Shift_Lock
+  | K_Shift_R
+  | K_Super_L
+  | K_Super_R
+  | K_Tab
+  | K_Undo
+  | K_Up
+  | K_Other of int ]
+;
+
+value keysym_of_int =
+  fun
+  [ XK_Alt_L -> K_Alt_L
+  | XK_Alt_R -> K_Alt_R
+  | XK_BackSpace -> K_BackSpace
+  | XK_Begin | XK_KP_Begin -> K_Begin
+  | XK_Break -> K_Break
+  | XK_Cancel -> K_Cancel
+  | XK_Caps_Lock -> K_Caps_Lock
+  | XK_Clear -> K_Clear
+  | XK_Control_L -> K_Control_L
+  | XK_Control_R -> K_Control_R
+  | XK_Delete | XK_KP_Delete -> K_Delete
+  | XK_Down | XK_KP_Down -> K_Down
+  | XK_End | XK_KP_End -> K_End
+  | XK_Escape -> K_Escape
+  | XK_Execute -> K_Execute
+  | XK_F1 -> K_F 1
+  | XK_F10 -> K_F 10
+  | XK_F11 -> K_F 11
+  | XK_F12 -> K_F 12
+  | XK_F13 -> K_F 13
+  | XK_F14 -> K_F 14
+  | XK_F15 -> K_F 15
+  | XK_F16 -> K_F 16
+  | XK_F17 -> K_F 17
+  | XK_F18 -> K_F 18
+  | XK_F19 -> K_F 19
+  | XK_F2 -> K_F 2
+  | XK_F20 -> K_F 20
+  | XK_F21 -> K_F 21
+  | XK_F22 -> K_F 22
+  | XK_F23 -> K_F 23
+  | XK_F24 -> K_F 24
+  | XK_F25 -> K_F 25
+  | XK_F26 -> K_F 26
+  | XK_F27 -> K_F 27
+  | XK_F28 -> K_F 28
+  | XK_F29 -> K_F 29
+  | XK_F3 -> K_F 3
+  | XK_F30 -> K_F 30
+  | XK_F31 -> K_F 31
+  | XK_F32 -> K_F 32
+  | XK_F33 -> K_F 33
+  | XK_F34 -> K_F 34
+  | XK_F35 -> K_F 35
+  | XK_F4 -> K_F 4
+  | XK_F5 -> K_F 5
+  | XK_F6 -> K_F 6
+  | XK_F7 -> K_F 7
+  | XK_F8 -> K_F 8
+  | XK_F9 -> K_F 9
+  | XK_Find -> K_Find
+  | XK_Help -> K_Help
+  | XK_Home | XK_KP_Home -> K_Home
+  | XK_Hyper_L -> K_Hyper_L
+  | XK_Hyper_R -> K_Hyper_R
+  | XK_Insert | XK_KP_Insert -> K_Insert
+  | XK_KP_Add -> K_KP_Add
+  | XK_KP_Decimal -> K_KP_Decimal
+  | XK_KP_Divide -> K_KP_Divide
+  | XK_KP_Enter -> K_KP_Enter
+  | XK_KP_Equal -> K_KP_Equal
+  | XK_KP_F1 -> K_KP_F 1
+  | XK_KP_F2 -> K_KP_F 2
+  | XK_KP_F3 -> K_KP_F 3
+  | XK_KP_F4 -> K_KP_F 4
+  | XK_KP_Multiply -> K_KP_Multiply
+  | XK_KP_0 -> K_KP_N 0
+  | XK_KP_1 -> K_KP_N 1
+  | XK_KP_2 -> K_KP_N 2
+  | XK_KP_3 -> K_KP_N 3
+  | XK_KP_4 -> K_KP_N 4
+  | XK_KP_5 -> K_KP_N 5
+  | XK_KP_6 -> K_KP_N 6
+  | XK_KP_7 -> K_KP_N 7
+  | XK_KP_8 -> K_KP_N 8
+  | XK_KP_9 -> K_KP_N 9
+  | XK_KP_Separator -> K_KP_Separator
+  | XK_KP_Space -> K_KP_Space
+  | XK_KP_Subtract -> K_KP_Subtract
+  | XK_KP_Tab -> K_KP_Tab
+  | XK_Left | XK_KP_Left -> K_Left
+  | XK_Linefeed -> K_Linefeed
+  | XK_Menu -> K_Menu
+  | XK_Meta_L -> K_Meta_L
+  | XK_Meta_R -> K_Meta_R
+  | XK_Mode_switch -> K_Mode_switch
+  | XK_Multi_key -> K_Multi_key
+  | XK_Next -> K_Next
+  | XK_Num_Lock -> K_Num_Lock
+  | XK_Pause -> K_Pause
+  | XK_Print -> K_Print
+  | XK_Prior -> K_Prior
+  | XK_Redo -> K_Redo
+  | XK_Return -> K_Return
+  | XK_Right | XK_KP_Right -> K_Right
+  | XK_Scroll_Lock -> K_Scroll_Lock
+  | XK_Select -> K_Select
+  | XK_Shift_L -> K_Shift_L
+  | XK_Shift_Lock -> K_Shift_Lock
+  | XK_Shift_R -> K_Shift_R
+  | XK_Super_L -> K_Super_L
+  | XK_Super_R -> K_Super_R
+  | XK_Tab -> K_Tab
+  | XK_Undo -> K_Undo
+  | XK_Up | XK_KP_Up -> K_Up
+  | x -> K_Other x ]
+;
+
+value int_of_keysym =
+  fun
+  [ K_Alt_L -> XK_Alt_L
+  | K_Alt_R -> XK_Alt_R
+  | K_BackSpace -> XK_BackSpace
+  | K_Begin -> XK_Begin
+  | K_Break -> XK_Break
+  | K_Cancel -> XK_Cancel
+  | K_Caps_Lock -> XK_Caps_Lock
+  | K_Clear -> XK_Clear
+  | K_Control_L -> XK_Control_L
+  | K_Control_R -> XK_Control_R
+  | K_Delete -> XK_Delete
+  | K_Down -> XK_Down
+  | K_End -> XK_End
+  | K_Escape -> XK_Escape
+  | K_Execute -> XK_Execute
+  | K_F 1 -> XK_F1
+  | K_F 10 -> XK_F10
+  | K_F 11 -> XK_F11
+  | K_F 12 -> XK_F12
+  | K_F 13 -> XK_F13
+  | K_F 14 -> XK_F14
+  | K_F 15 -> XK_F15
+  | K_F 16 -> XK_F16
+  | K_F 17 -> XK_F17
+  | K_F 18 -> XK_F18
+  | K_F 19 -> XK_F19
+  | K_F 2 -> XK_F2
+  | K_F 20 -> XK_F20
+  | K_F 21 -> XK_F21
+  | K_F 22 -> XK_F22
+  | K_F 23 -> XK_F23
+  | K_F 24 -> XK_F24
+  | K_F 25 -> XK_F25
+  | K_F 26 -> XK_F26
+  | K_F 27 -> XK_F27
+  | K_F 28 -> XK_F28
+  | K_F 29 -> XK_F29
+  | K_F 3 -> XK_F3
+  | K_F 30 -> XK_F30
+  | K_F 31 -> XK_F31
+  | K_F 32 -> XK_F32
+  | K_F 33 -> XK_F33
+  | K_F 34 -> XK_F34
+  | K_F 35 -> XK_F35
+  | K_F 4 -> XK_F4
+  | K_F 5 -> XK_F5
+  | K_F 6 -> XK_F6
+  | K_F 7 -> XK_F7
+  | K_F 8 -> XK_F8
+  | K_F 9 -> XK_F9
+  | K_Find -> XK_Find
+  | K_Help -> XK_Help
+  | K_Home -> XK_Home
+  | K_Hyper_L -> XK_Hyper_L
+  | K_Hyper_R -> XK_Hyper_R
+  | K_Insert -> XK_Insert
+  | K_KP_Add -> XK_KP_Add
+  | K_KP_Decimal -> XK_KP_Decimal
+  | K_KP_Divide -> XK_KP_Divide
+  | K_KP_Enter -> XK_KP_Enter
+  | K_KP_Equal -> XK_KP_Equal
+  | K_KP_F 1 -> XK_KP_F1
+  | K_KP_F 2 -> XK_KP_F2
+  | K_KP_F 3 -> XK_KP_F3
+  | K_KP_F 4 -> XK_KP_F4
+  | K_KP_Multiply -> XK_KP_Multiply
+  | K_KP_N 0 -> XK_KP_0
+  | K_KP_N 1 -> XK_KP_1
+  | K_KP_N 2 -> XK_KP_2
+  | K_KP_N 3 -> XK_KP_3
+  | K_KP_N 4 -> XK_KP_4
+  | K_KP_N 5 -> XK_KP_5
+  | K_KP_N 6 -> XK_KP_6
+  | K_KP_N 7 -> XK_KP_7
+  | K_KP_N 8 -> XK_KP_8
+  | K_KP_N 9 -> XK_KP_9
+  | K_KP_Separator -> XK_KP_Separator
+  | K_KP_Space -> XK_KP_Space
+  | K_KP_Subtract -> XK_KP_Subtract
+  | K_KP_Tab -> XK_KP_Tab
+  | K_Left -> XK_Left
+  | K_Linefeed -> XK_Linefeed
+  | K_Menu -> XK_Menu
+  | K_Meta_L -> XK_Meta_L
+  | K_Meta_R -> XK_Meta_R
+  | K_Mode_switch -> XK_Mode_switch
+  | K_Multi_key -> XK_Multi_key
+  | K_Next -> XK_Next
+  | K_Num_Lock -> XK_Num_Lock
+  | K_Pause -> XK_Pause
+  | K_Print -> XK_Print
+  | K_Prior -> XK_Prior
+  | K_Redo -> XK_Redo
+  | K_Return -> XK_Return
+  | K_Right -> XK_Right
+  | K_Scroll_Lock -> XK_Scroll_Lock
+  | K_Select -> XK_Select
+  | K_Shift_L -> XK_Shift_L
+  | K_Shift_Lock -> XK_Shift_Lock
+  | K_Shift_R -> XK_Shift_R
+  | K_Super_L -> XK_Super_L
+  | K_Super_R -> XK_Super_R
+  | K_Tab -> XK_Tab
+  | K_Undo -> XK_Undo
+  | K_Up -> XK_Up
+  | K_Other x -> x
+  | K_Ascii x -> Char.code x
+  | _ -> -1 ]
+;
+
+value keysym_of_keycode wid state code =
+  let xd = wid.wid_xd in
+  let k =
+    xKeycodeToKeysym
+      (xd.dpy, code,
+       if state land (shiftMask lor lockMask) != 0 then 1 else 0)
+  in
+  let k =
+    if k >= 0x20 && k < 0xff then K_Ascii (Char.chr k) else keysym_of_int k
+  in
+  item_modified state k
+;
+
+value keysym_of_keysym_int k state =
+  let k =
+    if k >= 0x20 && k < 0xff then K_Ascii (Char.chr k) else keysym_of_int k
+  in
+  item_modified state k
+;
+
+value is_modifier =
+  fun
+  [ K_Shift_L | K_Shift_R | K_Control_L | K_Control_R | K_Caps_Lock |
+    K_Shift_Lock | K_Meta_L | K_Meta_R | K_Alt_L | K_Alt_R | K_Super_L |
+    K_Super_R | K_Hyper_L | K_Hyper_R | K_Other 0 ->
+      True
+  | _ -> False ]
+;
+
+value string_of_keysym =
+  fun
+  [ {control = False; item = K_Ascii x} ->
+      String.make 1 x
+  | {control = True; item = K_Ascii x} ->
+      String.make 1 (Char.chr (Char.code x land 31))
+  | {item = k} ->
+      match k with
+      [ K_Alt_L -> "Alt_L"
+      | K_Alt_R -> "Alt_R"
+      | K_BackSpace -> "BackSpace"
+      | K_Begin -> "Begin"
+      | K_Break -> "Break"
+      | K_Cancel -> "Cancel"
+      | K_Caps_Lock -> "Caps_Lock"
+      | K_Clear -> "Clear"
+      | K_Control_L -> "Control_L"
+      | K_Control_R -> "Control_R"
+      | K_Delete -> "Delete"
+      | K_Down -> "Down"
+      | K_End -> "End"
+      | K_Escape -> "Escape"
+      | K_Execute -> "Execute"
+      | K_F x -> "F" ^ string_of_int x
+      | K_Find -> "Find"
+      | K_Help -> "Help"
+      | K_Home -> "Home"
+      | K_Hyper_L -> "Hyper_L"
+      | K_Hyper_R -> "Hyper_R"
+      | K_Insert -> "Insert"
+      | K_KP_Add -> "KP_Add"
+      | K_KP_Decimal -> "KP_Decimal"
+      | K_KP_Divide -> "KP_Divide"
+      | K_KP_Enter -> "KP_Enter"
+      | K_KP_Equal -> "KP_Equal"
+      | K_KP_F x -> "KP_F" ^ string_of_int x
+      | K_KP_Multiply -> "KP_Multiply"
+      | K_KP_N x -> "KP_" ^ string_of_int x
+      | K_KP_Separator -> "KP_Separator"
+      | K_KP_Space -> "KP_Space"
+      | K_KP_Subtract -> "KP_Subtract"
+      | K_KP_Tab -> "KP_Tab"
+      | K_Left -> "Left"
+      | K_Linefeed -> "Linefeed"
+      | K_Menu -> "Menu"
+      | K_Meta_L -> "Meta_L"
+      | K_Meta_R -> "Meta_R"
+      | K_Mode_switch -> "Mode_switch"
+      | K_Next -> "Next"
+      | K_Num_Lock -> "Num_Lock"
+      | K_Pause -> "Pause"
+      | K_Print -> "Print"
+      | K_Prior -> "Prior"
+      | K_Redo -> "Redo"
+      | K_Return -> "Return"
+      | K_Right -> "Right"
+      | K_Scroll_Lock -> "Scroll_Lock"
+      | K_Select -> "Select"
+      | K_Shift_L -> "Shift_L"
+      | K_Shift_Lock -> "Shift_Lock"
+      | K_Shift_R -> "Shift_R"
+      | K_Super_L -> "Super_L"
+      | K_Super_R -> "Super_R"
+      | K_Tab -> "Tab"
+      | K_Undo -> "Undo"
+      | K_Up -> "Up"
+      | _ -> "\007" ] ]
+;
+
+Util.string_of_xevent_keysym.val :=
+  fun xev ->
+    let ksym =
+      let k = keysym_int_of_xevent xev in
+      keysym_of_keysym_int k 0
+    in
+    string_of_keysym ksym
+;
