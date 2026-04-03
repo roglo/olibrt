@@ -1,0 +1,186 @@
+(* $Id: rtdecl.mlip,v 1.14 2017/12/28 10:38:58 deraugla Exp $ *)
+
+(***** Types *)
+
+#ifndef RT_USER
+open Time;
+open Xlib;
+
+(*** Main (visible) types *)
+
+type xdata =
+  { dpy : display;
+    scr : int;
+    vis : visual;
+    black : int;
+    white : int;
+    backg_pix : int;
+    bord_pix : array int;
+    rootw : window;
+    root_width : int;
+    root_height : int;
+    depth : int;
+    cmap : colormap;
+    connection_number : int;
+    motif_border : int;
+    gray_pixm : xpixmap;
+    gc : gC;
+    wm_delete_window : atom;
+    wm_protocols : atom;
+    char_set : mutable char_set;
+    line_width : mutable int;
+    win_but : mutable window_button_state;
+    popped_up : mutable list widget;
+    end_func : mutable list (unit -> unit);
+    sys_timeout : mutable list (widget * int * unit -> unit);
+    cancel_timeout : mutable list widget;
+    focus : mutable bool;
+    x_selected_wid : mutable option widget;
+    redirected_wid : mutable option widget;
+    no_redirecting_wid : mutable list widget;
+    ginfo : array (list (string * global_info));
+    wid_by_win : array (list (window * widget));
+    wid_by_name : array (list (string * widget));
+    font_by_name : array (list (string * font));
+    wid_by_shortcut : mutable list (char * widget) }
+and widget =
+  { wid_xd : xdata;
+    win : window;
+    is_toplevel : bool;
+    x : mutable int;
+    y : mutable int;
+    width : mutable int;
+    height : mutable int;
+    border : mutable int;
+    is_mapped : mutable bool;
+    frozen : mutable bool;
+    deleted : mutable bool;
+    delete_callback : mutable delete_callback;
+    user_info : mutable user_info;
+    wdesc : widget_desc;
+    info : local_info;
+    children : mutable list widget }
+and char_set = [ Latin_1 | Utf_8 ]
+and delete_callback = option (widget -> unit)
+and global_info = globinfo -> string
+and globinfo = [ C_GI ]
+and local_info = locinfo -> string
+and locinfo = [ C_LI ]
+and args_info = arginfo -> string
+and arginfo = [ C_AI ]
+and user_info = [ C_UI of unit -> string ]
+and widget_desc =
+  { wsize : xdata -> size_hints;
+    wcreate :
+      xdata -> window -> bool -> bool -> widget_desc -> int -> int ->
+        size_hints -> widget;
+    wresize : widget -> int -> int -> unit;
+    wdestroy : widget -> unit;
+    wdispatch : widget -> xEvent -> unit;
+    wfreeze : widget -> unit;
+    wselect : widget -> bool -> unit;
+    wargs : args_info;
+    filler : bool }
+and size_hints =
+  { sh_width : int;
+    sh_height : int;
+    sh_border : int;
+    base_width : int;
+    base_height : int;
+    width_inc : int;
+    height_inc : int }
+and font =
+  { font_xd : xdata;
+    fs : xFontStruct;
+    fid : xfont;
+    gc_mask : int;
+    ascent : int;
+    descent : int;
+    fwidth : int;
+    fheight : int }
+and pixmap = { pixm_xd : xdata; pixmap : xpixmap }
+and color = { col_xd : xdata; pixel : int }
+and mouse = { curs_xd : xdata; cursor : cursor }
+and gc = { gc_xd : xdata; xgc : gC }
+and xargs =
+  { xdl : mutable list xdata;
+    fd_list : mutable list (int * int -> unit);
+    initial_time : timeb;
+    current_time : mutable int;
+    timeout : mutable list (timeout_tag * int * unit -> unit);
+    file_buff : mutable bytes;
+    running : mutable bool }
+and timeout_tag = [ SysTimeout of widget | UserTimeout of string ]
+and window_button_state =
+  [ WB_None
+  | WB_Win of window
+  | WB_WinBut of window
+  | WB_WinButExit of window
+  | WB_But
+  | WB_ButWin ]
+;
+#else
+
+(*** Main (abstract) types *)
+
+type xdata = 'aa';
+type widget = 'aa';
+type widget_desc = 'aa';
+type xargs = 'aa';
+type color = 'aa';
+type pixmap = 'aa';
+type mouse = 'aa';
+type font = 'aa';
+type gc = 'aa';
+type user_info = 'aa';
+type delete_callback = option (widget -> unit);
+type char_set = [ Latin_1 | Utf_8 ];
+#endif
+
+(*** Paint *)
+
+type paint = [ NonePn | PixmapPn of pixmap | ColorPn of color ];
+
+(*** Drawable *)
+
+type drawable = [ WidgetDr of widget | PixmapDr of pixmap ];
+
+(*** Orientation *)
+
+type orientation = [ Horizontal | Vertical | InDepth ];
+
+(*** Direction *)
+
+type direction = [ D_up | D_down | D_left | D_right ];
+
+(*** Widget positioning *)
+
+type position = [ AutoPosition | UserPosition of int and int ];
+
+(*** Widget attributes *)
+
+type attribute =
+  [ BackgroundAtt of paint
+  | BandAtt of int
+  | BoldAtt of int
+  | BorderAtt of int
+  | BorderBackgAtt of paint
+  | FillerAtt
+  | FontAtt of array font
+  | ForegroundAtt of paint
+  | HeightAtt of int
+  | InterAtt of int
+  | LeftJustifAtt
+  | NameAtt of string
+  | WidthAtt of int ]
+;
+
+(*** Modified keys or buttons *)
+
+type modified 'ta' =
+  { shiftMod : bool;
+    shiftLock : bool;
+    control : bool;
+    mod1 : bool;
+    item : 'ta' }
+;

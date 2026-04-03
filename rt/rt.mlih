@@ -1,0 +1,74 @@
+(* $Id: rt.mlih,v 1.6 2008/12/29 10:46:57 deraugla Exp $ *)
+
+(***** Keysym *)
+#include "keysym.mli"
+
+(***** Main functions *)
+#include "rt_main.mli"
+
+(***** Arrow widget *)
+#include "c_arrow.mli"
+
+(***** Button widget *)
+#include "c_button.mli"
+
+(***** Check widget *)
+#include "c_check.mli"
+
+(***** Line widget *)
+#include "c_line.mli"
+
+(***** Pack widget *)
+#include "c_pack.mli"
+
+(***** Scroll widget *)
+#include "c_scroll.mli"
+
+(***** Table widget *)
+#include "c_table.mli"
+
+(***** Term widget *)
+#include "c_term.mli"
+#include "term.mli"
+
+(***** Title widget *)
+#include "c_title.mli"
+
+(***** Raw widget *)
+#include "c_raw.mli"
+
+(***** Pixmap *)
+#include "pixmap.mli"
+
+(***** Color *)
+#include "rt_color.mli"
+
+(***** Pattern *)
+#include "pattern.mli"
+
+(***** Drawing *)
+#include "draw.mli"
+
+(***** Image *)
+#include "rt_image.mli"
+
+(***** Mouse *)
+#include "mouse.mli"
+
+(***** Font *)
+#include "font.mli"
+
+(***** Resource *)
+#include "resource.mli"
+
+(***** Miscellaneous *)
+#include "misc.mli"
+
+(***** User information *)
+#include "uinfo.mli"
+
+(***** Time *)
+#include "time.mli"
+
+(*--*)
+#include "mousefont.mli"
