@@ -16,6 +16,7 @@ fi
 
 OLIBDIR=`ocamlc -v | sed -n -e 's/Standard library directory: //p'`
 OLIBDIR=`echo $OLIBDIR | sed -e s=\\\\\\\\=/=g`
+mkdir -p config
 echo "Ocaml library directory is $OLIBDIR"
 
 (
