@@ -1,0 +1,122 @@
+Version 1.11
+------------
+
+* [28 Dec 2017] Changed String into Bytes for new OCaml compatibility.
+* [14 May 2017] Eliminated compilation warnings:
+    in C code
+      some #include added
+      XKeycodeToKeysym -> XkbKeycodeToKeysym
+    in OCaml code
+      Array.create -> Array.make
+      String.create -> Bytes.create
+      String.fill -> Bytes.fill
+      String.set -> Bytes.set
+    done also in example/sokoban (not yet in other examples)
+* [11 Mar 2017] Fixed bug could not find Xlib in Time because of order
+  of linking.
+* [23 Feb 2012] Added comment in README about linking on Mac.
+
+Version 1.10
+------------
+
+* [17 Nov 2010] Added Makefiles in examples, remove the old Imakefiles.
+
+Version 1.09
+------------
+
+* [03 Aug 2010] Makefiles do not use 'imake' any more.
+* [06 Jan 2009] Fixed bug in [rt_get_image] for TrueColors visuals
+  (millions of colors, most used now): got only the 'blue' part of
+  the pixels.
+* [29 Dec 2008] Changed module name 'Image' into 'Rt_image' to prevent
+  name conflicts with other libraries.
+* [28 Dec 2008] Changed module name 'Color' into 'Rt_color' to prevent
+  name conflicts with other libraries.
+* [28 Dec 2008] Added file 'hmake.sh' to allow choosing 'make' or 'gmake'.
+
+Version 1.08
+------------
+
+* [22 Dec 2008] Some changes in Makefiles.
+* [20 Dec 2008] Fixed bug: if some popup widgets have been deleted by
+  [rt_destroy_widget], the next button release callback triggered an X
+  error.
+* [20 Dec 2008] Fixed behaviour in [rt_pending_event]: now also consider
+  timeouts.
+* [10 Dec 2008] Changed parameters of constructor RawEvConfigureNotify and
+  set new width and height to raw widgets *before* calling back.
+* [21 Nov 2008] Added function [term_emphasized_location].
+
+Version 1.07
+------------
+
+* [10 Jun 2008] Added function [term_set_max_history_size].
+* [15 Apr 2008] Added widget type 'table' (table_desc).
+* [03 Apr 2008] Added function [scroll_set_bar_size].
+* [28 Mar 2008] Changed behaviour : when resizing a term widget to a
+  smaller size, the number of rows and columns are now changed also.
+* [20 Mar 2008] Added functions [pack_extend] to extend a pack,
+  [pack_remove_nth] to remove the nth sub-widget of a pack,
+  [raw_set_size] to change a raw widget size, and [title_change]
+  to change a title text. For all these functions, a call to
+  [rt_adjust_widget] to the top widget the widget belongs to is
+  necessary to apply the changes (one call sufficient for all).
+* [20 Mar 2008] Add compilation of native code library librt.cmxa.
+* [19 Mar 2008] Fixed bug in term widget: generated a X failure when
+  destroyed because of trying to display cursor.
+* [14 Mar 2008] Added event handler for title widget (was missing), holding
+  buttons pressed.
+* [28 Feb 2008] Fixed bug in term widget: term_emphasize_to did not take
+  the last column.
+* [11 Feb 2008] Added ability in check widgets to put ForegroundAtt to a
+  color which is displayed when the check is selected.
+* [10 Feb 2008] Added function "menu_button", a shortcut for "button_desc"
+  with a call to a map of a popup_widget.
+* [07 Feb 2008] Fixed bug: when a button triggered then unmapping of the
+  window where the button was, the buttons triggering popups were afterward
+  activated when entering them, without button press.
+* [05 Feb 2008] Fixed bug: some keysyms (e.g. numeric keys when Num Lock
+  is set) did not work.
+* [05 Feb 2008] Added ability to define buttons texts with "\t" to ask
+  that the text after "\t" be right aligned. Example: "Quit\tq" will
+  be displayed "Quit  q".
+* [02 Feb 2008] Added function rt_set_dashes.
+* [30 Jan 2008] Fixed bug: key events were not raised when NumLock was set.
+
+Version 1.06
+------------
+
+* [29 Jan 2008] Changed to compile with Camlp5. Rewritten sources in
+  revised syntax instead of special syntax.
+
+Version 1.05
+------------
+
+* [16 Jul 2007] Changed to compile with Camlp5.
+* [05 Jul 2007] Make the examples compile (they did not).
+
+Version 1.04
+------------
+
+* [28 Jun 2007] Adapted for Camlp4s 4.02
+
+Version 1.03
+------------
+
+Version 1.02
+------------
+
+* [08/06/2001] Updated to be compilable with OCaml 3.01
+* [31/12/1998] (rt) Renamed "term_send_string" into "term_send".
+* [31/12/1998] (rt internal) Suppressed timezone (obsolete in system) in
+  Xlib/timeb.c (calling gettimeofday).
+
+Version 1.01
+------------
+
+* [28/12/1998] Added some missing keysyms.
+* [28/12/1998] Added game "sokoban".
+* [27/12/1998] Fixed timer problem (games with timing worked bad in Linux
+  RH 5).
+* [26/12/1998] Used camlp4 and converted all into revised syntax.
+* Deleted the files "Makefile" in distribution (now created by imake).
