@@ -1,0 +1,7 @@
+*.[ao]
+*.cm[aiox]
+*.cmxa
+keysym.ml
+rt.mli
+rtdecl.mli
+rtdef.mli
