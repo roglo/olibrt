@@ -69,7 +69,7 @@ depend::
 		> Imakefile
 	$(ZDEP) $(ZDEPFLAGS) $$(ls *.ml *.mli | LC_ALL=C sort) >> Imakefile
 
-# ## DO NOT DELETE THIS LINE
+### DO NOT DELETE THIS LINE
 a_entree.cmo: state.cmi rtN.cmi b_pointage.cmi b_init.cmi b_compte.cmi     action.cmi a_entree.cmi
 
 a_entree.cmx: state.cmx rtN.cmx b_pointage.cmx b_init.cmx b_compte.cmx     action.cmx a_entree.cmi
