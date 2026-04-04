@@ -5,17 +5,12 @@ open File;
 open RtN;
 
 value get_dpi xd =
-  let width = Rt.screen_width_mm xd in
-  width;
-(*
-  let screen = XDefaultScreen display in
-  let width_mm = XDisplayWidthMM display screen in
-  let width_px = XDisplayWidth display screen in
+  let width_px = RtN.screen_width xd in
+  let width_mm = RtN.screen_width_mm xd in
   (float width_px *. 25.4) /. (float width_mm);
 
 value mm_to_pixels mm dpi =
   int_of_float (mm /. 25.4 *. dpi);
-*)
 
 Rt.button_font.val := "*-helvetica-bold-r-*--18-*";
 Rt.title_font.val := "*-helvetica-bold-o-*--18-*";
@@ -29,6 +24,8 @@ value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 value budget_prog xd = do {
 Printf.eprintf "screen_width %d\n" (RtN.screen_width xd);
 Printf.eprintf "screen_width_mm %d\n" (RtN.screen_width_mm xd);
+Printf.eprintf "get_dpi %g\n" (get_dpi xd);
+Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   prerr_string "Initialisation... ";
   flush Pervasives.stderr;
   state.action_quit := fun _ -> state.quit := True;
