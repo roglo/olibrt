@@ -116,6 +116,7 @@ external xDestroyWindow : (display * window) -> unit = "ML_XDestroyWindow";
 external xDisplayHeight : (display * int) -> int = "ML_XDisplayHeight";
 external xDisplayName : string -> c_String = "ML_XDisplayName";
 external xDisplayWidth : (display * int) -> int = "ML_XDisplayWidth";
+external xDisplayWidthMM : (display * int) -> int = "ML_XDisplayWidthMM";
 external xDrawArc :
   (display * drawable * gC * int * int * int * int * int * int) ->
     unit = "ML_XDrawArc";

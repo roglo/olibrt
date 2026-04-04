@@ -85,4 +85,7 @@ value rt_xdata_of_widget : widget -> xdata;
 value rt_unmap_alert : 'a -> unit;
 value rt_unmap_widget : widget -> unit;
 
+value screen_width : xdata -> int;
+value screen_width_mm : xdata -> int;
+
 value is_frozen : widget -> bool;

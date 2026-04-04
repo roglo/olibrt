@@ -70,6 +70,16 @@ value *v;
 	return MLINT(r);
 }
 
+value ML_XDisplayWidthMM(v)
+value *v;
+{
+	int r = XDisplayWidthMM(
+		(Display*) aarv(0),
+		(int) iarv(1)
+	);
+	return MLINT(r);
+}
+
 value ML_XDefaultVisual(v)
 value *v;
 {

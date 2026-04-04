@@ -142,6 +142,9 @@ value is_colored : xdata -> bool;
 value screen_width : xdata -> int;
       (* [screen_width xd]
          returns the width of the screen [xd] *)
+value screen_width_mm : xdata -> int;
+      (* [screen_width_mm xd]
+         returns the width of the screen [xd] in millimeters *)
 value screen_height : xdata -> int;
       (* [screen_height xd]
          returns the height of the screen [xd] *)

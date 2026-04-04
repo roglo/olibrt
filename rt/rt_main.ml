@@ -69,7 +69,9 @@ value rt_initialize =
     {dpy = dpy; scr = scr; vis = vis; black = black; white = white;
      backg_pix = backg_pix; bord_pix = [| light_pix; dark_pix |];
      rootw = rootw; root_width = xDisplayWidth (dpy, scr);
-     root_height = xDisplayHeight (dpy, scr); depth = depth; cmap = cmap;
+     root_height = xDisplayHeight (dpy, scr);
+     root_width_mm = xDisplayWidthMM (dpy, scr);
+     depth = depth; cmap = cmap;
      connection_number = xConnectionNumber dpy; motif_border = motif_border;
      gray_pixm =
        xCreatePixmapFromBitmapData
@@ -312,6 +314,7 @@ value widget_named xd wname =
 ;
 
 value screen_width xd = xd.root_width
+and screen_width_mm xd = xd.root_width_mm
 and screen_height xd = xd.root_height
 and screen_depth xd = xd.depth
 and rt_display_name dname =

@@ -295,4 +295,7 @@ value rt_unmap_alert _ = do {
 };
 value rt_unmap_widget = Rt.rt_unmap_widget;
 
+value screen_width = Rt.screen_width;
+value screen_width_mm = Rt.screen_width_mm;
+
 value is_frozen = Rt.is_frozen;
