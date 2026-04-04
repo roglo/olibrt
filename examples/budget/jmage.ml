@@ -156,8 +156,8 @@ value get_field ip n =
 
 value saved_blit_string src bsrc dst bdst len =
   try String.blit src bsrc dst bdst len with _ ->
-    String.blit (String.make (String.length dst) '*') 0 dst 0
-      (String.length dst)
+    String.blit (String.make (Bytes.length dst) '*') 0 dst 0
+      (Bytes.length dst)
 ;
 
 value format_field fmt typ dec f dst =
@@ -173,7 +173,7 @@ value format_field fmt typ dec f dst =
             if String.length fmt > 1 && fmt.[1] == '0' then '0' else ' '
           in
           let src = string_of_int n in
-          let start = String.length dst - String.length src in
+          let start = Bytes.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := gap };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -182,13 +182,13 @@ value format_field fmt typ dec f dst =
       match f with
       [ Fdecimal (m, d, e) -> do {
           let d =
-            normalize (dec - e) d where normalize sh d =
+            normalize (dec - e) d where rec normalize sh d =
               if sh < 0 then normalize (succ sh) (d / 10)
               else if sh > 0 then normalize (pred sh) (d * 10)
               else d
           in
           let src = string_of_int m ^ "," ^ Printf.sprintf "%02d" d in
-          let start = String.length dst - String.length src in
+          let start = Bytes.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := ' ' };
           saved_blit_string src 0 dst start (String.length src)
         }

@@ -225,7 +225,7 @@ value input ip hook_key kont_ret =
         else
           let c =
             match accent.val with
-            [ Some a -> (accent.val := None; mettre_accent a c)
+            [ Some a -> do { accent.val := None; mettre_accent a c }
             | None -> c ]
           in
           if match ip.iPtyp with
