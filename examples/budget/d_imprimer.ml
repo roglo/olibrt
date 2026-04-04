@@ -78,7 +78,7 @@ value imprimer_solde_general () = do {
     List.fold_left (fun n (_, d) -> n + d) s.soldeReel s.enCours
   in
   let (comptes, tot) =
-    glop budget.comptes s.soldeComptes where glop _xxx1 _xxx2 =
+    glop budget.comptes s.soldeComptes where rec glop _xxx1 _xxx2 =
       match (_xxx1, _xxx2) with
       [ ([Some (lib, _) :: cs], [(_, n) :: sc]) ->
           let (comptes, tot) = glop cs sc in
@@ -87,7 +87,7 @@ value imprimer_solde_general () = do {
       | (_, _) -> ([], 0) ]
   in
   let comptes =
-    Sort.list (fun (lib1, _) (lib2, _) -> lib1 <= lib2) comptes
+    List.sort (fun (lib1, _) (lib2, _) -> compare lib1 lib2) comptes
   in
   let long_ligne = 47 + Const.taille_nom_compte in
   printf "\012";
@@ -136,7 +136,7 @@ value imprimer_solde_general () = do {
       printf " %-10s  Total%14s|" (string_of_somme 10 tot) ""
     else printf "%32s|" "";
     printf "\n";
-  done;
+  };
   for i = 3 to List.length s.enCours do { printf "|%27s|%32s|\n" "" "" };
   printf "| Solde réel   : %-10s |%32s|\n" (string_of_somme 10 s.soldeReel)
     "";
@@ -179,13 +179,13 @@ value imprimer_bilan () = do {
   printf "\012";
   printf "%s\n" ligne;
   printf "|";
-  for i = 2 to (String.length ligne - String.length titre) / 2 do
+  for i = 2 to (String.length ligne - String.length titre) / 2 do {
     printf " ";
-  done;
+  };
   printf "%s" titre;
-  for i = 2 to (String.length ligne + 1 - String.length titre) / 2 do
+  for i = 2 to (String.length ligne + 1 - String.length titre) / 2 do {
     printf " ";
-  done;
+  };
   printf "|\n";
   printf "%s\n" ligne;
   printf "|%11sD E P E N S E S%11s|%11sR E C E T T E S%11s|\n" "" "" "" "";
@@ -194,28 +194,30 @@ value imprimer_bilan () = do {
   if report_deb > 0 then do {
     printf "     Report     : ";
     printf "%s" (string_of_somme 10 report_deb)
-  )
+  }
   else printf "%28s" "";
   printf "%9s|%1s" "" "";
   if report_cre >= 0 then do {
     printf "%8s" "";
     printf "%s" (string_of_somme 10 report_cre);
     printf " : Report"
-  )
+  }
   else printf "%27s" "";
   printf "%9s|\n" "";
-  for i = 0 to max (List.length rep.postesDeb) (List.length rep.postesCre) - 1 do
+  for i = 0 to
+    max (List.length rep.postesDeb) (List.length rep.postesCre) - 1
+  do {
     if i < List.length rep.postesDeb then do {
       let (_, (lib, r)) = nth i rep.postesDeb in
       printf "|     ";
       printf "%s" lib;
-      for i = String.length lib + 1 to 10 do printf " "; done;
+      for i = String.length lib + 1 to 10 do { printf " " };
       printf " : ";
       printf "%s" (string_of_somme 10 r);
       printf " ";
       printf "%s" (string_of_somme 6 (pourcent r rep.totalDep));
       printf "%%"
-    )
+      }
     else printf "%34s" "";
     printf "%1s|%1s" "" "";
     if i < List.length rep.postesCre then do {
@@ -225,12 +227,12 @@ value imprimer_bilan () = do {
       printf "%s" (string_of_somme 10 r);
       printf " : ";
       printf "%s" lib;
-      for i = String.length lib + 1 to 10 do printf " "; done;
+      for i = String.length lib + 1 to 10 do { printf " " };
       printf "%4s" ""
-    )
+      }
     else printf "%35s" "";
     printf " |\n";
-  done;
+  };
   printf "|     Placement  : ";
   printf "%s" (string_of_somme 10 rep.placement);
   printf " ";
@@ -252,14 +254,14 @@ value imprimer_bilan () = do {
   if total_dep <= total_rec then do {
     printf "Solde créditeur : ";
     printf "%s" (string_of_somme 10 (total_rec - total_dep))
-  )
+      }
   else printf "%28s" "";
   printf "%9s|%1s" "" "";
   if total_rec < total_dep then do {
     printf "%8s" "";
     printf "%s" (string_of_somme 10 (total_dep - total_rec));
     printf " : Solde débiteur"
-  )
+  }
   else printf "%35s" "";
   printf " |\n";
   printf "|%17s" "";

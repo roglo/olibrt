@@ -3,13 +3,13 @@
 open RtN;
 
 type inputPic =
-  { iParr : array (bool * string * int * int * char * int * string * widget);
+  { iParr : array (bool * string * int * int * char * int * String.t * widget);
     iPcur : mutable int;
     iPlin : mutable int;
     iPcol : mutable int;
     iPtyp : mutable char;
     iPdec : mutable int;
-    iPstr : mutable string;
+    iPstr : mutable String.t;
     iPind : mutable int;
     iPwid : mutable widget }
 ;
@@ -84,7 +84,7 @@ value input_of_pic wid pic =
    iPstr = str; iPind = 0; iPwid = wid}
 ;
 
-value strip_trailing_spaces str =
+value strip_trailing_spaces (str : String.t) =
   let end_ =
     start_spaces (String.length str) where rec start_spaces n =
       if n == 0 then 0
@@ -156,12 +156,11 @@ value get_field ip n =
 
 value saved_blit_string src bsrc dst bdst len =
   try String.blit src bsrc dst bdst len with _ ->
-    String.blit (String.make (Bytes.length dst) '*') 0
-      dst 0 (Bytes.length dst)
+    String.blit (String.make (String.length dst) '*') 0
+      dst 0 (String.length dst)
 ;
 
 value format_field fmt typ dec f dst =
-  let dst = Bytes.of_string dst in
   match typ with
   [ 's' ->
       match f with
@@ -174,7 +173,7 @@ value format_field fmt typ dec f dst =
             if String.length fmt > 1 && fmt.[1] == '0' then '0' else ' '
           in
           let src = string_of_int n in
-          let start = Bytes.length dst - String.length src in
+          let start = String.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := gap };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -189,7 +188,7 @@ value format_field fmt typ dec f dst =
               else d
           in
           let src = string_of_int m ^ "," ^ Printf.sprintf "%02d" d in
-          let start = Bytes.length dst - String.length src in
+          let start = String.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := ' ' };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -267,7 +266,7 @@ value mois_annee_large m a = do {
     s.[2 * String.length m + 2 + 2 * i] := a.[i];
     s.[2 * String.length m + 2 + 2 * i + 1] := ' ';
   };
-  "- " ^ Bytes.to_string s ^ "-"
+  "- " ^ s ^ "-"
 };
 
 value capitalize str =
@@ -282,7 +281,7 @@ value capitalize str =
 ;
 
 value large str = do {
-  let str2 = Bytes.make (2 * String.length str - 1) ' ' in
+  let str2 = String.make (2 * String.length str - 1) ' ' in
   for i = 0 to String.length str - 1 do { str2.[2 * i] := str.[i] };
   Bytes.to_string str2
 };

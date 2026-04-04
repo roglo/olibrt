@@ -96,7 +96,7 @@ value rec nth _xxx1 _xxx2 =
 ;
 
 value uppercase str = do {
-  let str2 = Bytes.create (String.length str) in
+  let str2 = Bytes.of_string str in
   for i = 0 to String.length str - 1 do {
     str2.[i] :=
       match str.[i] with
@@ -104,7 +104,7 @@ value uppercase str = do {
           Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
       | c -> c ];
   };
-  Bytes.to_string str2
+  str2
 };
 
 value ligne_marquee () =

@@ -33,10 +33,8 @@ OLIBDIR=/usr/local/lib/ocaml
 OLIBDIR=/home/roglo/work/usr/lib/ocaml
 
 ZDEPFLAGS=-I $(RTDIR)
-ZFLAGS=-I $(RTDIR) -I `camlp5 -where`
+ZFLAGS=-I $(RTDIR) -I `camlp5 -where` -unsafe-string
 CFLAGS=-O -I$(OLIBDIR) -I/usr/X11R6/include
-
-all::
 
 # (begin Imakefile)
 
@@ -51,9 +49,7 @@ EXT=pa_r.cmo ./pa_ext.cmo
 EXT=pa_r.cmo
 CAMLP5="camlp5 $(EXT) pa_rp.cmo pr_dump.cmo"
 
-all::
-
-allold:: $(TARGET)
+all:: $(TARGET)
 
 $(TARGET): $(RTLIB) $(XLIB) $(ZOFILES)
 	$(CAMLLINK) -custom $(RTLIB) "unix.cma" -I `camlp5 -where` "gramlib.cma" $(ZOFILES) $(XLIB) $(LIBX11) \
