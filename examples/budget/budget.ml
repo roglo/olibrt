@@ -19,6 +19,24 @@ Rt.term_font.(1) := "*-courier-bold-r-*-18-*";
 Rt.term_font.(2) := "*-courier-medium-o-*-18-*";
 Rt.term_font.(3) := "*-courier-bold-o-*-18-*";
 
+value fonte =
+  "-adobe-avant garde gothic-book-o-normal--0-0-0-0-p-0-iso8859-1";
+value fonte =
+  "-adobe-avantgarde-book-o-normal--0-0-0-0-p-0-iso8859-1";
+value fonte = "-adobe-bookman-demi-i-normal--0-0-0-0-p-0-iso8859-1";
+
+value fonte1 = "-adobe-courier-bold-r-normal--0-0-0-0-p-0-iso8859-1";
+value fonte2 = "-adobe-courier-medium-r-normal--0-0-0-0-p-0-iso8859-1";
+
+value fonte1 = "-*-courier-bold-r-*";
+value fonte2 = "-*-courier-medium-r-*";
+Rt.button_font.val := "-*-helvetica-bold-r-*";
+Rt.title_font.val := "-*-helvetica-bold-o-*";
+Rt.term_font.(0) := "-*-courier-medium-r-*";
+Rt.term_font.(1) := "-*-courier-bold-r-*";
+Rt.term_font.(2) := "-*-courier-medium-o-*";
+Rt.term_font.(3) := "-*-courier-bold-o-*";
+
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 
 value budget_prog xd = do {
