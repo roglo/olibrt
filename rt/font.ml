@@ -18,6 +18,8 @@ value rt_load_query_font xd fname =
       let font =
         let fs = xLoadQueryFont (xd.dpy, fname) in
         if is_null_XFontStruct fs then do {
+	  Printf.eprintf "font \"%s\" not found\n" fname;
+	  flush stderr;
           let xid = xGContextFromGC (xDefaultGC (xd.dpy, xd.scr)) in
           let fs = xQueryFont (xd.dpy, xid) in
           xd.end_func := [fun () -> xFreeFontInfoSpec fs :: xd.end_func];
