@@ -155,12 +155,13 @@ value get_field ip n =
 ;
 
 value saved_blit_string src bsrc dst bdst len =
-  try String.blit src bsrc (Bytes.of_string dst) bdst len with _ ->
-    String.blit (String.make (String.length dst) '*') 0
-      (Bytes.of_string dst) 0 (String.length dst)
+  try String.blit src bsrc dst bdst len with _ ->
+    String.blit (String.make (Bytes.length dst) '*') 0
+      dst 0 (Bytes.length dst)
 ;
 
 value format_field fmt typ dec f dst =
+  let dst = Bytes.of_string dst in
   match typ with
   [ 's' ->
       match f with
@@ -173,7 +174,7 @@ value format_field fmt typ dec f dst =
             if String.length fmt > 1 && fmt.[1] == '0' then '0' else ' '
           in
           let src = string_of_int n in
-          let start = String.length dst - String.length src in
+          let start = Bytes.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := gap };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -199,7 +200,7 @@ value format_field fmt typ dec f dst =
 
 value set_field ip n f = do {
   let (_, fmt, lin, col, typ, dec, dst, twid) = ip.iParr.(n) in
-  format_field fmt typ dec f (Bytes.of_string dst);
+  format_field fmt typ dec f dst;
   term_goto twid lin col;
   term_send twid dst
 };
@@ -243,15 +244,13 @@ value string_of_mois =
 ;
 
 value string_of_date j m a = do {
-  let strj = Bytes.create 2 in
+  let strj = String.make 2 ' ' in
   format_field "%02d" 'd' 0 (Fint j) strj;
-  let strm = Bytes.create 2 in
+  let strm = String.make 2 ' ' in
   format_field "%02d" 'd' 0 (Fint m) strm;
-  let stra = Bytes.create 4 in
+  let stra = String.make 4 ' ' in
   format_field "%4d" 'd' 0 (Fint a) stra;
-  Bytes.to_string strj ^ "/" ^
-  Bytes.to_string strm ^ "/" ^
-  Bytes.to_string stra
+  strj ^ "/" ^ strm ^ "/" ^ stra
 };
 
 value mois_annee_large m a = do {
@@ -285,5 +284,5 @@ value capitalize str =
 value large str = do {
   let str2 = Bytes.make (2 * String.length str - 1) ' ' in
   for i = 0 to String.length str - 1 do { str2.[2 * i] := str.[i] };
-  str2
+  Bytes.to_string str2
 };
