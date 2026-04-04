@@ -4,8 +4,10 @@ TO COMPILE
 
 You need ocaml and camlp5.
 
+```
    ./configure
    make
+```
 
 GAMES
 
