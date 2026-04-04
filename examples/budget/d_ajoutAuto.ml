@@ -11,9 +11,9 @@ Nombre  : %3d
 Dernier : %02d/%02d
 Jour    : %02d
 Poste   : %2s
-LibellÈ : %20s
-DÈbit   : %10.2f
-CrÈdit  : %10.2f"
+Libell√© : %20s
+D√©bit   : %10.2f
+Cr√©dit  : %10.2f"
 ;
 
 value rec init_ajout xd = do {
@@ -52,12 +52,12 @@ and verif_ajout ip = do {
     if debit = Fempty && credit = Fempty ||
        debit <> Fempty && credit <> Fempty
     then
-      raise (ErrField "Renseignez dÈbit ou crÈdit" 6)
+      raise (ErrField "Renseignez d√©bit ou cr√©dit" 6)
     else ();
     match (trouver_poste poste, (debit, credit)) with
     [ ((True, _), (_, Fempty)) | ((_, True), (Fempty, _)) -> ()
     | ((False, False), _) -> raise (ErrField "Poste inexistant" 4)
-    | _ -> raise (ErrField "Poste dans la mauvaise catÈgorie" 4) ];
+    | _ -> raise (ErrField "Poste dans la mauvaise cat√©gorie" 4) ];
     term_send twid "\027[?35h\027[?7l";
     rt_map_alert (rt_widget_named xd "MA Correct alert");
     state.keyPressAct :=

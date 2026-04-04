@@ -32,7 +32,7 @@ value ajouter_ligne xd v = do {
 value action_fin wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   List.iter
     (fun v ->
        if v.vselection then do { v.vselection := False; ajouter_ligne xd v }
@@ -52,7 +52,7 @@ value action_fin wid = do {
 value action_annule wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   state.buttonAct := fun _ _ -> ();
   List.iter
     (fun ligne ->
@@ -81,7 +81,7 @@ value select_ligne xd ligne = do {
 value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "VIR AUTO");
   rt_map_widget (rt_widget_named xd "VA Vir Auto action");
   state.buttonAct :=

@@ -82,16 +82,16 @@ value init_bilan xd = do {
   term_send twid2 "% ";
   term_send twid2 (string_of_somme 10 rep.retrait);
   term_send twid2 " : Retrait\n";
-  term_send twid1 "     Non imputé : ";
+  term_send twid1 "     Non imputÃ© : ";
   term_send twid1 (string_of_somme 10 rep.nonImpDeb);
   term_send twid1 "\n";
   term_send twid2 "         ";
   term_send twid2 (string_of_somme 10 rep.nonImpCre);
-  term_send twid2 " : Non imputé\n";
+  term_send twid2 " : Non imputÃ©\n";
   let total_dep = report_deb + rep.totalDep + rep.nonImpDeb in
   let total_rec = report_cre + rep.totalRec + rep.nonImpCre in
   if total_dep <= total_rec then do {
-    term_send twid1 "Solde créditeur : ";
+    term_send twid1 "Solde crÃ©diteur : ";
     term_send twid1 (string_of_somme 10 (total_rec - total_dep))
   }
   else ();
@@ -104,7 +104,7 @@ value init_bilan xd = do {
   if total_rec < total_dep then do {
     term_send twid2 "         ";
     term_send twid2 (string_of_somme 10 (total_dep - total_rec));
-    term_send twid2 " : Solde débiteur"
+    term_send twid2 " : Solde dÃ©biteur"
   }
   else ();
   term_send twid2 "\n";
@@ -121,7 +121,7 @@ value action_quit wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "Traitement"; "Budget"; "INFO Postes";
-     "INFO Cartes"; "INFO Comptes spéciaux"; "Mise à jour"];
+     "INFO Cartes"; "INFO Comptes spÃ©ciaux"; "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "BILAN")
 };
 
@@ -130,7 +130,7 @@ value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "Traitement"; "Budget"; "INFO Postes";
-     "INFO Cartes"; "INFO Comptes spéciaux"; "Mise à jour"];
+     "INFO Cartes"; "INFO Comptes spÃ©ciaux"; "Mise Ã  jour"];
   init_bilan xd;
   rt_map_widget (rt_widget_named xd "BILAN")
 };

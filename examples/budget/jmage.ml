@@ -228,17 +228,17 @@ value string_of_somme len s =
 value string_of_mois =
   fun
   [ 1 -> "janvier"
-  | 2 -> "février"
+  | 2 -> "fÃ©vrier"
   | 3 -> "mars"
   | 4 -> "avril"
   | 5 -> "mai"
   | 6 -> "juin"
   | 7 -> "juillet"
-  | 8 -> "août"
+  | 8 -> "aoÃ»t"
   | 9 -> "septembre"
   | 10 -> "octobre"
   | 11 -> "novembre"
-  | 12 -> "décembre"
+  | 12 -> "dÃ©cembre"
   | _ -> invalid_arg "string_of_mois" ]
 ;
 

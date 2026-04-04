@@ -54,12 +54,12 @@ value titres xd = do {
   texte_titre xd "Date titre" "Date";
   texte_titre xd "Nature titre" "Nature";
   texte_titre xd "Poste titre" "P";
-  texte_titre xd "Libelle titre" "Libellé";
-  texte_titre xd "Debit titre" "Débit";
-  texte_titre xd "Credit titre" "Crédit";
+  texte_titre xd "Libelle titre" "LibellÃ©";
+  texte_titre xd "Debit titre" "DÃ©bit";
+  texte_titre xd "Credit titre" "CrÃ©dit";
   texte_titre xd "Init Correct titre" "Correct : ";
   texte_titre xd "Correct titre" "Correct : ";
-  texte_titre xd "PT Question titre" "Choisissez un type de sélection";
+  texte_titre xd "PT Question titre" "Choisissez un type de sÃ©lection";
   texte_titre xd "Modifier titre" "Modifier : ";
   texte_titre xd "Supprimer titre" "Supprimer : ";
   texte_titre xd "AJOUT titre" "AJOUT/MODIF";
@@ -67,8 +67,8 @@ value titres xd = do {
   texte_titre xd "TRANSF titre" "TRANSFERER";
   texte_titre xd "Liste mois titre" "MOIS";
   texte_titre xd "Ajouter mois question titre"
-    "Création d'un nouveau mois ?";
-  texte_titre xd "SOLDE REDUIT titre" "SOLDE RÉDUIT";
+    "CrÃ©ation d'un nouveau mois ?";
+  texte_titre xd "SOLDE REDUIT titre" "SOLDE RÃ‰DUIT";
   texte_titre xd "SG CC titre" "COMPTE COURANT";
   texte_titre xd "SG CS titre" "COMPTES SPECIAUX";
   texte_titre xd "REPART MOIS titre" "REPARTITION";
@@ -76,11 +76,11 @@ value titres xd = do {
   texte_titre xd "INFO POSTES titre" "POSTES";
   texte_titre xd "INFO CARTES titre" "LISTE DES CARTES";
   texte_titre xd "INFO COMPTES titre" "COMPTES";
-  texte_titre xd "MAJ POSTES titre" "MISE À JOUR DES POSTES";
-  texte_titre xd "MAJP debit titre" "Débit";
-  texte_titre xd "MAJP credit titre" "Crédit";
-  texte_titre xd "MAJ CARTES titre" "MISE À JOUR DES CARTES";
-  texte_titre xd "MAJ COMPTES titre" "M.À.J. COMPTES";
+  texte_titre xd "MAJ POSTES titre" "MISE Ã€ JOUR DES POSTES";
+  texte_titre xd "MAJP debit titre" "DÃ©bit";
+  texte_titre xd "MAJP credit titre" "CrÃ©dit";
+  texte_titre xd "MAJ CARTES titre" "MISE Ã€ JOUR DES CARTES";
+  texte_titre xd "MAJ COMPTES titre" "M.Ã€.J. COMPTES";
   texte_titre xd "IMPR EFFACE titre" "Impression";
   texte_titre xd "NM Auto titre" "Vous avez des virements automatiques";
   texte_titre xd "NM Selection titre" "Selection : ";
@@ -90,34 +90,34 @@ value titres xd = do {
   texte_titre xd "PT Date titre" "Date";
   texte_titre xd "PT Nature titre" "Nature";
   texte_titre xd "PT Poste titre" "P";
-  texte_titre xd "PT Libelle titre" "Libellé";
-  texte_titre xd "PT Debit titre" "Débit";
-  texte_titre xd "PT Credit titre" "Crédit";
+  texte_titre xd "PT Libelle titre" "LibellÃ©";
+  texte_titre xd "PT Debit titre" "DÃ©bit";
+  texte_titre xd "PT Credit titre" "CrÃ©dit";
   texte_titre xd "BI Depenses titre" "D E P E N S E S";
   texte_titre xd "BI Recettes titre" "R E C E T T E S";
-  texte_titre xd "MAJ AUTO titre" "MISE À JOUR DES VIREMENTS AUTOMATIQUES";
+  texte_titre xd "MAJ AUTO titre" "MISE Ã€ JOUR DES VIREMENTS AUTOMATIQUES";
   texte_titre xd "MA Selection titre" "S";
   texte_titre xd "MA Nombre titre" "Nbr";
   texte_titre xd "MA Dernier titre" "Der";
   texte_titre xd "MA Jour titre" "Jr";
   texte_titre xd "MA Poste titre" "P";
-  texte_titre xd "MA Libelle titre" "Libellé";
-  texte_titre xd "MA Debit titre" "Débit";
-  texte_titre xd "MA Credit titre" "Crédit";
+  texte_titre xd "MA Libelle titre" "LibellÃ©";
+  texte_titre xd "MA Debit titre" "DÃ©bit";
+  texte_titre xd "MA Credit titre" "CrÃ©dit";
   texte_titre xd "MA AJOUT titre" "AJOUT/MODIF";
   texte_titre xd "MA MODIF titre" "AJOUT/MODIF";
   texte_titre xd "MA Correct titre" "Correct : ";
   texte_titre xd "MA Supprimer titre" "Supprimer : ";
   texte_titre xd "MA Modifier titre" "Modifier : ";
-  texte_titre xd "VIR AUTO titre" "SÉLECTION DES VIREMENTS AUTOMATIQUES";
+  texte_titre xd "VIR AUTO titre" "SÃ‰LECTION DES VIREMENTS AUTOMATIQUES";
   texte_titre xd "VA Selection titre" "S";
   texte_titre xd "VA Nombre titre" "Nbr";
   texte_titre xd "VA Dernier titre" "Der";
   texte_titre xd "VA Jour titre" "Jr";
   texte_titre xd "VA Poste titre" "P";
-  texte_titre xd "VA Libelle titre" "Libellé";
-  texte_titre xd "VA Debit titre" "Débit";
-  texte_titre xd "VA Credit titre" "Crédit";
+  texte_titre xd "VA Libelle titre" "LibellÃ©";
+  texte_titre xd "VA Debit titre" "DÃ©bit";
+  texte_titre xd "VA Credit titre" "CrÃ©dit";
   texte_titre xd "VA Vir Auto titre" "Virements automatiques : "
 };
 
@@ -304,7 +304,7 @@ value solde_reduit xd = do {
   let en_cours = List.fold_left (fun n (_, d) -> n + d) 0 s.enCours in
   let solde_fictif = s.soldeReel + en_cours in
   term_send twid "\027[H\027[2J\027[?35h";
-  term_send twid "Solde réel     : ";
+  term_send twid "Solde rÃ©el     : ";
   term_send twid (string_of_somme 10 s.soldeReel);
   term_send twid "\n";
   term_send twid "Total en-cours : ";
@@ -318,7 +318,7 @@ value solde_reduit xd = do {
   if s.soldeReel < 0 then
     if not state.decouvert then do {
       let err = rt_widget_named xd "Err" in
-      texte_centre err "Attention, vous êtes en découvert";
+      texte_centre err "Attention, vous Ãªtes en dÃ©couvert";
       rt_map_widget err;
       state.decouvert := True;
       term_send err "\007"

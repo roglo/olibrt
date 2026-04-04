@@ -7,12 +7,12 @@ open RtN;
 
 value image =
   "\
-Retiré    : X
+RetirÃ©    : X
 Date      : %02d/%02d/%02d
 Nature    : %10s
 Poste src : %2s
 Poste dst : %2s
-Libellé   : %20s
+LibellÃ©   : %20s
 Somme     : %10.2f"
 ;
 
@@ -44,7 +44,7 @@ value verif ip = do {
       raise (ErrField "Jour invalide" 0)
     else ();
     if somme = Fempty then
-      raise (ErrField "Renseignez la somme à transférer" 7)
+      raise (ErrField "Renseignez la somme Ã  transfÃ©rer" 7)
     else ();
     match (trouver_poste poste_src, trouver_poste poste_dst) with
     [ ((_, True), (True, _)) -> ()
@@ -183,9 +183,9 @@ and action_correct_non wid = do {
 value action_X wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "Calculatrice"; "Bloc-notes";
-     "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "Calculatrice"; "Bloc-notes";
+     "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "TRANSF");
   rt_map_widget (rt_widget_named xd "NoErr");
   state.keyPressAct := fun _ _ -> ();
@@ -199,9 +199,9 @@ value action wid = do {
   let x = (rt_widget_width mwid - rt_widget_width wid) / 2 in
   let y = (rt_widget_height mwid - rt_widget_height wid) / 2 in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "Calculatrice"; "Bloc-notes";
-     "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "Calculatrice"; "Bloc-notes";
+     "Mise Ã  jour"];
   init_transferer xd;
   rt_move_widget wid (rt_widget_x mwid + x) (rt_widget_y mwid + y);
   rt_map_widget wid;

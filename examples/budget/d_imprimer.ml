@@ -32,7 +32,7 @@ value imprimer_mois () = do {
   printf
     "\
 %s
-|R|  Date  |  Nature  |P       Libellé        |   Débit  |  Crédit  |
+|R|  Date  |  Nature  |P       LibellÃ©        |   DÃ©bit  |  CrÃ©dit  |
 %s
 "
     ligne ligne;
@@ -95,7 +95,7 @@ value imprimer_solde_general () = do {
   printf "\n";
   let txt =
     let tm = Unix.localtime (Unix.time ()) in
-    "SOLDE GÉNÉRAL DU " ^
+    "SOLDE GÃ‰NÃ‰RAL DU " ^
     string_of_date tm.Unix.tm_mday (succ tm.Unix.tm_mon)
       (1900 + tm.Unix.tm_year)
   in
@@ -138,11 +138,11 @@ value imprimer_solde_general () = do {
     printf "\n";
   };
   for i = 3 to List.length s.enCours do { printf "|%27s|%32s|\n" "" "" };
-  printf "| Solde réel   : %-10s |%32s|\n" (string_of_somme 10 s.soldeReel)
+  printf "| Solde rÃ©el   : %-10s |%32s|\n" (string_of_somme 10 s.soldeReel)
     "";
   imprimer_n_fois long_ligne '-';
   printf "\n";
-  printf "|%13sSolde général : %-10s%21s|\n" ""
+  printf "|%13sSolde gÃ©nÃ©ral : %-10s%21s|\n" ""
     (string_of_somme 10 (s.soldeReel + tot)) "";
   imprimer_n_fois long_ligne '-';
   printf "\n";
@@ -243,16 +243,16 @@ value imprimer_bilan () = do {
   printf "%% ";
   printf "%s" (string_of_somme 10 rep.retrait);
   printf " : Retrait%8s|\n" "";
-  printf "|     Non imputé : ";
+  printf "|     Non imputÃ© : ";
   printf "%s" (string_of_somme 10 rep.nonImpDeb);
   printf "%9s|%9s" "" "";
   printf "%s" (string_of_somme 10 rep.nonImpCre);
-  printf " : Non imputé%5s|\n" "";
+  printf " : Non imputÃ©%5s|\n" "";
   let total_dep = report_deb + rep.totalDep + rep.nonImpDeb in
   let total_rec = report_cre + rep.totalRec + rep.nonImpCre in
   printf "|";
   if total_dep <= total_rec then do {
-    printf "Solde créditeur : ";
+    printf "Solde crÃ©diteur : ";
     printf "%s" (string_of_somme 10 (total_rec - total_dep))
       }
   else printf "%28s" "";
@@ -260,7 +260,7 @@ value imprimer_bilan () = do {
   if total_rec < total_dep then do {
     printf "%8s" "";
     printf "%s" (string_of_somme 10 (total_dep - total_rec));
-    printf " : Solde débiteur"
+    printf " : Solde dÃ©biteur"
   }
   else printf "%35s" "";
   printf " |\n";

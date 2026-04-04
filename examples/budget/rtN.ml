@@ -275,7 +275,10 @@ value rt_map_widget wid =
 ;
 value rt_move_widget = Rt.rt_move_widget;
 value rt_open = Rt.rt_initialize;
-value rt_root_widget (xd : xdata) = xd;
+value rt_root_widget (xd : xdata) = do {
+  Rt.rt_select_char_set xd Rt.Utf_8;
+  xd
+};
 value rt_set_cut_buffer wid str =
   Rt.rt_set_cut_buffer (Rt.xdata_of_widget wid) str
 ;

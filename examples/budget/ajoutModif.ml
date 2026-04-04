@@ -7,13 +7,13 @@ open RtN;
 
 value image =
   "\
-RetirÈ  : %1s
+Retir√©  : %1s
 Date    : %02d/%02d/%02d
 Nature  : %10s
 Poste   : %2s
-LibellÈ : %20s
-DÈbit   : %10.2f
-CrÈdit  : %10.2f"
+Libell√© : %20s
+D√©bit   : %10.2f
+Cr√©dit  : %10.2f"
 ;
 
 value verif ip = do {
@@ -46,12 +46,12 @@ value verif ip = do {
     if debit = Fempty && credit = Fempty ||
        debit <> Fempty && credit <> Fempty
     then
-      raise (ErrField "Renseignez dÈbit ou crÈdit" 7)
+      raise (ErrField "Renseignez d√©bit ou cr√©dit" 7)
     else ();
     match (trouver_poste poste, (debit, credit)) with
     [ ((True, _), (_, Fempty)) | ((_, True), (Fempty, _)) -> ()
     | ((False, False), _) -> raise (ErrField "Poste inexistant" 5)
-    | _ -> raise (ErrField "Poste dans la mauvaise catÈgorie" 5) ];
+    | _ -> raise (ErrField "Poste dans la mauvaise cat√©gorie" 5) ];
     term_send twid "\027[?35h\027[?7l";
     rt_map_alert (rt_widget_named xd "Correct alert");
     True

@@ -1,5 +1,5 @@
 (* $Id: d_comptesSpe.ml,v 1.6 2006/06/07 14:53:39 deraugla Exp $ *)
-(* inutilisé bicoz problème conceptuel... *)
+(* inutilisÃ© bicoz problÃ¨me conceptuel... *)
 
 open State;
 open File;
@@ -8,8 +8,8 @@ open RtN;
 value modif_image =
   "\
 Code         : %2s
-Libellé      : %15s
-Quantité     : %12.5f
+LibellÃ©      : %15s
+QuantitÃ©     : %12.5f
 Cours        : %12.2f
 Valorisation : %12.2f"
 ;
@@ -267,7 +267,7 @@ value action_modifier wid = do {
 value action_quitter wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   state.buttonAct := fun _ _ -> ();
   List.iter
     (fun ligne ->
@@ -294,7 +294,7 @@ value action_X wid = do {
 value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "CPTE SPE");
   rt_map_widget (rt_widget_named xd "CS Cptes Spe action");
   state.cptLignes :=

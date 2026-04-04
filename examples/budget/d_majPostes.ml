@@ -70,7 +70,7 @@ value get_list ip debut fin plist =
           for j = 0 to String.length nom - 1 do {
             match nom.[j] with
             [ 'A'..'Z' | ' ' -> ()
-            | _ -> raise (ErrField "Caractère invalide" (2 * i)) ];
+            | _ -> raise (ErrField "CaractÃ¨re invalide" (2 * i)) ];
           };
           if List.mem nom plist then
             raise (ErrField "Code poste en double" (2 * i))
@@ -80,7 +80,7 @@ value get_list ip debut fin plist =
             [ Fstring lib -> lib
             | _ ->
                 raise
-                  (ErrField "Il manque le libellé du poste" (2 * i + 1)) ]
+                  (ErrField "Il manque le libellÃ© du poste" (2 * i + 1)) ]
           in
           let (l, plist) = iterate [nom :: plist] (succ i) in
           ([Some (nom, lib) :: l], plist)
@@ -133,9 +133,9 @@ and action_correct_oui wid = do {
   rt_unmap_widget (rt_widget_named xd "MAJ POSTES");
   state.keyPressAct := fun _ _ -> ();
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Postes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Postes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   maj_budget (budget.postesDebit, budget.postesCredit)
     (postes_debit, postes_credit);
   budget.postesDebit :=
@@ -212,9 +212,9 @@ and init_maj_postes xd pdeb pcre = do {
 value action_X wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Postes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Postes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "NoErr");
   rt_unmap_widget (rt_widget_named xd "MAJ POSTES");
   state.action := Rien;
@@ -228,9 +228,9 @@ value action wid = do {
   let x = (rt_widget_width mwid - rt_widget_width wid) / 2 in
   let y = (rt_widget_height mwid - rt_widget_height wid) / 2 in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Postes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Postes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   init_maj_postes xd budget.postesDebit budget.postesCredit;
   rt_move_widget wid (rt_widget_x mwid + x) (rt_widget_y mwid + y);
   rt_map_widget wid;

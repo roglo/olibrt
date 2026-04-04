@@ -175,7 +175,7 @@ value init_pointage xd = do {
         clist;
       term_send twid "Autre que carte\n"
     } ];
-  term_send twid "Tout sélectionner\n";
+  term_send twid "Tout sÃ©lectionner\n";
   term_send twid "Quitter";
   state.buttonAct :=
     Action.button_select xd ["PT Question term"] lignes (fun _ -> 0)

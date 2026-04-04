@@ -12,7 +12,7 @@ value initialisation_pic =
 
 Entrez le premier mois
 
-  mois/année : %02d/%02d%02d"
+  mois/annÃ©e : %02d/%02d%02d"
 ;
 
 value rec verif_init ip = do {

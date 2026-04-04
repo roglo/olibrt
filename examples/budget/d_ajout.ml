@@ -68,9 +68,9 @@ and action_correct_non wid = do {
 value action_X wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "Calculatrice"; "Bloc-notes";
-     "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "Calculatrice"; "Bloc-notes";
+     "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "AJOUT");
   rt_map_widget (rt_widget_named xd "NoErr");
   state.keyPressAct := fun _ _ -> ();
@@ -84,9 +84,9 @@ value action wid = do {
   let x = (rt_widget_width mwid - rt_widget_width wid) / 2 in
   let y = (rt_widget_height mwid - rt_widget_height wid) / 2 in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "Calculatrice"; "Bloc-notes";
-     "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "Calculatrice"; "Bloc-notes";
+     "Mise Ã  jour"];
   init_ajouter xd;
   rt_move_widget wid (rt_widget_x mwid + x) (rt_widget_y mwid + y);
   rt_map_widget wid;

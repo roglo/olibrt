@@ -262,8 +262,8 @@ value wdesc =
             button_desc [] ("Informations", None)
               (Action.popup "Informations popup"));
            (FIXSZ,
-            button_desc [] ("Mise à jour", None)
-              (Action.popup "Mise à jour popup"))])
+            button_desc [] ("Mise Ã  jour", None)
+              (Action.popup "Mise Ã  jour popup"))])
          Action.no_pack);
       (INCSZ,
        pack_desc [BandAtt 0]

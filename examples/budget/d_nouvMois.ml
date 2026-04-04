@@ -92,7 +92,7 @@ value message_efface xd = do {
   term_send twid (capitalize (string_of_mois eff.mois));
   term_send twid " ";
   term_send twid (string_of_int eff.annee);
-  term_send twid "\nva être effacé";
+  term_send twid "\nva Ãªtre effacÃ©";
   Action.place_transient wid;
   rt_map_alert wid
 };

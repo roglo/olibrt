@@ -25,7 +25,7 @@ value get_list ip debut fin plist =
             [ Fstring lib -> lib
             | _ ->
                 raise
-                  (ErrField "Il manque le libellé de la carte" (2 * i + 1)) ]
+                  (ErrField "Il manque le libellÃ© de la carte" (2 * i + 1)) ]
           in
           let (l, plist) = iterate [nom :: plist] (succ i) in
           ([(nom, lib) :: l], plist)
@@ -70,9 +70,9 @@ and action_correct_oui wid = do {
   rt_unmap_widget (rt_widget_named xd "MAJ CARTES");
   state.keyPressAct := fun _ _ -> ();
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Cartes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Cartes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   budget.cartes := cartes;
   modif xd;
   state.action := Rien;
@@ -112,9 +112,9 @@ and init_maj_cartes xd cartes = do {
 value action_X wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Cartes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Cartes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "NoErr");
   rt_unmap_widget (rt_widget_named xd "MAJ CARTES");
   state.action := Rien;
@@ -128,9 +128,9 @@ value action wid = do {
   let x = (rt_widget_width mwid - rt_widget_width wid) / 2 in
   let y = (rt_widget_height mwid - rt_widget_height wid) / 2 in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Cartes"; "Calculatrice";
-     "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Cartes"; "Calculatrice";
+     "Bloc-notes"; "Mise Ã  jour"];
   init_maj_cartes xd budget.cartes;
   rt_move_widget wid (rt_widget_x mwid + x) (rt_widget_y mwid + y);
   rt_map_widget wid;

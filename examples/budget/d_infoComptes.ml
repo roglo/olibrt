@@ -34,7 +34,7 @@ value action wid =
   with
   [ [] -> do {
       let err = rt_widget_named xd "Err" in
-      Show.texte_centre err "Pas de comptes spéciaux";
+      Show.texte_centre err "Pas de comptes spÃ©ciaux";
       rt_map_widget err
     }
   | plist -> do {

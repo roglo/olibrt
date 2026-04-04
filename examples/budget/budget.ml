@@ -48,7 +48,7 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   let _ = rt_create_popup_widget wid C_popup.informations_wdesc in
   let _ = rt_create_popup_widget wid C_popup.mise_a_jour_wdesc in
   let _ =
-    rt_create_transient_widget wid "Choisissez un type de sélection"
+    rt_create_transient_widget wid "Choisissez un type de sÃ©lection"
       (Some (fun _ -> B_pointage.action_quit xd)) B_pointage.question_wdesc
   in
   let _ =
@@ -65,11 +65,11 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
     rt_create_transient_widget wid "MOIS" (Some no_del) D_listeMois.wdesc
   in
   let _ =
-    rt_create_transient_widget wid "Création d'un nouveau mois ?"
+    rt_create_transient_widget wid "CrÃ©ation d'un nouveau mois ?"
       (Some no_del) D_nouvMois.question_wdesc
   in
   let _ =
-    rt_create_transient_widget wid "SOLDE RÉDUIT" (Some no_del)
+    rt_create_transient_widget wid "SOLDE RÃ‰DUIT" (Some no_del)
       D_soldeRed.wdesc
   in
   let _ =
@@ -92,15 +92,15 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
       D_infoComptes.wdesc
   in
   let _ =
-    rt_create_transient_widget wid "MISE À JOUR DES POSTES"
+    rt_create_transient_widget wid "MISE Ã€ JOUR DES POSTES"
       (Some D_majPostes.action_X) D_majPostes.wdesc
   in
   let _ =
-    rt_create_transient_widget wid "MISE À JOUR DES CARTES" (Some no_del)
+    rt_create_transient_widget wid "MISE Ã€ JOUR DES CARTES" (Some no_del)
       D_majCartes.wdesc
   in
   let _ =
-    rt_create_transient_widget wid "M.À.J. COMPTES" (Some no_del)
+    rt_create_transient_widget wid "M.Ã€.J. COMPTES" (Some no_del)
       D_majComptes.wdesc
   in
   let _ =
@@ -121,7 +121,7 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   in
   let ind = List.length mois.val.lignes - 1 in
   let (nlin, _) = term_get_params (rt_widget_named xd "Libelle term") in
-  prerr_string "Lecture données... ";
+  prerr_string "Lecture donnÃ©es... ";
   flush Pervasives.stderr;
   charger_fichier ();
   prerr_string "ok\n";

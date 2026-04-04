@@ -18,7 +18,7 @@ value init_solde_general xd = do {
   term_send twid3 "\027[2J\027[H\027[?35h";
   let tm = Unix.localtime (Unix.time ()) in
   Show.texte_centre (rt_widget_named xd "SG titre")
-    ("SOLDE GÉNÉRAL DU " ^
+    ("SOLDE GÃ‰NÃ‰RAL DU " ^
      string_of_date tm.Unix.tm_mday (succ tm.Unix.tm_mon)
        (1900 + tm.Unix.tm_year));
   term_send twid1 " Solde banque : ";
@@ -40,7 +40,7 @@ value init_solde_general xd = do {
   for i = List.length s.enCours + 1 to Const.nb_comptes do {
     term_send twid1 "\n";
   };
-  term_send twid1 " Solde réel   : ";
+  term_send twid1 " Solde rÃ©el   : ";
   term_send twid1 (string_of_somme 10 s.soldeReel);
   term_send twid1 "\n";
   let (comptes, tot) =
@@ -72,7 +72,7 @@ value init_solde_general xd = do {
   term_send twid2 "------------\n ";
   term_send twid2 (string_of_somme 10 tot);
   term_send twid2 "  Total\n";
-  term_send twid3 "Solde général : ";
+  term_send twid3 "Solde gÃ©nÃ©ral : ";
   term_send twid3 (string_of_somme 10 (s.soldeReel + tot))
 };
 
@@ -81,7 +81,7 @@ value action_quit wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "Traitement"; "Budget"; "INFO Postes";
-     "INFO Cartes"; "INFO Comptes spéciaux"; "Mise à jour"];
+     "INFO Cartes"; "INFO Comptes spÃ©ciaux"; "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "SOLDE GENERAL")
 };
 
@@ -90,7 +90,7 @@ value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "Traitement"; "Budget"; "INFO Postes";
-     "INFO Cartes"; "INFO Comptes spéciaux"; "Mise à jour"];
+     "INFO Cartes"; "INFO Comptes spÃ©ciaux"; "Mise Ã  jour"];
   init_solde_general xd;
   rt_map_widget (rt_widget_named xd "SOLDE GENERAL")
 };

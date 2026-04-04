@@ -65,9 +65,9 @@ value action_quit wid = do {
   let xd = rt_xdata_of_widget wid in
   state.action := Rien;
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Liste mois"; "Nouveau mois"; "Traitement"; "Solde réduit";
-     "Répartition du mois"; "Solde général"; "Bilan de l'année";
-     "INFO Postes"; "INFO Cartes"; "INFO Comptes spéciaux"; "Mise à jour"];
+    ["Liste mois"; "Nouveau mois"; "Traitement"; "Solde rÃ©duit";
+     "RÃ©partition du mois"; "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e";
+     "INFO Postes"; "INFO Cartes"; "INFO Comptes spÃ©ciaux"; "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "REPART POSTE");
   rt_unmap_widget (rt_widget_named xd "RP List");
   state.buttonAct := fun _ _ -> ()
@@ -101,10 +101,10 @@ value action wid =
       in
       let y = (rt_widget_height mwid - height) / 2 in
       List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-        ["Liste mois"; "Nouveau mois"; "Traitement"; "Solde réduit";
-         "Répartition du mois"; "Solde général"; "Bilan de l'année";
-         "INFO Postes"; "INFO Cartes"; "INFO Comptes spéciaux";
-         "Mise à jour"];
+        ["Liste mois"; "Nouveau mois"; "Traitement"; "Solde rÃ©duit";
+         "RÃ©partition du mois"; "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e";
+         "INFO Postes"; "INFO Cartes"; "INFO Comptes spÃ©ciaux";
+         "Mise Ã  jour"];
       term_send twid "\027[2J\027[H\027[?35h";
       List.iter
 	(fun (nom, lib) -> do { term_send twid lib; term_send twid "\n" })

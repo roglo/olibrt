@@ -104,9 +104,9 @@ and action_correct_oui wid = do {
   rt_unmap_widget (rt_widget_named xd "MAJ COMPTES");
   state.keyPressAct := fun _ _ -> ();
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Comptes spéciaux";
-     "Calculatrice"; "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Comptes spÃ©ciaux";
+     "Calculatrice"; "Bloc-notes"; "Mise Ã  jour"];
   maj_budget comptes;
   budget.comptes :=
     let rec glip =
@@ -160,9 +160,9 @@ and init_maj_comptes xd comptes = do {
 value action_X wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Comptes spéciaux";
-     "Calculatrice"; "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Comptes spÃ©ciaux";
+     "Calculatrice"; "Bloc-notes"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "NoErr");
   rt_unmap_widget (rt_widget_named xd "MAJ COMPTES");
   state.action := Rien;
@@ -185,9 +185,9 @@ value action wid = do {
   let x = (rt_widget_width mwid - width) / 2 in
   let y = (rt_widget_height mwid - height) / 2 in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Nouveau mois"; "Quitter"; "Traitement"; "Répartition par poste";
-     "Solde général"; "Bilan de l'année"; "INFO Comptes spéciaux";
-     "Calculatrice"; "Bloc-notes"; "Mise à jour"];
+    ["Nouveau mois"; "Quitter"; "Traitement"; "RÃ©partition par poste";
+     "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e"; "INFO Comptes spÃ©ciaux";
+     "Calculatrice"; "Bloc-notes"; "Mise Ã  jour"];
   init_maj_comptes xd budget.comptes;
   rt_move_widget wid (rt_widget_x mwid + x) (rt_widget_y mwid + y);
   rt_map_widget wid;

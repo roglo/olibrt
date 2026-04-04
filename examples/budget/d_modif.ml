@@ -105,7 +105,7 @@ and boucle_modifier xd =
   else do {
     rt_unmap_widget wid;
     List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-      ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+      ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
     state.keyPressAct := fun _ _ -> ()
   }
 ;
@@ -132,7 +132,7 @@ value action_fin wid = do {
 value action_annule wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "NoErr");
   state.buttonAct := fun _ _ -> ();
   List.iter
@@ -167,7 +167,7 @@ value select_ligne xd ligne = do {
 value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
-    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise à jour"];
+    ["Fichier"; "Traitement"; "Budget"; "Informations"; "Mise Ã  jour"];
   rt_map_widget (rt_widget_named xd "Modifier action");
   state.buttonAct :=
     Action.button_select xd

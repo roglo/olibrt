@@ -56,7 +56,7 @@ value traitement_wdesc =
       (FIXSZ,
        button_desc [] ("Supprimer", None) (Action.button action_supprimer));
       (FIXSZ,
-       button_desc [] ("Transférer", None)
+       button_desc [] ("TransfÃ©rer", None)
          (Action.button action_transferer))])
     Action.no_pack
 ;
@@ -65,19 +65,19 @@ value budget_wdesc =
   pack_desc [NameAtt "Budget popup"]
     (DIRy,
      [(FIXSZ,
-       button_desc [] ("Solde réduit", None)
+       button_desc [] ("Solde rÃ©duit", None)
          (Action.button D_soldeRed.action));
       (FIXSZ,
-       button_desc [] ("Répartition du mois", None)
+       button_desc [] ("RÃ©partition du mois", None)
          (Action.button D_repartMois.action));
       (FIXSZ,
-       button_desc [] ("Répartition par poste", None)
+       button_desc [] ("RÃ©partition par poste", None)
          (Action.button D_repartPoste.action));
       (FIXSZ,
-       button_desc [] ("Solde général", None)
+       button_desc [] ("Solde gÃ©nÃ©ral", None)
          (Action.button D_soldeGen.action));
       (FIXSZ,
-       button_desc [] ("Bilan de l'année", None)
+       button_desc [] ("Bilan de l'annÃ©e", None)
          (Action.button D_bilan.action))])
     Action.no_pack
 ;
@@ -92,8 +92,8 @@ value informations_wdesc =
        button_desc [NameAtt "INFO Cartes"] ("Cartes", None)
          (Action.button D_infoCartes.action));
       (FIXSZ,
-       button_desc [NameAtt "INFO Comptes spéciaux"]
-         ("Comptes spéciaux", None) (Action.button D_infoComptes.action));
+       button_desc [NameAtt "INFO Comptes spÃ©ciaux"]
+         ("Comptes spÃ©ciaux", None) (Action.button D_infoComptes.action));
       (FIXSZ,
        button_desc [] ("Calculatrice", None)
          (Action.button D_calculat.action));
@@ -104,7 +104,7 @@ value informations_wdesc =
 ;
 
 value mise_a_jour_wdesc =
-  pack_desc [NameAtt "Mise à jour popup"]
+  pack_desc [NameAtt "Mise Ã  jour popup"]
     (DIRy,
      [(FIXSZ,
        button_desc [NameAtt "MAJ Postes"] ("Postes", None)
@@ -113,8 +113,8 @@ value mise_a_jour_wdesc =
        button_desc [NameAtt "MAJ Cartes"] ("Cartes", None)
          (Action.button D_majCartes.action));
       (FIXSZ,
-       button_desc [NameAtt "MAJ Comptes spéciaux"]
-         ("Comptes spéciaux", None) (Action.button D_majComptes.action));
+       button_desc [NameAtt "MAJ Comptes spÃ©ciaux"]
+         ("Comptes spÃ©ciaux", None) (Action.button D_majComptes.action));
       (FIXSZ,
        button_desc [] ("Virements automatiques", None)
          (Action.button D_majAuto.action))])

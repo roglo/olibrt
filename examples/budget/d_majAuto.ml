@@ -25,8 +25,8 @@ value action_quit wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_unfreeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "TRAIT Virements automatiques";
-     "Répartition par poste"; "Solde général"; "Bilan de l'année";
-     "Mise à jour"];
+     "RÃ©partition par poste"; "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e";
+     "Mise Ã  jour"];
   rt_unmap_widget (rt_widget_named xd "MAJ AUTO")
 };
 
@@ -35,8 +35,8 @@ value action wid = do {
   let xd = rt_xdata_of_widget wid in
   List.iter (fun n -> rt_freeze_widget (rt_widget_named xd n))
     ["Liste mois"; "Nouveau mois"; "TRAIT Virements automatiques";
-     "Répartition par poste"; "Solde général"; "Bilan de l'année";
-     "Mise à jour"];
+     "RÃ©partition par poste"; "Solde gÃ©nÃ©ral"; "Bilan de l'annÃ©e";
+     "Mise Ã  jour"];
   init_vir_auto xd;
   rt_map_widget (rt_widget_named xd "MAJ AUTO")
 };

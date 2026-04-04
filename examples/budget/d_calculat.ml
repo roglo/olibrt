@@ -59,7 +59,7 @@ value normaliser a =
 value valeur_of_float f v =
   let neg = f < 0.0 in
   let f = abs_float f in
-  if f >= float _MAX then etat.val := Erreur "Dépassement"
+  if f >= float _MAX then etat.val := Erreur "DÃ©passement"
   else if f = 0.0 then do { v.neg := False; v.mant := 0; v.exp := 1 }
   else do {
     let (mant, exp) =
