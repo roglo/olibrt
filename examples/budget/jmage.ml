@@ -155,9 +155,9 @@ value get_field ip n =
 ;
 
 value saved_blit_string src bsrc dst bdst len =
-  try String.blit src bsrc dst bdst len with _ ->
-    String.blit (String.make (Bytes.length dst) '*') 0 dst 0
-      (Bytes.length dst)
+  try String.blit src bsrc (Bytes.of_string dst) bdst len with _ ->
+    String.blit (String.make (String.length dst) '*') 0
+      (Bytes.of_string dst) 0 (String.length dst)
 ;
 
 value format_field fmt typ dec f dst =
@@ -173,7 +173,7 @@ value format_field fmt typ dec f dst =
             if String.length fmt > 1 && fmt.[1] == '0' then '0' else ' '
           in
           let src = string_of_int n in
-          let start = Bytes.length dst - String.length src in
+          let start = String.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := gap };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -199,7 +199,7 @@ value format_field fmt typ dec f dst =
 
 value set_field ip n f = do {
   let (_, fmt, lin, col, typ, dec, dst, twid) = ip.iParr.(n) in
-  format_field fmt typ dec f dst;
+  format_field fmt typ dec f (Bytes.of_string dst);
   term_goto twid lin col;
   term_send twid dst
 };
@@ -243,19 +243,21 @@ value string_of_mois =
 ;
 
 value string_of_date j m a = do {
-  let strj = String.create 2 in
+  let strj = Bytes.create 2 in
   format_field "%02d" 'd' 0 (Fint j) strj;
-  let strm = String.create 2 in
+  let strm = Bytes.create 2 in
   format_field "%02d" 'd' 0 (Fint m) strm;
-  let stra = String.create 4 in
+  let stra = Bytes.create 4 in
   format_field "%4d" 'd' 0 (Fint a) stra;
-  strj ^ "/" ^ strm ^ "/" ^ stra
+  Bytes.to_string strj ^ "/" ^
+  Bytes.to_string strm ^ "/" ^
+  Bytes.to_string stra
 };
 
 value mois_annee_large m a = do {
   let m = string_of_mois m in
   let a = Printf.sprintf "%04d" a in
-  let s = String.create (2 * (String.length m + 1 + String.length a)) in
+  let s = Bytes.create (2 * (String.length m + 1 + String.length a)) in
   for i = 0 to String.length m - 1 do {
     s.[2 * i] := Char.chr (Char.code m.[i] + Char.code 'A' - Char.code 'a');
     s.[2 * i + 1] := ' ';
@@ -266,22 +268,22 @@ value mois_annee_large m a = do {
     s.[2 * String.length m + 2 + 2 * i] := a.[i];
     s.[2 * String.length m + 2 + 2 * i + 1] := ' ';
   };
-  "- " ^ s ^ "-"
+  "- " ^ Bytes.to_string s ^ "-"
 };
 
 value capitalize str =
   match str.[0] with
   [ 'a'..'z' as c -> do {
-      let str2 = String.create (String.length str) in
+      let str2 = Bytes.create (String.length str) in
       String.blit str 0 str2 0 (String.length str);
       str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
-      str2
+      Bytes.to_string str2
     }
   | _ -> str ]
 ;
 
 value large str = do {
-  let str2 = String.make (2 * String.length str - 1) ' ' in
+  let str2 = Bytes.make (2 * String.length str - 1) ' ' in
   for i = 0 to String.length str - 1 do { str2.[2 * i] := str.[i] };
   str2
 };
