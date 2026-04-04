@@ -119,7 +119,7 @@ value button_select xd terms liste sh f =
       | None -> False ]
     then
       match
-        nth (row + sh) liste where nth _xxx1 _xxx2 =
+        nth (row + sh) liste where rec nth _xxx1 _xxx2 =
           match (_xxx1, _xxx2) with
           [ (_, []) -> None
           | (0, [x :: _]) -> Some x
@@ -241,13 +241,13 @@ value input ip hook_key kont_ret =
             if ip.iPind == String.length ip.iPstr then
               next_field ip.iPcur False
             else ()
-          )
+          }
           else ()
     | ksym -> do {
         Printf.printf "<0x%x>" (int_of_keysym ksym);
         flush Pervasives.stdout
-      ) ]
-  )
+      } ]
+  }
 ;
 
 value filler = (INCSZ, pack_desc [BandAtt 0] (DIRx, []) no_pack);

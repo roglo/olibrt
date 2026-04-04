@@ -354,9 +354,9 @@ value recopier_fichier () =
   match try Some (open_in source.val) with _ -> None with
   [ Some ic -> do {
       let oc = open_out (source.val ^ "~") in
-      let buf = String.make 512 ' ' in
+      let buf = Bytes.create 512 in
       let rec copy () =
-        let len = input ic buf 0 (String.length buf) in
+        let len = input ic buf 0 (Bytes.length buf) in
         if len > 0 then do { output oc buf 0 len; copy () } else ()
       in
       copy ();
