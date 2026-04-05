@@ -43,7 +43,7 @@ oldall::
 # $Id: Makefile,v 1.6 2010/11/17 17:28:41 deraugla Exp $
 
 TARGET=$(ARCH)/vie.out
-ZOFILES=vie.cmo run.cmo
+ZOFILES=fvie.cmo vie.cmo run.cmo
 OFILES=fvie.o
 XLIB=$(TOP)/Xlib/$(ARCH)/libx.a
 
