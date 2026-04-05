@@ -26,9 +26,19 @@ Rt.term_font.(1) := "-*-courier-bold-r-*";
 Rt.term_font.(2) := "-*-courier-medium-o-*";
 Rt.term_font.(3) := "-*-courier-bold-o-*";
 
+Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
+Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
+Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
+Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
+Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
+Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
+
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 
 value budget_prog xd = do {
+Printf.eprintf "if errors in loading fonts, do\n";
+Printf.eprintf "  sudo apt install xfonts-terminus\n";
+Printf.eprintf "  xset fp rehash\n";
 Printf.eprintf "screen_width %d\n" (RtN.screen_width xd);
 Printf.eprintf "screen_width_mm %d\n" (RtN.screen_width_mm xd);
 Printf.eprintf "get_dpi %g\n" (get_dpi xd);
