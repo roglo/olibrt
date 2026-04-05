@@ -1,0 +1,42 @@
+# $Id: help.txt,v 1.6 2005/10/10 19:30:17 ddr Exp $
+
+                    SOKOBAN
+
+[
+en:     Commands:
+    
+    \tq: quit
+    \th: help
+    \tp: previous level
+    \tn: next level
+    \tg: go to level
+    \tu: undo
+    \tr: redo
+    \tj: jump to some move
+    \tR: restart level
+    \tL: load solution (only at level begin)
+    \tB: toggle display blocked
+    \tC: complete from solution
+    \tO: optimize next moves
+    \t`: move automatically an object
+    \tarrows: move
+    \tmouse: move automatically
+fr:     Commandes:
+    
+    \tq: quitter
+    \th: aide
+    \tp: niveau précédent
+    \tn: niveau suivant
+    \tg: aller au niveau
+    \tu: défaire
+    \tr: refaire
+    \tj: aller à un certain coup
+    \tR: redémarrer niveau
+    \tL: charger solution (si début du niveau)
+    \tB: afficher/ne pas afficher blocages
+    \tC: compléter à partir de la solution
+    \tO: optimiser les coups suivants
+    \t`: pousser automatiquement un objet
+    \tflèches: déplacer
+    \tsouris: déplacer automatiquement
+]

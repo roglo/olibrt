@@ -1,3 +1,5 @@
 *.cm[io]
 *.bak
+*.out
+*.mm
 TAGS
