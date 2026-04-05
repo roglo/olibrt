@@ -211,8 +211,15 @@ value select_pattern (gm, n) =
     | C'GrayP -> 6 ]
   in
   match gm.patt with
-  [ C'Pattern patt -> rt_select_pattern patt.(i0) (0, 0)
-  | C'Color col -> rt_select_color col.(i0) ]
+  [ C'Pattern patt ->
+let _ = do { Printf.eprintf "select_pattern patt %d i0 %d\n" (Array.length patt) i0; flush stderr } in
+      rt_select_pattern patt.(i0) (0, 0)
+  | C'Color col ->
+let _ = do { Printf.eprintf "select_pattern col %d i0 %d\n" (Array.length col) i0; flush stderr } in
+let r =
+      rt_select_color col.(i0)
+in
+do { Printf.eprintf "ok\n"; flush stderr; r } ]
 ;
 
 value patt_init xd =
@@ -260,23 +267,29 @@ and (tab_colors, ncolors) =
 value gW = leftB + w * sZ + rightB and gH = upperB + h * sZ + lowerB;
 
 value clear_square gm drw x y = do {
+let _ = do { Printf.eprintf "call select_pattern 1\n"; flush stderr } in
   select_pattern (gm, C'WhiteP);
   rt_fill_rectangle drw (x * sZ + leftB, y * sZ + upperB, sZ, sZ)
 }
 and draw_square gm drw x y k = do {
+let _ = do { Printf.eprintf "call select_pattern 2 k=%d\n" k; flush stderr } in
   select_pattern (gm, tab_colors (k - 1));
+let _ = do { Printf.eprintf "call select_pattern 2 ok\n"; flush stderr } in
   rt_fill_rectangle drw
     (x * sZ + leftB + 1, y * sZ + upperB + 1, sZ - 1, sZ - 1);
+let _ = do { Printf.eprintf "call select_pattern 3\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_draw_rectangle drw (x * sZ + leftB, y * sZ + upperB, sZ - 1, sZ - 1)
 }
 and draw_score gm drw = do {
+let _ = do { Printf.eprintf "call select_pattern 4\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_erase_draw_string drw (leftB + sZ / 3, 25)
     (if column_wizard.val then "score <" ^ string_of_int gm.score ^ ">   "
      else "score " ^ string_of_int gm.score ^ "   ")
 }
 and draw_level gm drw = do {
+let _ = do { Printf.eprintf "call select_pattern 5\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_erase_draw_string drw (gW - rightB - sZ / 3 - 50, 25)
     ("level " ^
@@ -284,6 +297,7 @@ and draw_level gm drw = do {
       (if lev < 10 then " " else "") ^ string_of_int lev))
 }
 and draw_state gm drw = do {
+let _ = do { Printf.eprintf "call select_pattern 6\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_erase_draw_string drw (gW - rightB - sZ / 3 - 70, upperB - 15)
     (match gm.state with
@@ -294,6 +308,7 @@ and draw_state gm drw = do {
 and draw_player_score gm1 gm drw = do {
   let s = "     " ^ string_of_int gm1.score in
   let s = String.sub s (String.length s - 6) 6 in
+let _ = do { Printf.eprintf "call select_pattern 7\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_erase_draw_string drw (gW - 40, upperB + 20 + gm1.pint * 20) s
 }
@@ -334,10 +349,12 @@ value set_gm_timeout gd gm wait_time = do {
 and reset_gm_timeout gd gm = do { gm.timeout := None0; gen_timeout gd };
 
 value draw_players gd gm drw = do {
+let _ = do { Printf.eprintf "call select_pattern 8\n"; flush stderr } in
   select_pattern (gm, C'WhiteP);
   rt_fill_rectangle drw (gW - rightB + 10, upperB, 0, 0);
   List.iter
     (fun (gm1, _) -> do {
+let _ = do { Printf.eprintf "call select_pattern 9\n"; flush stderr } in
        select_pattern (gm, C'BlackP);
        rt_erase_draw_string drw
          (gW - rightB + 15, upperB + 20 + gm1.pint * 20)
@@ -383,6 +400,7 @@ and explose gm drw = do {
 and explosive gm drw x y = do {
   gm.mark.(x).(y) := True;
   let a = sZ / 3 in
+let _ = do { Printf.eprintf "call select_pattern 10\n"; flush stderr } in
   select_pattern (gm, C'WhiteP);
   rt_fill_rectangle drw
     (x * sZ + leftB + a, y * sZ + upperB + a, sZ - 2 * a, sZ - 2 * a)
@@ -443,6 +461,7 @@ and pause gd gm drw = do {
   gm.time_beginning_of_level := gm.time_beginning_of_level - t;
   reset_gm_timeout gd gm;
   if not column_wizard.val then do {
+let _ = do { Printf.eprintf "call select_pattern 11\n"; flush stderr } in
     select_pattern (gm, C'GrayP);
     rt_fill_rectangle drw (leftB, upperB, w * sZ, h * sZ);
     if trace_games.val then do {
@@ -462,6 +481,7 @@ and restart gd gm drw = do {
   gm.time_beginning_of_level := gm.time_beginning_of_level + t;
   set_gm_timeout gd gm (speed_tab gm.level);
   if not column_wizard.val then do {
+let _ = do { Printf.eprintf "call select_pattern 12\n"; flush stderr } in
     select_pattern (gm, C'WhiteP);
     rt_fill_rectangle drw (leftB, upperB, w * sZ, h * sZ);
     let draw = draw_square gm drw in
@@ -488,6 +508,7 @@ and restart gd gm drw = do {
 value start_new_game gd gm drw = do {
   Array.iter (fun x -> for i0 = 0 to Array.length x - 1 do { x.(i0) := 0 })
     gm.board;
+let _ = do { Printf.eprintf "call select_pattern 13\n"; flush stderr } in
   select_pattern (gm, C'WhiteP);
   rt_fill_rectangle drw (leftB, upperB, sZ * w, sZ * h);
   gm.level := 0;
@@ -712,6 +733,7 @@ value woops_fun gd _ =
 
 value expose gd gm wid = do {
   let drw = WidgetDr wid in
+let _ = do { Printf.eprintf "call select_pattern 14\n"; flush stderr } in
   select_pattern (gm, C'BlackP);
   rt_draw_rectangle drw (leftB - 1, upperB - 1, w * sZ + 1, h * sZ + 1);
   draw_score gm drw;
@@ -730,6 +752,7 @@ value expose gd gm wid = do {
     else ()
   }
   else if gm.state = C'Pausing && not column_wizard.val then do {
+let _ = do { Printf.eprintf "call select_pattern 15\n"; flush stderr } in
     select_pattern (gm, C'GrayP);
     rt_fill_rectangle drw (leftB, upperB, w * sZ, h * sZ)
   }
