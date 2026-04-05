@@ -54,7 +54,14 @@ type config =
     board_width : mutable int;
     board_height : mutable int }
 ;
-value square_len = 32;
+value square_len = ref 32;
+
+Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
+Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
+Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
+Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
+Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
+Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
 
 value dsol = ref "usol";
 value file_level n = "screens/screen." ^ string_of_int n;
@@ -353,26 +360,31 @@ value expose_hero conf drw x y width height =
 ;
 
 value xy_of_ij conf brd (i, j) =
-  let x = (conf.board_width - brd.ncol * square_len) / 2 + j * square_len in
+  let x =
+    (conf.board_width - brd.ncol * square_len.val) / 2 + j * square_len.val
+  in
   let y =
-    (conf.board_height - (brd.nlin - 1) * square_len) / 2 + i * square_len
+    (conf.board_height - (brd.nlin - 1) * square_len.val) / 2 +
+     i * square_len.val
   in
   (x, y)
 ;
 
 value ij_of_xy conf brd (x, y) =
   let i =
-    (y - (conf.board_height - (brd.nlin - 1) * square_len) / 2) / square_len
+    (y - (conf.board_height - (brd.nlin - 1) * square_len.val) / 2) /
+    square_len.val
   in
-  let j = (x - (conf.board_width - brd.ncol * square_len) / 2) / square_len in
+  let j = (x - (conf.board_width - brd.ncol * square_len.val) / 2) /
+    square_len.val in
   (i, j)
 ;
 
 value expose_case conf brd wid (i, j) =
   let drw = WidgetDr wid in
   let (x, y) = xy_of_ij conf brd (i, j) in
-  let width = square_len in
-  let height = square_len in
+  let width = square_len.val in
+  let height = square_len.val in
   do {
     if brd.tab.(i).(j) = Wall then do {
       rt_select_color conf.wall_col;
@@ -384,7 +396,7 @@ value expose_case conf brd wid (i, j) =
     else ();
     if i = fst brd.hero && j = snd brd.hero then
       let (x, y) = xy_of_ij conf brd brd.hero in
-      expose_hero conf drw x y square_len square_len
+      expose_hero conf drw x y square_len.val square_len.val
     else ()
   }
 ;
@@ -392,8 +404,8 @@ value expose_case conf brd wid (i, j) =
 value expose_blocked conf brd wid (i, j) =
   let drw = WidgetDr wid in
   let (x, y) = xy_of_ij conf brd (i, j) in
-  let width = square_len in
-  let height = square_len in
+  let width = square_len.val in
+  let height = square_len.val in
   let e = width / 4 in
   let f = height / 4 in
   do {
@@ -406,8 +418,8 @@ value expose_blocked conf brd wid (i, j) =
 
 value erase_case conf brd wid (i, j) =
   let (x, y) = xy_of_ij conf brd (i, j) in
-  let width = square_len in
-  let height = square_len in
+  let width = square_len.val in
+  let height = square_len.val in
   do {
     rt_select_color (rt_white_color conf.xd);
     rt_fill_rectangle (WidgetDr wid) (x, y, width, height)
@@ -1671,8 +1683,8 @@ value action_term conf brd wid _ = ();
 value action_term conf brd wid _ = ();
 
 value make_widget xa xd (gm, lang, disp_block) =
-  let width = square_len * 30 in
-  let height = square_len * 16 in
+  let width = square_len.val * 30 in
+  let height = square_len.val * 16 in
   let conf =
     {xa = xa; xd = xd; wall_col = rt_closest_color xd (128, 0, 128);
      empty_col = rt_closest_color xd (220, 255, 180);
@@ -1755,6 +1767,7 @@ value main dname =
   do {
     Arg.parse speclist anon_fun usage_msg;
     let xd = rt_initialize dname in
+    square_len.val := 2 * square_len.val;
     let xa = rt_args [xd] in
     let (gm, slang, disp_block) = restore_state () in
     let lang = if lang.val = "" then slang else lang.val in
