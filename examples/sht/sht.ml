@@ -7,13 +7,13 @@ open Rt;
 open Sys;
 open Time;
 
-value line_buff = String.create 200 and seed = ref 0;
+value line_buff = Bytes.create 200 and seed = ref 0;
 value input_line ic =
   String.sub line_buff 0
     (input_rec 0 where rec input_rec i =
        match input_char ic with
        [ '\n' -> i
-       | c -> do { String.set line_buff i c; input_rec (succ i) } ])
+       | c -> do { Bytes.set line_buff i c; input_rec (succ i) } ])
 and modify_vect f v =
   let len = Array.length v in
   modify_rec 0 where rec modify_rec i =
@@ -75,7 +75,7 @@ and implode_ascii l =
   implode_rec l 0 where rec implode_rec p0 p1 =
     match (p0, p1) with
     [ ([x :: l], i) -> do {
-        String.set s i (Char.chr x);
+        Bytes.set s i (Char.chr x);
         implode_rec l (succ i)
       }
     | (_, _) -> s ]
@@ -146,14 +146,14 @@ while i.val < Array.length argv do {
   incr i
 };
 
-value buff = String.create 1024;
+value buff = Bytes.create 1024;
 value (wID, hEI, data) = do {
   let ic = open_in cards_file.val in
   let x =
     try do {
       let width = int_of_string (input_line ic)
       and height = int_of_string (input_line ic)
-      and data = Array.create 52 "" in
+      and data = Array.make 52 "" in
       modify_vect
         (fun _ -> do {
            let len = (width + 7) / 8 * height in
@@ -820,8 +820,8 @@ value gen_sht bw dname = do {
     in
     rt_select_color black_col;
     let gm =
-      {xargs = xargs; towers = Array.create 4 []; buffers = Array.create 4 [];
-       columns = Array.create 10 []; wid_list = wid_list; mover = mover;
+      {xargs = xargs; towers = Array.make 4 []; buffers = Array.make 4 [];
+       columns = Array.make 10 []; wid_list = wid_list; mover = mover;
        state = NotStarted; undo = []; redo = []; bp = False; mwid = [];
        xg = 0; yg = 0}
     in
