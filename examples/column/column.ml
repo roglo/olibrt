@@ -1146,7 +1146,7 @@ Printf.eprintf "*** exec_columns 3\n"; flush stderr;
       List.iter
         (fun (gm, _) -> do {
            display_closing_display gm.dname;
-           try rt_end gm; flush stderr } in r.xd with _ -> ()
+           try rt_end gm.xd with _ -> ()
          })
         gd.gwl;
       raise x
