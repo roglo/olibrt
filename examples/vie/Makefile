@@ -31,7 +31,7 @@ LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11
 OLIBDIR=$$(ocamlc -where)
 
 ZDEPFLAGS=-I $(RTDIR)
-ZFLAGS=-I $(RTDIR) -I `camlp5 -where`
+ZFLAGS=-I $(RTDIR) -I `camlp5 -where` -unsafe-string
 CFLAGS=-O -I$(OLIBDIR) -I/usr/X11R6/include
 
 all::
