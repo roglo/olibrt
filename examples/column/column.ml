@@ -677,7 +677,8 @@ value woops_fun gd _ =
   List.iter
     (fun (gm, drw) ->
        match gm.timeout with
-       [ None0 -> ()
+       [ None0 ->
+           ()
        | Some0 timeout ->
            if rt_current_time gd.xargs >= timeout then do {
              if gm.state <> C'Running then failwith "erreur dans woops_fun"
@@ -1002,7 +1003,6 @@ value one_column_continued (dname, pint, gd, xd) pname =
 ;
 
 value stdin_act gd c =
-let _ = do { Printf.eprintf "stdin_act %s\n" c; flush stderr } in
   match c with
   [ "c" -> do {
       print_string "*** available commands in game:";
@@ -1086,11 +1086,9 @@ let _ = do { Printf.eprintf "stdin_act %s\n" c; flush stderr } in
 ;
 
 value stdin_fun gd buff len =
-let _ = do { Printf.eprintf "1/ stdin_fun %d\n" len; flush stderr } in
   let len =
     if len > 0 && String.get buff (len - 1) == '\n' then len - 1 else len
   in
-let _ = do { Printf.eprintf "2/ stdin_fun %d\n" len; flush stderr } in
   match gd.gstate with
   [ GSRunning ->
       for i0 = 0 to len - 1 do {
@@ -1130,11 +1128,12 @@ value columns dnamel = do {
     | _ -> () ]
   and exec_columns gd =
     try do {
-Printf.eprintf "*** 1\n"; flush stderr;
+Printf.eprintf "*** exec_columns 1\n"; flush stderr;
       rt_main_loop gd.xargs;
-Printf.eprintf "*** 2\n"; flush stderr;
+Printf.eprintf "*** exec_columns 2\n"; flush stderr;
       List.iter
         (fun (gm, _) -> do {
+Printf.eprintf "*** exec_columns 3\n"; flush stderr;
            if trace_games.val then display_closing_display gm.dname else ();
            rt_end gm.xd
          })
@@ -1147,7 +1146,7 @@ Printf.eprintf "*** 2\n"; flush stderr;
       List.iter
         (fun (gm, _) -> do {
            display_closing_display gm.dname;
-           try rt_end gm.xd with _ -> ()
+           try rt_end gm; flush stderr } in r.xd with _ -> ()
          })
         gd.gwl;
       raise x
