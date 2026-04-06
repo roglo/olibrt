@@ -716,3 +716,9 @@ value isModifierKey keysym = keysym >= xK_Shift_L && keysym <= xK_Hyper_R;
 value revertToNone = xNone
 and revertToPointerRoot = pointerRoot
 and revertToParent = 2;
+
+(* Xft *)
+
+type xftfont = 'a;
+
+external xftFontOpenName : (display * string) -> xfont = "ML_xftFontOpenName";
