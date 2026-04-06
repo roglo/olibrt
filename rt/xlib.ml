@@ -721,4 +721,4 @@ and revertToParent = 2;
 
 type xftfont = 'a;
 
-external xftFontOpenName : (display * string) -> xfont = "ML_xftFontOpenName";
+external xftFontOpenName : (display * string) -> xftfont = "ML_xftFontOpenName";
