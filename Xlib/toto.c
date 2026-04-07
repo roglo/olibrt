@@ -67,46 +67,6 @@ int get_screen_physical_size(Display *display, int *width_mm, int *height_mm) {
     return 0;
 }
 
-float get_screen_dpi(Display *display) {
-    int event_base, error_base;
-    if (!XRRQueryExtension(display, &event_base, &error_base)) {
-        fprintf(stderr,
-		"XRandR non disponible. Utilisation de 96 DPI par défaut.\n");
-        return 96.0;
-    }
-    Window root = RootWindow(display, 0);
-    XRRScreenResources *resources = XRRGetScreenResources(display, root);
-    if (!resources) {
-      fprintf
-	(stderr,
-	 "Impossible de récupérer les ressources XRandR. \
- Utilisation de 96 DPI.\n");
-        return 96.0;
-    }
-    float dpi = 96.0;
-    for (int i = 0; i < resources->noutput; i++) {
-        XRROutputInfo *output_info =
-	  XRRGetOutputInfo(display, resources, resources->outputs[i]);
-        if (!output_info) continue;
-
-        if (output_info->connection == RR_Connected &&
-	    output_info->mm_width > 0) {
-            XRRCrtcInfo *crtc_info =
-	      XRRGetCrtcInfo(display, resources, output_info->crtc);
-            if (crtc_info && crtc_info->width > 0) {
-                dpi = (crtc_info->width * 25.4) / output_info->mm_width;
-                XRRFreeCrtcInfo(crtc_info);
-                break;
-            }
-            if (crtc_info) XRRFreeCrtcInfo(crtc_info);
-        }
-        XRRFreeOutputInfo(output_info);
-    }
-
-    XRRFreeScreenResources(resources);
-    return dpi;
-}
-
 void main ()
 {
   Display* display;
@@ -123,12 +83,15 @@ void main ()
   display = XOpenDisplay(NULL);
   screen = DefaultScreen(display);
   printf("screen width = %d\n", DisplayWidth(display, screen));
-  printf("screen width mm = %d\n", DisplayWidthMM(display, screen));
-  dpmm = DisplayWidth(display, screen) / DisplayWidthMM(display, screen);
-  printf("dpmm = %g\n", dpmm);
-  printf("get_screen_dpi = %g\n", get_screen_dpi(display));
+  printf("screen width mm = %d (not sure)\n", DisplayWidthMM(display, screen));
   get_screen_physical_size(display, &width_mm, &height_mm);
   printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
+  dpmm =
+    (double)DisplayWidth(display, screen) /
+    (double)DisplayWidthMM(display, screen);
+  printf("dpmm = %g\n", dpmm);
+  dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
+  printf("dpmm better = %g\n", dpmm);
   font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);
   window = XCreateSimpleWindow(display, DefaultRootWindow(display),
