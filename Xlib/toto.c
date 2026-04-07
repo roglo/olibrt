@@ -5,21 +5,6 @@
 #include <fontconfig/fontconfig.h>
 #include <stdio.h>
 
-XftFont* open_xft_font(Display* display, int screen, const char* font_name) {
-    // Charge la police Xft par son nom (ex: "mono:size=12")
-    XftFont* font = XftFontOpenName(display, screen, font_name);
-    if (!font) {
-        fprintf(stderr, "Erreur : Impossible de charger la police '%s'.\n", font_name);
-        // Optionnel : Essayer une police de secours (ex: "fixed:size=12")
-        font = XftFontOpenName(display, screen, "fixed:size=12");
-        if (!font) {
-            fprintf(stderr, "Erreur : Impossible de charger la police de secours.\n");
-            return NULL;
-        }
-    }
-    return font;
-}
-
 void print_font_info(Display* display, XftFont* font) {
     if (!font) {
         printf("Aucune police chargée.\n");
@@ -51,19 +36,25 @@ void print_font_info(Display* display, XftFont* font) {
 
 void main ()
 {
-  Display* display = XOpenDisplay(NULL);  // Supposé déjà ouvert
-  int screen = DefaultScreen(display);
+  Display* display;
+  int screen;
   XftFont* font;
   Window window;
   XftColor color;
   XEvent xev;
   XftDraw *draw;
   XWindowAttributes attrs;
+  float dpmm;
+  int x_pixels;
 
-  font = open_xft_font(display, screen, "mono:size=12");
-  if (font) {
-    print_font_info(display, font);
-  }
+  display = XOpenDisplay(NULL);
+  screen = DefaultScreen(display);
+  printf("screen width = %d\n", DisplayWidth(display, screen));
+  printf("screen width mm = %d\n", DisplayWidthMM(display, screen));
+  dpmm = DisplayWidth(display, screen) / DisplayWidthMM(display, screen);
+  printf("dpmm = %g\n", dpmm);
+  font = XftFontOpenName(display, screen, "mono:size=12");
+  if (font) print_font_info(display, font);
   window = XCreateSimpleWindow(display, DefaultRootWindow(display),
 			       0, 0, 400, 300, 0, 0, 0);
   XSelectInput(display, window, ExposureMask);
