@@ -54,8 +54,27 @@ void main ()
   Display* display = XOpenDisplay(NULL);  // Supposé déjà ouvert
   int screen = DefaultScreen(display);
   XftFont* font = open_xft_font(display, screen, "mono:size=12");
+  Window window =
+    XCreateSimpleWindow(display, DefaultRootWindow(display),
+			0, 0, 400, 300, 0, 0, 0);
+  Pixmap pixmap = XCreatePixmap(display, window, 100, 100, 8);
+  XftColor color;
+  XEvent xev;
+  XftDraw *draw;
+  XWindowAttributes attrs;
+
   if (font) {
     print_font_info(display, font);
+  }
+  XftColorAllocName(display, DefaultVisual(display, 0),
+		    DefaultColormap(display, 0), "white", &color);
+  XMapWindow(display, window);
+  XGetWindowAttributes(display, window, &attrs);
+  draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
+  XftDrawString8(draw, &color, font, 10, 20,
+		 (XftChar8 *)"Bonjour", strlen("Bonjour"));
+  while (1) {
+    XNextEvent(display, &xev);
   }
   XftFontClose(display, font);
 }
