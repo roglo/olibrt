@@ -53,28 +53,33 @@ void main ()
 {
   Display* display = XOpenDisplay(NULL);  // Supposé déjà ouvert
   int screen = DefaultScreen(display);
-  XftFont* font = open_xft_font(display, screen, "mono:size=12");
-  Window window =
-    XCreateSimpleWindow(display, DefaultRootWindow(display),
-			0, 0, 400, 300, 0, 0, 0);
-  Pixmap pixmap = XCreatePixmap(display, window, 100, 100, 8);
+  XftFont* font;
+  Window window;
   XftColor color;
   XEvent xev;
   XftDraw *draw;
   XWindowAttributes attrs;
 
+  font = open_xft_font(display, screen, "mono:size=12");
   if (font) {
     print_font_info(display, font);
   }
-  XftColorAllocName(display, DefaultVisual(display, 0),
-		    DefaultColormap(display, 0), "white", &color);
+  window = XCreateSimpleWindow(display, DefaultRootWindow(display),
+			       0, 0, 400, 300, 0, 0, 0);
+  XSelectInput(display, window, ExposureMask);
   XMapWindow(display, window);
   XGetWindowAttributes(display, window, &attrs);
   draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
-  XftDrawString8(draw, &color, font, 10, 20,
-		 (XftChar8 *)"Bonjour", strlen("Bonjour"));
+  XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
     XNextEvent(display, &xev);
+    if (xev.type == Expose) {
+      if (xev.xexpose.count == 0) {
+	XftDrawString8(draw, &color, font, 10, 20,
+		       (XftChar8 *)"Bonjour", strlen("Bonjour"));
+	XFlush(display);
+      }
+    }
   }
   XftFontClose(display, font);
 }
