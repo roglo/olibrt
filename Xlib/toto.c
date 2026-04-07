@@ -36,35 +36,35 @@ void print_font_info(Display* display, XftFont* font) {
 }
 
 int get_screen_physical_size(Display *display, int *width_mm, int *height_mm) {
-    *width_mm = 0;
-    *height_mm = 0;
-    int event_base, error_base;
-    if (!XRRQueryExtension(display, &event_base, &error_base)) {
-        fprintf(stderr, "XRandR non disponible.\n");
-        return 0;
-    }
-    Window root = RootWindow(display, 0);
-    XRRScreenResources *resources = XRRGetScreenResources(display, root);
-    if (!resources) {
-        fprintf (stderr, "Impossible de récupérer les ressources XRandR.\n");
-        return 0;
-    }
-    for (int i = 0; i < resources->noutput; i++) {
-        XRROutputInfo *output_info =
-	  XRRGetOutputInfo(display, resources, resources->outputs[i]);
-        if (!output_info) continue;
-        if (output_info->connection == RR_Connected &&
-	    output_info->mm_width > 0) {
-            *width_mm = output_info->mm_width;
-            *height_mm = output_info->mm_height;
-            XRRFreeOutputInfo(output_info);
-            XRRFreeScreenResources(resources);
-            return 1;
-        }
-        XRRFreeOutputInfo(output_info);
-    }
-    XRRFreeScreenResources(resources);
+  *width_mm = 0;
+  *height_mm = 0;
+  int event_base, error_base;
+  if (!XRRQueryExtension(display, &event_base, &error_base)) {
+    fprintf(stderr, "XRandR non disponible.\n");
     return 0;
+  }
+  Window root = RootWindow(display, 0);
+  XRRScreenResources *resources = XRRGetScreenResources(display, root);
+  if (!resources) {
+    fprintf (stderr, "Impossible de récupérer les ressources XRandR.\n");
+    return 0;
+  }
+  for (int i = 0; i < resources->noutput; i++) {
+    XRROutputInfo *output_info =
+      XRRGetOutputInfo(display, resources, resources->outputs[i]);
+    if (!output_info) continue;
+    if (output_info->connection == RR_Connected &&
+	output_info->mm_width > 0) {
+      *width_mm = output_info->mm_width;
+      *height_mm = output_info->mm_height;
+      XRRFreeOutputInfo(output_info);
+      XRRFreeScreenResources(resources);
+      return 1;
+    }
+    XRRFreeOutputInfo(output_info);
+  }
+  XRRFreeScreenResources(resources);
+  return 0;
 }
 
 void main ()
