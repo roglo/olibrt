@@ -35,6 +35,38 @@ void print_font_info(Display* display, XftFont* font) {
     }
 }
 
+int get_screen_physical_size(Display *display, int *width_mm, int *height_mm) {
+    *width_mm = 0;
+    *height_mm = 0;
+    int event_base, error_base;
+    if (!XRRQueryExtension(display, &event_base, &error_base)) {
+        fprintf(stderr, "XRandR non disponible.\n");
+        return 0;
+    }
+    Window root = RootWindow(display, 0);
+    XRRScreenResources *resources = XRRGetScreenResources(display, root);
+    if (!resources) {
+        fprintf (stderr, "Impossible de récupérer les ressources XRandR.\n");
+        return 0;
+    }
+    for (int i = 0; i < resources->noutput; i++) {
+        XRROutputInfo *output_info =
+	  XRRGetOutputInfo(display, resources, resources->outputs[i]);
+        if (!output_info) continue;
+        if (output_info->connection == RR_Connected &&
+	    output_info->mm_width > 0) {
+            *width_mm = output_info->mm_width;
+            *height_mm = output_info->mm_height;
+            XRRFreeOutputInfo(output_info);
+            XRRFreeScreenResources(resources);
+            return 1;
+        }
+        XRRFreeOutputInfo(output_info);
+    }
+    XRRFreeScreenResources(resources);
+    return 0;
+}
+
 float get_screen_dpi(Display *display) {
     int event_base, error_base;
     if (!XRRQueryExtension(display, &event_base, &error_base)) {
@@ -86,7 +118,7 @@ void main ()
   XftDraw *draw;
   XWindowAttributes attrs;
   float dpmm;
-  int x_pixels;
+  int x_pixels, width_mm, height_mm;
 
   display = XOpenDisplay(NULL);
   screen = DefaultScreen(display);
@@ -95,6 +127,8 @@ void main ()
   dpmm = DisplayWidth(display, screen) / DisplayWidthMM(display, screen);
   printf("dpmm = %g\n", dpmm);
   printf("get_screen_dpi = %g\n", get_screen_dpi(display));
+  get_screen_physical_size(display, &width_mm, &height_mm);
+  printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
   font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);
   window = XCreateSimpleWindow(display, DefaultRootWindow(display),
