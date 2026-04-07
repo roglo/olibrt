@@ -36,39 +36,41 @@ void print_font_info(Display* display, XftFont* font) {
 }
 
 int get_screen_physical_size(Display *display, int *width_mm, int *height_mm) {
-  int event_base, error_base;
+  int event_base, error_base, r;
+  XRROutputInfo *output_info;
+  XRRScreenResources *resources;
+  Window root;
+  root = RootWindow(display, 0);
   *width_mm = 0;
   *height_mm = 0;
   if (!XRRQueryExtension(display, &event_base, &error_base)) {
-    fprintf(stderr, "XRandR non disponible.\n");
-    return 0;
+    fprintf(stderr, "XRandR not available.\n");
+    r = 0;
   }
   else {
-    Window root = RootWindow(display, 0);
-    XRRScreenResources *resources = XRRGetScreenResources(display, root);
+    resources = XRRGetScreenResources(display, root);
     if (!resources) {
-      fprintf (stderr, "Impossible de récupérer les ressources XRandR.\n");
-      return 0;
+      fprintf (stderr, "Impossible to get XRandR resources.\n");
+      r = 0;
     }
     else {
-      for (int i = 0; i < resources->noutput; i++) {
-        XRROutputInfo *output_info =
-	  XRRGetOutputInfo(display, resources, resources->outputs[i]);
-	if (!output_info) continue;
-	if (output_info->connection == RR_Connected &&
-	    output_info->mm_width > 0) {
-	  *width_mm = output_info->mm_width;
-	  *height_mm = output_info->mm_height;
+      r = 0;
+      for (int i = 0; i < resources->noutput && r == 0; i++) {
+        output_info = XRRGetOutputInfo(display, resources, resources->outputs[i]);
+	if (output_info) {
+	  if (output_info->connection == RR_Connected &&
+	      output_info->mm_width > 0) {
+	    *width_mm = output_info->mm_width;
+	    *height_mm = output_info->mm_height;
+	    r = 1;
+	  }
 	  XRRFreeOutputInfo(output_info);
-	  XRRFreeScreenResources(resources);
-	  return 1;
 	}
-	XRRFreeOutputInfo(output_info);
       }
       XRRFreeScreenResources(resources);
-      return 0;
     }
   }
+  return r;
 }
 
 void main ()
