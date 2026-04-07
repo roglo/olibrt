@@ -95,13 +95,13 @@ void main ()
   dpmm =
     (double)DisplayWidth(display, screen) /
     (double)DisplayWidthMM(display, screen);
-  printf("dpmm = %g\n", dpmm);
+  printf("dpmm = %g (not sure)\n", dpmm);
   dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
-  printf("dpmm better = %g\n", dpmm);
+  printf("dpmm = %g\n", dpmm);
   font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);
   window = XCreateSimpleWindow(display, DefaultRootWindow(display),
-			       0, 0, 400, 300, 0, 0, 0);
+			       0, 0, (int)(200 * dpmm), (int)(150 * dpmm), 0, 0, 0);
   XSelectInput(display, window, ExposureMask);
   XMapWindow(display, window);
   XGetWindowAttributes(display, window, &attrs);
@@ -111,7 +111,7 @@ void main ()
     XNextEvent(display, &xev);
     if (xev.type == Expose) {
       if (xev.xexpose.count == 0) {
-	XftDrawString8(draw, &color, font, 10, 20,
+	XftDrawString8(draw, &color, font, (int)(10 * dpmm), (int)(20 * dpmm),
 		       (XftChar8 *)"Bonjour", strlen("Bonjour"));
 	XFlush(display);
       }
