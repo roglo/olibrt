@@ -35,7 +35,7 @@ void print_font_info(Display* display, XftFont* font) {
     }
 }
 
-int get_screen_physical_size(Display *display, int *width_mm, int *height_mm) {
+int get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
   int event_base, error_base, r;
   XRROutputInfo *output_info;
   XRRScreenResources *resources;
@@ -90,7 +90,7 @@ void main ()
   screen = DefaultScreen(display);
   printf("screen width = %d\n", DisplayWidth(display, screen));
   printf("screen width mm = %d (not sure)\n", DisplayWidthMM(display, screen));
-  get_screen_physical_size(display, &width_mm, &height_mm);
+  get_screen_size_mm(display, &width_mm, &height_mm);
   printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
   dpmm =
     (double)DisplayWidth(display, screen) /
