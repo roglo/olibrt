@@ -100,8 +100,9 @@ void main ()
   printf("dpmm = %g\n", dpmm);
   font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);
-  window = XCreateSimpleWindow(display, DefaultRootWindow(display),
-			       0, 0, (int)(200 * dpmm), (int)(150 * dpmm), 0, 0, 0);
+  window =
+    XCreateSimpleWindow(display, DefaultRootWindow(display),
+			0, 0, (int)(200 * dpmm), (int)(150 * dpmm), 0, 0, 0);
   XSelectInput(display, window, ExposureMask);
   XMapWindow(display, window);
   XGetWindowAttributes(display, window, &attrs);
@@ -119,4 +120,3 @@ void main ()
   }
   XftFontClose(display, font);
 }
-
