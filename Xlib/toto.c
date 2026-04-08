@@ -39,14 +39,12 @@ void get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
   int event_base, error_base, r;
   XRROutputInfo *output_info;
   XRRScreenResources *resources;
-  Window root;
-  root = RootWindow(display, 0);
   if (!XRRQueryExtension(display, &event_base, &error_base)) {
     fprintf(stderr, "<W> XRandR not available.\n");
     r = 0;
   }
   else {
-    resources = XRRGetScreenResources(display, root);
+    resources = XRRGetScreenResources(display, RootWindow(display, 0));
     if (!resources) {
       fprintf (stderr, "<W> Impossible to get XRandR resources.\n");
       r = 0;
