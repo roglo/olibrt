@@ -719,7 +719,12 @@ and revertToParent = 2;
 
 (* Xft *)
 
+type xftcolor = 'a;
+type xftdraw = 'a;
 type xftfont = 'a;
 
+external xftDrawString8 :
+  (xftdraw * xftcolor * xftfont * int * int * string * int) -> unit =
+    "ML_XftDrawString8";
 external xftFontOpenName : (display * int * string) -> xftfont =
   "ML_xftFontOpenName";
