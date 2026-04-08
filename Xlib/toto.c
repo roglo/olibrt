@@ -52,7 +52,8 @@ void get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
     else {
       r = 0;
       for (int i = 0; i < resources->noutput && r == 0; i++) {
-        output_info = XRRGetOutputInfo(display, resources, resources->outputs[i]);
+        output_info =
+	  XRRGetOutputInfo(display, resources, resources->outputs[i]);
 	if (output_info) {
 	  if (output_info->connection == RR_Connected &&
 	      output_info->mm_width > 0) {
