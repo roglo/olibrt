@@ -46,7 +46,7 @@ void get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
   else {
     resources = XRRGetScreenResources(display, RootWindow(display, 0));
     if (!resources) {
-      fprintf (stderr, "<W> Impossible to get XRandR resources.\n");
+      fprintf(stderr, "<W> Impossible to get XRandR resources.\n");
       r = 0;
     }
     else {
