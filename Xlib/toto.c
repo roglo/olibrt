@@ -35,22 +35,20 @@ void print_font_info(Display* display, XftFont* font) {
     }
 }
 
-int get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
+void get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
   int event_base, error_base, r;
   XRROutputInfo *output_info;
   XRRScreenResources *resources;
   Window root;
   root = RootWindow(display, 0);
-  *width_mm = 0;
-  *height_mm = 0;
   if (!XRRQueryExtension(display, &event_base, &error_base)) {
-    fprintf(stderr, "XRandR not available.\n");
+    fprintf(stderr, "<W> XRandR not available.\n");
     r = 0;
   }
   else {
     resources = XRRGetScreenResources(display, root);
     if (!resources) {
-      fprintf (stderr, "Impossible to get XRandR resources.\n");
+      fprintf (stderr, "<W> Impossible to get XRandR resources.\n");
       r = 0;
     }
     else {
@@ -70,7 +68,10 @@ int get_screen_size_mm(Display *display, int *width_mm, int *height_mm) {
       XRRFreeScreenResources(resources);
     }
   }
-  return r;
+  if (r == 0) {
+    *width_mm = DisplayWidthMM(display, DefaultScreen(display));
+    *height_mm = DisplayHeightMM(display, DefaultScreen(display));
+  }
 }
 
 void main ()
