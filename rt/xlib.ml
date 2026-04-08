@@ -723,6 +723,9 @@ type xftcolor = 'a;
 type xftdraw = 'a;
 type xftfont = 'a;
 
+external xftColorAllocName :
+  (display * visual * colormap * string * xftcolor) -> bool =
+    "ML_XftColorAllocName";
 external xftDrawString8 :
   (xftdraw * xftcolor * xftfont * int * int * string * int) -> unit =
     "ML_XftDrawString8";
