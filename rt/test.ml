@@ -19,9 +19,9 @@ value main () = do {
   flush stdout;
   let dpmm = float (xDisplayWidth (dpy, screen)) /. float width_mm in
   Printf.printf "dpmm = %g\n" dpmm;
+  let font = xftFontOpenName (dpy, screen, "mono:size=12") in
+  ()
 (*
-  printf("dpmm = %g (not sure)\n", dpmm);
-  dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
   printf("dpmm = %g\n", dpmm);
   font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);

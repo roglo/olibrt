@@ -730,7 +730,7 @@ external xftDrawString8 :
   (xftdraw * xftcolor * xftfont * int * int * string * int) -> unit =
     "ML_XftDrawString8";
 external xftFontOpenName : (display * int * string) -> xftfont =
-  "ML_xftFontOpenName";
+  "ML_XftFontOpenName";
 
 external get_screen_size_mm : display -> (int * int) =
   "ML_get_screen_size_mm";
