@@ -18,6 +18,17 @@ value *v;
 	return MLINT(r);
 }
 
+value ML_XftDrawCreate(v)
+value *v;
+{
+	XftDraw *d;
+	d = XftDrawCreate((Display*) aarv(0),
+			  (Drawable) iarv(1),
+			  (Visual*) aarv(2),
+			  (Colormap) iarv(3));
+	return Val_addr(d);
+}
+
 value ML_XftDrawString8(v)
 value *v;
 {
@@ -34,11 +45,10 @@ value *v;
 value ML_XftFontOpenName(v)
 value *v;
 {
-	XftFont * r = XftFontOpenName(
-		(Display*) aarv(0),
-		(int) iarv(1),
-		(const char*) sarv(2)
-	);
+	XftFont * r =
+	  XftFontOpenName((Display*) aarv(0),
+			  (int) iarv(1),
+			  (const char*) sarv(2));
 	return Val_addr(r);
 }
 

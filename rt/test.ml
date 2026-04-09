@@ -23,22 +23,27 @@ value main () = do {
   let dpmm = float (xDisplayWidth (dpy, screen)) /. float width_mm in
   Printf.printf "dpmm = %g\n" dpmm;
   let font = xftFontOpenName (dpy, screen, "mono:size=12") in
-  let  window =
+(*
+  font = XftFontOpenName(display, screen, "mono:size=12");
+  if (font) print_font_info(display, font);
+*)
+  let window =
     xCreateSimpleWindow
       (dpy, xDefaultRootWindow dpy, 0, 0, truncate (150. *. dpmm),
        truncate (100. *. dpmm), 0, 0, 0)
   in
+  xSelectInput (dpy, window, exposureMask);
+  xMapWindow (dpy, window);
+(*
+  XGetWindowAttributes(display, window, &attrs);
+*)
+  let draw =
+    xftDrawCreate
+      (dpy, window, xDefaultVisual (dpy, 0),
+       xDefaultColormap (dpy, screen))
+  in
   ()
 (*
-  printf("dpmm = %g\n", dpmm);
-  font = XftFontOpenName(display, screen, "mono:size=12");
-  if (font) print_font_info(display, font);
-  window =
-    XCreateSimpleWindow(display, DefaultRootWindow(display),
-			0, 0, (int)(200 * dpmm), (int)(150 * dpmm), 0, 0, 0);
-  XSelectInput(display, window, ExposureMask);
-  XMapWindow(display, window);
-  XGetWindowAttributes(display, window, &attrs);
   draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
   XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
