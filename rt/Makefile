@@ -19,7 +19,7 @@ depend:
 	mv .depend.new .depend
 
 test.out: test.ml
-	ocamlc -custom -pp camlp5r -o test.out librt.cma test.ml ../Xlib/libx.a -cclib -lX11
+	ocamlc -custom -pp camlp5r -o test.out librt.cma test.ml ../Xlib/libx.a ../Xft/libxft.a -cclib -lX11 -cclib -lXft -cclib -lXrandr
 
 $(RTLIB): $(MLTARG) $(OBJS)
 	$(OCAMLC) -a -o $@ $(OBJS)

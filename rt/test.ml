@@ -1,5 +1,5 @@
 (* sudo apt install libxft-dev libfreetype-dev libxrandr-dev *)
-(* ocamlc -custom -pp camlp5r librt.cma test.ml ../Xlib/libx.a -cclib -lX11 *)
+(* ocamlc -custom -pp camlp5r librt.cma test.ml ../Xlib/libx.a -cclib -lX11 -lXft *)
 
 open Xlib;
 

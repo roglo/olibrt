@@ -1,5 +1,10 @@
 #include "../Xlib/stub.h"
+#include <X11/XKBlib.h>
+#include "caml/memory.h"
+#include "caml/alloc.h"
 #include <X11/Xft/Xft.h>
+#include <X11/extensions/Xrandr.h>
+#include <stdio.h>
 
 value ML_XftColorAllocName(v)
 value *v;
@@ -35,4 +40,60 @@ value *v;
 		(const char*) sarv(2)
 	);
 	return Val_addr(r);
+}
+
+value ML_get_screen_size_mm(v)
+value v;
+{
+	CAMLparam1(v);
+	CAMLlocal1(r);
+	Display *dpy;
+	int width_mm, height_mm;
+	int event_base, error_base, x;
+	XRROutputInfo *output_info;
+	XRRScreenResources *resources;
+
+	dpy = (Display *)Field(v, 0);
+printf("1\n");
+	if (!XRRQueryExtension(dpy, &event_base, &error_base)) {
+printf("11\n");
+	  fprintf(stderr, "<W> XRandR not available.\n");
+	  x = 0;
+	}
+	else {
+printf("2\n");
+	  resources = XRRGetScreenResources(dpy, RootWindow(dpy, 0));
+	  if (!resources) {
+	    fprintf(stderr, "<W> Impossible to get XRandR resources.\n");
+	    x = 0;
+	  }
+	  else {
+printf("3\n");
+	    x = 0;
+	    for (int i = 0; i < resources->noutput && x == 0; i++) {
+	      output_info =
+		XRRGetOutputInfo(dpy, resources, resources->outputs[i]);
+	      if (output_info) {
+		if (output_info->connection == RR_Connected &&
+		    output_info->mm_width > 0) {
+		  width_mm = output_info->mm_width;
+		  height_mm = output_info->mm_height;
+		  x = 1;
+		}
+		XRRFreeOutputInfo(output_info);
+	      }
+	    }
+	    XRRFreeScreenResources(resources);
+	  }
+	}
+printf("4\n");
+	if (x == 0) {
+	  width_mm = DisplayWidthMM(dpy, DefaultScreen(dpy));
+	  height_mm = DisplayHeightMM(dpy, DefaultScreen(dpy));
+	}
+printf("5\n");
+	r = alloc_small(2, 0);
+        Store_field(r, 0, Val_int(width_mm));
+        Store_field(r, 1, Val_int(height_mm));
+        CAMLreturn(r);
 }
