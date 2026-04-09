@@ -17,6 +17,8 @@ value main () = do {
   let dpmm = float (xDisplayWidth (dpy, screen)) /. float (xDisplayWidthMM (dpy, screen)) in
   Printf.printf "dpmm = %g (not sure)\n" dpmm;
   flush stdout;
+  let dpmm = float (xDisplayWidth (dpy, screen)) /. float width_mm in
+  Printf.printf "dpmm = %g\n" dpmm;
 (*
   printf("dpmm = %g (not sure)\n", dpmm);
   dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
