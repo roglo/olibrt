@@ -11,8 +11,10 @@ value main () = do {
   Printf.printf "screen width = %d\n" (xDisplayWidth (dpy, screen));
   Printf.printf "screen width mm = %d (not sure)\n" (xDisplayWidthMM (dpy, screen));
   flush stdout;
+  let (width_mm, height_mm) = get_screen_size_mm dpy in
+  Printf.printf "screen (width, height) in mm = (%d, %d)\n" width_mm height_mm;
+  flush stdout;
 (*
-  printf("screen width mm = %d (not sure)\n", DisplayWidthMM(display, screen));
   get_screen_size_mm(display, &width_mm, &height_mm);
   printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
   dpmm =
