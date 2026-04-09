@@ -723,6 +723,7 @@ type xftcolor = 'a;
 type xftdraw = 'a;
 type xftfont = 'a;
 
+external alloc_XftColor : unit -> xftcolor = "ML_alloc_XftColor";
 external xftColorAllocName :
   (display * visual * colormap * string * xftcolor) -> bool =
     "ML_XftColorAllocName";
