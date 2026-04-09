@@ -14,12 +14,10 @@ value main () = do {
   let (width_mm, height_mm) = get_screen_size_mm dpy in
   Printf.printf "screen (width, height) in mm = (%d, %d)\n" width_mm height_mm;
   flush stdout;
+  let dpmm = float (xDisplayWidth (dpy, screen)) /. float (xDisplayWidthMM (dpy, screen)) in
+  Printf.printf "dpmm = %g (not sure)\n" dpmm;
+  flush stdout;
 (*
-  get_screen_size_mm(display, &width_mm, &height_mm);
-  printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
-  dpmm =
-    (double)DisplayWidth(display, screen) /
-    (double)DisplayWidthMM(display, screen);
   printf("dpmm = %g (not sure)\n", dpmm);
   dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
   printf("dpmm = %g\n", dpmm);
