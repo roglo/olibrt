@@ -1,6 +1,7 @@
 *.[ao]
 *.cm[aiox]
 *.cmxa
+*.out
 keysym.ml
 rt.mli
 rtdecl.mli
