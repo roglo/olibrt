@@ -53,22 +53,18 @@ value v;
 	XRROutputInfo *output_info;
 	XRRScreenResources *resources;
 
-	dpy = (Display *)Field(v, 0);
-printf("1\n");
+	dpy = (Display *)aar();
 	if (!XRRQueryExtension(dpy, &event_base, &error_base)) {
-printf("11\n");
 	  fprintf(stderr, "<W> XRandR not available.\n");
 	  x = 0;
 	}
 	else {
-printf("2\n");
 	  resources = XRRGetScreenResources(dpy, RootWindow(dpy, 0));
 	  if (!resources) {
 	    fprintf(stderr, "<W> Impossible to get XRandR resources.\n");
 	    x = 0;
 	  }
 	  else {
-printf("3\n");
 	    x = 0;
 	    for (int i = 0; i < resources->noutput && x == 0; i++) {
 	      output_info =
@@ -86,12 +82,10 @@ printf("3\n");
 	    XRRFreeScreenResources(resources);
 	  }
 	}
-printf("4\n");
 	if (x == 0) {
 	  width_mm = DisplayWidthMM(dpy, DefaultScreen(dpy));
 	  height_mm = DisplayHeightMM(dpy, DefaultScreen(dpy));
 	}
-printf("5\n");
 	r = alloc_small(2, 0);
         Store_field(r, 0, Val_int(width_mm));
         Store_field(r, 1, Val_int(height_mm));
