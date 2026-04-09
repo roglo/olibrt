@@ -42,9 +42,13 @@ value main () = do {
       (dpy, window, xDefaultVisual (dpy, 0),
        xDefaultColormap (dpy, screen))
   in
+  let (color, b) =
+    xftColorAllocName
+      (dpy, xDefaultVisual (dpy, 0),
+       xDefaultColormap (dpy, screen), "white")
+  in
   ()
 (*
-  draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
   XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
     XNextEvent(display, &xev);
