@@ -1,5 +1,5 @@
 // sudo apt install libxft-dev libfreetype-dev libxrandr-dev
-// gcc toto.c -o toto -lX11 -lXft -lXrandr -lfontconfig -I/usr/include/freetype2
+// gcc test.c -lX11 -lXft -lXrandr -lfontconfig -I/usr/include/freetype2
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 #include <X11/extensions/Xrandr.h>
