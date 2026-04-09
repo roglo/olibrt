@@ -9,17 +9,25 @@ value main () = do {
   Printf.printf "default screen = %d\n" screen;
   flush stdout;
   Printf.printf "screen width = %d\n" (xDisplayWidth (dpy, screen));
-  Printf.printf "screen width mm = %d (not sure)\n" (xDisplayWidthMM (dpy, screen));
+  Printf.printf "screen width mm = %d (not sure)\n"
+    (xDisplayWidthMM (dpy, screen));
   flush stdout;
   let (width_mm, height_mm) = get_screen_size_mm dpy in
   Printf.printf "screen (width, height) in mm = (%d, %d)\n" width_mm height_mm;
   flush stdout;
-  let dpmm = float (xDisplayWidth (dpy, screen)) /. float (xDisplayWidthMM (dpy, screen)) in
+  let dpmm =
+    float (xDisplayWidth (dpy, screen)) /. float (xDisplayWidthMM (dpy, screen))
+  in
   Printf.printf "dpmm = %g (not sure)\n" dpmm;
   flush stdout;
   let dpmm = float (xDisplayWidth (dpy, screen)) /. float width_mm in
   Printf.printf "dpmm = %g\n" dpmm;
   let font = xftFontOpenName (dpy, screen, "mono:size=12") in
+  let  window =
+    xCreateSimpleWindow
+      (dpy, xDefaultRootWindow dpy, 0, 0, truncate (150. *. dpmm),
+       truncate (100. *. dpmm), 0, 0, 0)
+  in
   ()
 (*
   printf("dpmm = %g\n", dpmm);
