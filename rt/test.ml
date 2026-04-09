@@ -3,12 +3,15 @@
 
 open Xlib;
 
-value main () =
+value main () = do {
   let dpy = xOpenDisplay "" in
-  ()
+  let screen = xDefaultScreen dpy in
+  Printf.printf "default screen = %d\n" screen;
+  flush stdout;
+  Printf.printf "screen width = %d\n" (xDisplayWidth (dpy, screen));
+  Printf.printf "screen width mm = %d (not sure)\n" (xDisplayWidthMM (dpy, screen));
+  flush stdout;
 (*
-  screen = DefaultScreen(display);
-  printf("screen width = %d\n", DisplayWidth(display, screen));
   printf("screen width mm = %d (not sure)\n", DisplayWidthMM(display, screen));
   get_screen_size_mm(display, &width_mm, &height_mm);
   printf("screen (width, height) in mm = (%d, %d)\n", width_mm, height_mm);
@@ -40,4 +43,6 @@ value main () =
   }
   XftFontClose(display, font);
 *)
-;
+};
+
+main ();
