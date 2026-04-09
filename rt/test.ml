@@ -42,6 +42,7 @@ value main () = do {
       (dpy, window, xDefaultVisual (dpy, 0),
        xDefaultColormap (dpy, screen))
   in
+(* créer un alloc_XftColor avec un new comme dans ../Xlib/event.c *)
   let (color, b) =
     xftColorAllocName
       (dpy, xDefaultVisual (dpy, 0),
