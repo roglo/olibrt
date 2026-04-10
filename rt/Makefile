@@ -18,8 +18,8 @@ depend:
 	export LC_ALL=C; for i in $$(ls *.mli *.ml); do camlp5r pr_depend.cmo $$i; done > .depend.new
 	mv .depend.new .depend
 
-test.out: test.ml
-	ocamlc -custom -pp camlp5r -o test.out librt.cma test.ml ../Xlib/libx.a ../Xft/libxft.a -cclib -lX11 -cclib -lXft -cclib -lXrandr
+test_xlib.out: test_xlib.ml
+	ocamlc -custom -pp camlp5r -o $@ librt.cma $< ../Xlib/libx.a ../Xft/libxft.a -cclib -lX11 -cclib -lXft -cclib -lXrandr
 
 $(RTLIB): $(MLTARG) $(OBJS)
 	$(OCAMLC) -a -o $@ $(OBJS)
