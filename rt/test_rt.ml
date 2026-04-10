@@ -1,10 +1,11 @@
 (* sudo apt install libxft-dev libfreetype-dev libxrandr-dev *)
 
+open Rt;
 open Rtf;
 
 value main () = do {
   let xdf = rtf_initialize "" in
-  ();
+  let xd = rtf_xdata xdf in
 (*
   Printf.printf "screen width = %d\n" (rt_screen_width xd);
   Printf.printf "screen width mm = %d (not sure)\n"
@@ -50,6 +51,10 @@ value main () = do {
   Printf.printf "xftColorAllocName returns %b\n" b;
   flush stdout;
   let xev = alloc_XEvent () in
+*)
+  let xa = rt_args [xd] in
+  rt_main_loop xa;
+(*
   while True do {
     xNextEvent(dpy, xev);
     if xEvent_type xev = expose then
