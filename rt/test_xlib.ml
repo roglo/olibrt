@@ -2,6 +2,7 @@
 (* ocamlc -custom -pp camlp5r librt.cma test.ml ../Xlib/libx.a -cclib -lX11 -lXft *)
 
 open Xlib;
+open Xft;
 
 value main () = do {
   let dpy = xOpenDisplay "" in
