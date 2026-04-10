@@ -46,19 +46,15 @@ value *v;
 	return unit;
 }
 
-#include <stdio.h>
-
 value ML_alloc_XWindowAttributes(v)
 value v;
 {
-printf("ML_alloc_XWinwdowsAttributes\n");
 	return new(XWindowAttributes);
 }
 
 value ML_XGetWindowAttributes(v)
 value *v;
 {
-printf("ML_XGetWinwdowsAttributes\n");
 	Status r = XGetWindowAttributes((Display *)aarv(0),
 					(Window)iarv(1),
 					(XWindowAttributes *)aarv(2));
@@ -66,19 +62,15 @@ printf("ML_XGetWinwdowsAttributes\n");
 }
 
 value ML_XWindowAttributes_colormap(v)
-value *v;
+value v;
 {
-printf("ML_XWinwdowsAttributes_colormap 1\n");
-	Colormap r = ((XWindowAttributes *)aarv(0))->colormap;
-printf("ML_XWinwdowsAttributes_colormap 2\n");
-	return MLINT(r);
+	Colormap r = ((XWindowAttributes *)aar())->colormap;
+	return Val_long(r);
 }
 
 value ML_XWindowAttributes_visual(v)
-value *v;
+value v;
 {
-printf("ML_XWinwdowsAttributes_visual 1\n");
-	Visual *r = ((XWindowAttributes *)aarv(0))->visual;
-printf("ML_XWinwdowsAttributes_visual 2\n");
+	Visual *r = ((XWindowAttributes *)aar())->visual;
 	return MLADDR(r);
 }

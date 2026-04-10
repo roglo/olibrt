@@ -36,29 +36,21 @@ value main () = do {
   xSelectInput (dpy, window, exposureMask);
   xMapWindow (dpy, window);
   let attrs = alloc_XWindowAttributes () in
-  Printf.printf "before xGetWindowAttributes\n";
-  flush stdout;
   let s = xGetWindowAttributes(dpy, window, attrs) in
-  Printf.printf "xGetWindowAttributes returns %d\n" s;
-  flush stdout;
   let draw =
     xftDrawCreate
       (dpy, window, xWindowAttributes_visual attrs,
        xWindowAttributes_colormap attrs)
   in
-();
-(*
-  Printf.printf "after xftDrawCreate\n";
-  flush stdout;
   let color = alloc_XftColor () in
-  Printf.printf "after allocXftColor\n";
   let b =
     xftColorAllocName
-      (dpy, xDefaultVisual (dpy, 0),
-       xDefaultColormap (dpy, 0), "white", color)
+      (dpy, xWindowAttributes_visual attrs,
+       xWindowAttributes_colormap attrs, "white", color)
   in
+  Printf.printf "xftColorAllocName returns %b\n" b;
+  flush stdout;
   ();
-*)
 (*
   Printf.printf "xfcColorAllocName returns %b\n" b;
   XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);

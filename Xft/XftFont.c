@@ -18,7 +18,7 @@ value *v;
 	Bool r;
 	r = XftColorAllocName((Display*) aarv(0),
 			      (_Xconst Visual*) aarv(1),
-			      (Colormap) aarv(2),
+			      (Colormap) iarv(2),
 			      (_Xconst char*) sarv(3),
 			      (XftColor *) aarv(4));
 	return MLINT(r);

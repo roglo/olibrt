@@ -106,6 +106,10 @@ void main ()
   XSelectInput(display, window, ExposureMask);
   XMapWindow(display, window);
   XGetWindowAttributes(display, window, &attrs);
+printf("default colormap %ld\n", XDefaultColormap (display, 0));
+fflush(stdout);
+printf("window colormap %ld\n", attrs.colormap);
+fflush(stdout);
   draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
   XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
