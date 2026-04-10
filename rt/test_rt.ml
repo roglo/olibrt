@@ -3,7 +3,7 @@
 open Rtf;
 
 value main () = do {
-  let xd = rtf_initialize "" in
+  let xdf = rtf_initialize "" in
   ();
 (*
   Printf.printf "screen width = %d\n" (rt_screen_width xd);
