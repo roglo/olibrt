@@ -21,6 +21,9 @@ depend:
 test_xlib.out: test_xlib.ml
 	ocamlc -custom -pp camlp5r -o $@ librt.cma $< ../Xlib/libx.a ../Xft/libxft.a -cclib -lX11 -cclib -lXft -cclib -lXrandr
 
+test_rt.out: test_rt.ml
+	ocamlc -custom -pp camlp5r -o $@ librt.cma $< ../Xlib/libx.a ../Xft/libxft.a -cclib -lX11 -cclib -lXft -cclib -lXrandr
+
 $(RTLIB): $(MLTARG) $(OBJS)
 	$(OCAMLC) -a -o $@ $(OBJS)
 
