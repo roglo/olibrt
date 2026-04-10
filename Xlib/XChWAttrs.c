@@ -45,3 +45,38 @@ value *v;
 				(XSetWindowAttributes *)aarv(3));
 	return unit;
 }
+
+value ML_alloc_XWindowAttributes(v)
+value v;
+{
+	return new(XWindowAttributes);
+}
+
+value ML_XGetWindowAttributes(v)
+value *v;
+{
+	Status r = XGetWindowAttributes((Display *)aarv(0),
+					(Window)iarv(1),
+					(XWindowAttributes *)aarv(2));
+	return Val_long(r);
+}
+
+#include <stdio.h>
+
+value ML_XWindowAttributes_colormap(v)
+value *v;
+{
+printf("ML_XWinwdowsAttributes_colormap 1\n");
+	Colormap r = ((XWindowAttributes *)aarv(0))->colormap;
+printf("ML_XWinwdowsAttributes_colormap 2\n");
+	return MLINT(r);
+}
+
+value ML_XWindowAttributes_visual(v)
+value *v;
+{
+printf("ML_XWinwdowsAttributes_visual 1\n");
+	Visual *r = ((XWindowAttributes *)aarv(0))->visual;
+printf("ML_XWinwdowsAttributes_visual 2\n");
+	return MLADDR(r);
+}

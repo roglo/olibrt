@@ -6,6 +6,12 @@
 #include <X11/extensions/Xrandr.h>
 #include <stdio.h>
 
+value ML_alloc_XftColor(v)
+value v;
+{
+        return new(XftColor);
+}
+
 value ML_XftColorAllocName(v)
 value *v;
 {

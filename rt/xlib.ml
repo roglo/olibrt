@@ -11,6 +11,7 @@ and xEvent = 'a
 and xFontStruct = 'a
 and xFontSet = 'a
 and xfont = 'a
+and xWindowAttributes = 'a
 and xSetWindowAttributes = 'a
 and xGCValues = 'a
 and xWindowChanges = 'a
@@ -268,6 +269,10 @@ external xTextWidth : (xFontStruct * string * int) -> int = "ML_XTextWidth";
 external xUndefineCursor : (display * window) -> unit = "ML_XUndefineCursor";
 external xUnmapWindow : (display * window) -> unit = "ML_XUnmapWindow";
 external xWhitePixel : (display * int) -> int = "ML_XWhitePixel";
+external xWindowAttributes_colormap : xWindowAttributes -> colormap =
+   "ML_XWindowAttributes_colormap";
+external xWindowAttributes_visual : xWindowAttributes -> visual =
+   "ML_XWindowAttributes_visual";
 external alloc_XAtom : int -> xAtom = "ML_alloc_XAtom";
 external alloc_XColor : unit -> xColor = "ML_alloc_XColor";
 external alloc_XEvent : unit -> xEvent = "ML_alloc_XEvent";
@@ -280,6 +285,8 @@ external alloc_XPoint : int -> xPoint = "ML_alloc_XPoint";
 external alloc_XSetWindowAttributes :
   unit -> xSetWindowAttributes = "ML_alloc_XSetWindowAttributes";
 external alloc_XSizeHints : unit -> xSizeHints = "ML_alloc_XSizeHints";
+external alloc_XWindowAttributes :
+  unit -> xWindowAttributes = "ML_alloc_XWindowAttributes";
 external alloc_XWindowChanges :
   unit -> xWindowChanges = "ML_alloc_XWindowChanges";
 external alloc_XWMHints : unit -> xWMHints = "ML_alloc_XWMHints";
@@ -347,6 +354,8 @@ external xFontStruct_max_bounds_ascent :
   xFontStruct -> int = "ML_XFontStruct_max_bounds_ascent";
 external xFontStruct_max_bounds_descent :
   xFontStruct -> int = "ML_XFontStruct_max_bounds_descent";
+external xGetWindowAttributes :
+  (display * window * xWindowAttributes) -> status = "ML_XGetWindowAttributes";
 external xGraphicsExposeEvent_count :
   xGraphicsExposeEvent -> int = "ML_XGraphicsExposeEvent_count";
 external xGraphicsExposeEvent_height :
