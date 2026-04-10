@@ -50,10 +50,16 @@ value main () = do {
   in
   Printf.printf "xftColorAllocName returns %b\n" b;
   flush stdout;
-  ();
+  let xev = alloc_XEvent () in
+  while True do {
+    xNextEvent(dpy, xev);
+    if xEvent_type xev = expose then do {
+      Printf.printf "expose\n";
+      flush stdout
+    }
+    else ();
+  }
 (*
-  Printf.printf "xfcColorAllocName returns %b\n" b;
-  XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
     XNextEvent(display, &xev);
     if (xev.type == Expose) {
