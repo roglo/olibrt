@@ -25,7 +25,6 @@ value main () = do {
   flush stdout;
   let font = xftFontOpenName (dpy, screen, "mono:size=12") in
 (*
-  font = XftFontOpenName(display, screen, "mono:size=12");
   if (font) print_font_info(display, font);
 *)
   let window =
@@ -37,6 +36,8 @@ value main () = do {
   xMapWindow (dpy, window);
   let attrs = alloc_XWindowAttributes () in
   let s = xGetWindowAttributes(dpy, window, attrs) in
+  Printf.printf "xGetWindowsAttributes returns %d\n" s;
+  flush stdout;
   let draw =
     xftDrawCreate
       (dpy, window, xWindowAttributes_visual attrs,
@@ -53,24 +54,21 @@ value main () = do {
   let xev = alloc_XEvent () in
   while True do {
     xNextEvent(dpy, xev);
-    if xEvent_type xev = expose then do {
-      Printf.printf "expose\n";
-      flush stdout
-    }
-    else ();
-  }
-(*
-  while (1) {
-    XNextEvent(display, &xev);
-    if (xev.type == Expose) {
-      if (xev.xexpose.count == 0) {
-	XftDrawString8(draw, &color, font, (int)(10 * dpmm), (int)(20 * dpmm),
-		       (XftChar8 -)"Bonjour", strlen("Bonjour"));
-	XFlush(display);
+    if xEvent_type xev = expose then
+      let xeev = xEvent_xexpose xev in
+      if xExposeEvent_count xeev = 0 then do {
+        Printf.printf "expose\n";
+        flush stdout;
+	xftDrawString8 (draw, color, font, truncate (10. *. dpmm),
+	                truncate (20. *. dpmm),
+		        "Bonjour", String.length("Bonjour"));
+	xFlush dpy;
       }
-    }
-  }
-  XftFontClose(display, font);
+      else ()
+    else ();
+  };
+(*
+  xftFontClose(dpy, font);
 *)
 };
 
