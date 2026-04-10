@@ -46,22 +46,24 @@ value *v;
 	return unit;
 }
 
+#include <stdio.h>
+
 value ML_alloc_XWindowAttributes(v)
 value v;
 {
+printf("ML_alloc_XWinwdowsAttributes\n");
 	return new(XWindowAttributes);
 }
 
 value ML_XGetWindowAttributes(v)
 value *v;
 {
+printf("ML_XGetWinwdowsAttributes\n");
 	Status r = XGetWindowAttributes((Display *)aarv(0),
 					(Window)iarv(1),
 					(XWindowAttributes *)aarv(2));
 	return Val_long(r);
 }
-
-#include <stdio.h>
 
 value ML_XWindowAttributes_colormap(v)
 value *v;
