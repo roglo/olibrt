@@ -120,19 +120,22 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
     else att_val.foreg_att
   in
   set_gc_foreground xd gi.bgc col;
-Printf.printf "Visual class: %d (TrueColor = %d, DirectColor = %d)\n"
-  (visual_class xd.vis) trueColor directColor;
-flush stdout;
-(*
-  let f =
-    if List.mem (visual_class xd.vis) [pseudoColor; trueColor] then
-      xDrawString
-    else xDrawImageString
+  let attrs = alloc_XWindowAttributes () in
+  let _s = xGetWindowAttributes(xd.dpy, wid.win, attrs) in
+  let draw =
+    xftDrawCreate
+      (xd.dpy, wid.win, xWindowAttributes_visual attrs,
+       xWindowAttributes_colormap attrs)
   in
-  f (xd.dpy, wid.win, gi.bgc.mgc,
-     if left_j then xd.motif_border + band
-     else (wid.width - xTextWidth (bfs.fs, txt, len)) / 2,
-     (wid.height + bfs.ascent - bfs.descent) / 2, txt, len);
+  let color = alloc_XftColor () in
+  let _b =
+    xftColorAllocName
+      (xd.dpy, xWindowAttributes_visual attrs,
+       xWindowAttributes_colormap attrs, "black", color)
+  in
+  let x = xd.motif_border + band in
+  let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
+  xftDrawString8 (draw, color, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
     [ Some sc -> Some (Printf.sprintf "Alt %c" sc, "Alt m")
@@ -147,31 +150,9 @@ flush stdout;
       let x =
         wid.width - xd.motif_border - band - xTextWidth (bfs.fs, s2, slen)
       in
-      f (xd.dpy, wid.win, gi.bgc.mgc, x,
-         (wid.height + bfs.ascent - bfs.descent) / 2, s, slen)
+      let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
+      xftDrawString8 (draw, color, gi.ftfont, x, y, s, slen)
   | None -> () ];
-*)
-  let attrs = alloc_XWindowAttributes () in
-  let _s = xGetWindowAttributes(xd.dpy, wid.win, attrs) in
-Printf.printf "Visual class attrs: %d (TrueColor = %d, DirectColor = %d)\n"
-  (visual_class (xWindowAttributes_visual attrs)) trueColor directColor;
-flush stdout;
-  let draw =
-    xftDrawCreate
-      (xd.dpy, wid.win, xWindowAttributes_visual attrs,
-       xWindowAttributes_colormap attrs)
-  in
-  let color = alloc_XftColor () in
-  let _b =
-    xftColorAllocName
-      (xd.dpy, xWindowAttributes_visual attrs,
-       xWindowAttributes_colormap attrs, "black", color)
-  in
-  let x = xd.motif_border + band in
-  let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
-Printf.printf "xftdrawstring8 (%d, %d) %s %d\n" x y txt len;
-flush stdout;
-  xftDrawString8 (draw, color, gi.ftfont, x, y, txt, len);
 };
 
 value button_wsize (txt, shortcut) att_val xd =
