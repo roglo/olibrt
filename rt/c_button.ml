@@ -29,6 +29,7 @@ type button_global_info =
     ftfont : xftfont;
     attrs : xWindowAttributes;
     color : xftcolor;
+    frozen_color : xftcolor;
     extents : glyphinfo;
     bgc : mutable_gc };
 
@@ -65,10 +66,14 @@ value make_button_global_info xd = do {
   let attrs = alloc_XWindowAttributes () in
   let color = alloc_XftColor () in
   let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
+  let frozen_color = alloc_XftColor () in
+  let _b =
+    xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "white", frozen_color)
+  in
   let extents = alloc_glyphinfo () in
   add_ginfo xd "button" button_global_info
     {dfont = dfont; ftfont = ftfont; attrs = attrs; color = color;
-     extents = extents; bgc = bgc}
+     frozen_color = frozen_color; extents = extents; bgc = bgc}
 };
 
 value set_gc_foreground xd mgc att =
@@ -129,6 +134,8 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   set_gc_foreground xd gi.bgc col;
 *)
+  let col = if wid.frozen then gi.frozen_color else gi.color in
+(**)
   let _s = xGetWindowAttributes(xd.dpy, wid.win, gi.attrs) in
   let draw =
     xftDrawCreate
@@ -137,7 +144,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   let x = xd.motif_border + band in
   let y = wid.height - 9 (* mouais, valeur au pif *) in
-  xftDrawString8 (draw, gi.color, gi.ftfont, x, y, txt, len);
+  xftDrawString8 (draw, col, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
     [ Some sc -> Some (Printf.sprintf "Alt %c" sc, "Alt m")
@@ -153,7 +160,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
       let x =
         wid.width - xd.motif_border - band - glyphinfo_width gi.extents
       in
-      xftDrawString8 (draw, gi.color, gi.ftfont, x, y, s, slen)
+      xftDrawString8 (draw, col, gi.ftfont, x, y, s, slen)
     }
   | None -> () ];
 };
