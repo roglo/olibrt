@@ -27,7 +27,7 @@ ARCH=.
 
 BINDIR=/usr/local/bin
 LIBDIR=/usr/local/lib/ocaml
-LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11
+LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11 -cclib -lXft -cclib -lXrandr
 OLIBDIR=/usr/local/lib/ocaml
 
 OLIBDIR=/home/roglo/work/usr/lib/ocaml
@@ -44,7 +44,7 @@ OCAMLC=ocamlc.opt -g
 CAMLLINK=ocamlc.opt -g
 TARGET=$(ARCH)/budget.out
 ZOFILES=rtN.cmo jmage.cmo file.cmo const.cmo state.cmo show.cmo action.cmo ajoutModif.cmo d_listeMois.cmo d_imprimer.cmo d_ajout.cmo d_transf.cmo d_auto.cmo d_nouvMois.cmo d_modif.cmo d_suppr.cmo d_soldeRed.cmo d_repartMois.cmo d_repartPoste.cmo d_soldeGen.cmo d_bilan.cmo d_infoPostes.cmo d_infoCartes.cmo d_infoComptes.cmo d_calculat.cmo d_blocnotes.cmo d_majPostes.cmo d_majCartes.cmo d_majComptes.cmo d_ajoutAuto.cmo d_modifAuto.cmo d_supprAuto.cmo d_majAuto.cmo b_compte.cmo b_pointage.cmo b_init.cmo a_entree.cmo c_popup.cmo budget.cmo main.cmo
-XLIB=$(TOP)/Xlib/$(ARCH)/libx.a
+XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
 EXT=pa_r.cmo ./pa_ext.cmo
 EXT=pa_r.cmo
 CAMLP5="camlp5 $(EXT) pa_rp.cmo pr_dump.cmo"
@@ -52,7 +52,7 @@ CAMLP5="camlp5 $(EXT) pa_rp.cmo pr_dump.cmo"
 all:: $(TARGET)
 
 $(TARGET): $(RTLIB) $(XLIB) $(ZOFILES)
-	$(CAMLLINK) -custom $(RTLIB) "unix.cma" -I `camlp5 -where` "gramlib.cma" $(ZOFILES) $(XLIB) $(LIBX11) \
+	$(CAMLLINK) -custom $(TOP)/rt/xft.cmo $(RTLIB) "unix.cma" -I `camlp5 -where` "gramlib.cma" $(ZOFILES) $(XLIB) $(LIBX11) \
  -o $@
 
 clean::
