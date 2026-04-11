@@ -146,13 +146,15 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
         | None -> None ] ]
   in
   match s_opt with
-  [ Some (s, s2) ->
+  [ Some (s, s2) -> do {
       let slen = String.length s2 in
+      xftTextExtents8 (xd.dpy, gi.ftfont, s2, slen, gi.extents);
       let x =
-        wid.width - xd.motif_border - band - xTextWidth (bfs.fs, s2, slen)
+        wid.width - xd.motif_border - band - glyphinfo_width gi.extents
       in
       let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
       xftDrawString8 (draw, gi.color, gi.ftfont, x, y, s, slen)
+    }
   | None -> () ];
 };
 
@@ -171,17 +173,18 @@ value button_wsize (txt, shortcut) att_val xd = do {
   let b = max 0 (opt_val button_border.val att_val.border_att) in
   let wg =
     max (opt_val 1 att_val.width_att)
-      (2 * (band + xd.motif_border) +
-       glyphinfo_width gi.extents)
+      (2 * (band + xd.motif_border) + glyphinfo_width gi.extents)
   and hg =
     max (opt_val 1 att_val.height_att)
       (2 * (band + xd.motif_border) + xftFont_height gi.ftfont)
-      (*glyphinfo_height gi.extents*)
   in
   let w =
     match shortcut with
-    [ Some _ ->
-        let s = "Alt m" in wg + xTextWidth (bfs.fs, s, String.length s) + 20
+    [ Some _ -> do {
+        let s = "Alt m" in
+        xftTextExtents8 (xd.dpy, gi.ftfont, s, String.length s, gi.extents);
+	wg + glyphinfo_width gi.extents + 20
+      }
     | None ->
         match try Some (String.index txt '\t') with [ Not_found -> None ] with
         [ Some _ -> wg + xTextWidth (bfs.fs, " ", 1)
