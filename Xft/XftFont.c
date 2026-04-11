@@ -36,6 +36,12 @@ value v;
         return MLINT(((XGlyphInfo *)aar())->height);
 }
 
+value ML_XGlyphInfo_yOff(v)
+value v;
+{
+        return MLINT(((XGlyphInfo *)aar())->yOff);
+}
+
 value ML_XftColorAllocName(v)
 value *v;
 {

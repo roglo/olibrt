@@ -110,7 +110,6 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   let gi = li.button_gi in
   let left_j = att_val.left_justif in
   let band = opt_val button_band.val att_val.band_att in
-  let bfs = li.bfont in
   let txt = latin_1_txt xd txt in
   let (txt, s_opt, left_j) =
     match try Some (String.index txt '\t') with [ Not_found -> None ] with
@@ -135,7 +134,12 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
        xWindowAttributes_colormap gi.attrs)
   in
   let x = xd.motif_border + band in
-  let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
+  let y = wid.height - 9 (* mouais, valeur au pif *) in
+(*
+Printf.printf "glyphinfo width %d height %d yOff %d\n"
+  (glyphinfo_width gi.extents) (glyphinfo_height gi.extents)
+  (glyphinfo_yOff gi.extents);
+*)
   xftDrawString8 (draw, gi.color, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
@@ -152,7 +156,6 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
       let x =
         wid.width - xd.motif_border - band - glyphinfo_width gi.extents
       in
-      let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
       xftDrawString8 (draw, gi.color, gi.ftfont, x, y, s, slen)
     }
   | None -> () ];

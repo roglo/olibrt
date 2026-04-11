@@ -13,6 +13,7 @@ external alloc_glyphinfo : unit -> glyphinfo = "ML_alloc_XGlyphInfo";
 external xftFont_height : xftfont -> int = "ML_XftFont_height";
 external glyphinfo_width : glyphinfo -> int = "ML_XGlyphInfo_width";
 external glyphinfo_height : glyphinfo -> int = "ML_XGlyphInfo_height";
+external glyphinfo_yOff : glyphinfo -> int = "ML_XGlyphInfo_yOff";
 
 external xftColorAllocName :
   (display * visual * colormap * string * xftcolor) -> bool =
