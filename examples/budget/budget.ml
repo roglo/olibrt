@@ -19,14 +19,7 @@ Rt.term_font.(1) := "*-courier-bold-r-*-18-*";
 Rt.term_font.(2) := "*-courier-medium-o-*-18-*";
 Rt.term_font.(3) := "*-courier-bold-o-*-18-*";
 
-Rt.button_font.val := "-*-nimbus roman*-bold-r-*";
-Rt.title_font.val := "-*-nimbus roman*-bold-o-*";
-Rt.term_font.(0) := "-*-courier-medium-r-*";
-Rt.term_font.(1) := "-*-courier-bold-r-*";
-Rt.term_font.(2) := "-*-courier-medium-o-*";
-Rt.term_font.(3) := "-*-courier-bold-o-*";
-
-Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
+Rt.button_font.val := "mono:size=12";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
 Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
 Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
