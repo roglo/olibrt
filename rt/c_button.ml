@@ -122,11 +122,13 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   let len = String.length txt in
   set_gc_font xd gi.bgc li.bfont.fid;
+(*
   let col =
     if wid.frozen then Some (ColorPn {col_xd = xd; pixel = xd.bord_pix.(0)})
     else att_val.foreg_att
   in
   set_gc_foreground xd gi.bgc col;
+*)
   let _s = xGetWindowAttributes(xd.dpy, wid.win, gi.attrs) in
   let draw =
     xftDrawCreate
@@ -135,11 +137,6 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   let x = xd.motif_border + band in
   let y = wid.height - 9 (* mouais, valeur au pif *) in
-(*
-Printf.printf "glyphinfo width %d height %d yOff %d\n"
-  (glyphinfo_width gi.extents) (glyphinfo_height gi.extents)
-  (glyphinfo_yOff gi.extents);
-*)
   xftDrawString8 (draw, gi.color, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
