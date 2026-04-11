@@ -127,15 +127,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   let len = String.length txt in
   set_gc_font xd gi.bgc li.bfont.fid;
-(*
-  let col =
-    if wid.frozen then Some (ColorPn {col_xd = xd; pixel = xd.bord_pix.(0)})
-    else att_val.foreg_att
-  in
-  set_gc_foreground xd gi.bgc col;
-*)
   let col = if wid.frozen then gi.frozen_color else gi.color in
-(**)
   let _s = xGetWindowAttributes(xd.dpy, wid.win, gi.attrs) in
   let draw =
     xftDrawCreate
