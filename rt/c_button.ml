@@ -9,6 +9,7 @@ open Rtdecl;
 open Std;
 open Util;
 open Xlib;
+open Xft;
 
 type button_event =
   [ ButtonEvEnter of int and int
@@ -23,7 +24,10 @@ type button_event_handler = widget -> button_event -> unit;
 
 type mutable_gc = { mgc : gC; c_foreg : mutable int; c_font : mutable xfont };
 
-type button_global_info = { dfont : font; bgc : mutable_gc };
+type button_global_info =
+  { dfont : font;
+    ftfont : xftfont;
+    bgc : mutable_gc };
 
 type button_local_info =
   { button_gi : button_global_info; bfont : font; in_popup : bool }
@@ -47,6 +51,7 @@ and button_font = ref "*-helvetica-bold-r-*--14-*";
 
 value make_button_global_info xd = do {
   let dfont = rt_load_query_font xd button_font.val in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
   let mask = gCLineWidth lor gCCapStyle lor dfont.gc_mask in
   let xgcv = (gstr ()).xgcv in set_XGCValues_cap_style (capProjecting, xgcv);
   set_XGCValues_font (dfont.fid, xgcv);
@@ -54,7 +59,8 @@ value make_button_global_info xd = do {
     {mgc = xCreateGC (xd.dpy, xd.rootw, mask, xgcv); c_foreg = 0;
      c_font = dfont.fid}
   in
-  add_ginfo xd "button" button_global_info {dfont = dfont; bgc = bgc}
+  add_ginfo xd "button" button_global_info
+    {dfont = dfont; ftfont = ftfont; bgc = bgc}
 };
 
 value set_gc_foreground xd mgc att =
