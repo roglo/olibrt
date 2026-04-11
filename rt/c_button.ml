@@ -120,6 +120,9 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
     else att_val.foreg_att
   in
   set_gc_foreground xd gi.bgc col;
+Printf.printf "Visual class: %d (TrueColor = %d, DirectColor = %d)\n"
+  (visual_class xd.vis) trueColor directColor;
+flush stdout;
   let f =
     if List.mem (visual_class xd.vis) [pseudoColor; trueColor] then
       xDrawString
