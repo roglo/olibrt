@@ -135,7 +135,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
        xWindowAttributes_colormap gi.attrs)
   in
   let x = xd.motif_border + band in
-  let y = wid.height - 9 (* mouais, valeur au pif *) in
+  let y = (wid.height + xftFont_height gi.ftfont - 5) / 2 in (* -5 : au pif *)
   xftDrawString8 (draw, col, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
