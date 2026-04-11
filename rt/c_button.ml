@@ -168,28 +168,7 @@ value button_wsize (txt, shortcut) att_val xd = do {
   in
   let txt = latin_1_txt xd txt in
   xftTextExtents8 (xd.dpy, gi.ftfont, txt, String.length txt, gi.extents);
-(**)
-  let w =
-    max (opt_val 1 att_val.width_att)
-      (2 * (band + xd.motif_border) +
-       xTextWidth (bfs.fs, txt, String.length txt))
-  and h =
-    max (opt_val 1 att_val.height_att)
-      (2 * (band + xd.motif_border) + bfs.fheight)
-  and b = max 0 (opt_val button_border.val att_val.border_att) in
-(*
-Printf.printf "Xlib txt %s w %d h %d b %d\n" txt w h b;
-*)
-  let w =
-    match shortcut with
-    [ Some _ ->
-        let s = "Alt m" in w + xTextWidth (bfs.fs, s, String.length s) + 20
-    | None ->
-        match try Some (String.index txt '\t') with [ Not_found -> None ] with
-        [ Some _ -> w + xTextWidth (bfs.fs, " ", 1)
-        | None -> w ] ]
-  in
-(**)
+  let b = max 0 (opt_val button_border.val att_val.border_att) in
   let wg =
     max (opt_val 1 att_val.width_att)
       (2 * (band + xd.motif_border) +
@@ -198,14 +177,18 @@ Printf.printf "Xlib txt %s w %d h %d b %d\n" txt w h b;
     max (opt_val 1 att_val.height_att)
       (2 * (band + xd.motif_border) + glyphinfo_height gi.extents)
   in
+  let w =
+    match shortcut with
+    [ Some _ ->
+        let s = "Alt m" in wg + xTextWidth (bfs.fs, s, String.length s) + 20
+    | None ->
+        match try Some (String.index txt '\t') with [ Not_found -> None ] with
+        [ Some _ -> wg + xTextWidth (bfs.fs, " ", 1)
+        | None -> wg ] ]
+  in
   (* mmm... voir si faut pas prendre plutôt le "height" de la fonte *)
-(*
-Printf.printf "Xft  txt %s w %d h %d\n" txt wg hg;
-*)
-  let w = wg
-  and h = hg in
-  {sh_width = w; sh_height = h; sh_border = b; base_width = w;
-   base_height = h; width_inc = -1; height_inc = -1}
+  {sh_width = w; sh_height = hg; sh_border = b; base_width = w;
+   base_height = hg; width_inc = -1; height_inc = -1}
 };
 
 value select_mask =
