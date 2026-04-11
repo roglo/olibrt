@@ -146,6 +146,24 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
       f (xd.dpy, wid.win, gi.bgc.mgc, x,
          (wid.height + bfs.ascent - bfs.descent) / 2, s, slen)
   | None -> () ];
+  let attrs = alloc_XWindowAttributes () in
+  let draw =
+    xftDrawCreate
+      (xd.dpy, wid.win, xWindowAttributes_visual attrs,
+       xWindowAttributes_colormap attrs)
+  in
+  let color = alloc_XftColor () in
+  let _s = xGetWindowAttributes(xd.dpy, wid.win, attrs) in
+  let _b =
+    xftColorAllocName
+      (xd.dpy, xWindowAttributes_visual attrs,
+       xWindowAttributes_colormap attrs, "white", color)
+  in
+  let x = xd.motif_border + band in
+  let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
+Printf.printf "xftdrawstring8 (%d, %d) %s %d\n" x y txt len;
+flush stdout;
+  xftDrawString8 (draw, color, gi.ftfont, x, y, txt, len);
 };
 
 value button_wsize (txt, shortcut) att_val xd =
