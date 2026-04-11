@@ -175,7 +175,8 @@ value button_wsize (txt, shortcut) att_val xd = do {
        glyphinfo_width gi.extents)
   and hg =
     max (opt_val 1 att_val.height_att)
-      (2 * (band + xd.motif_border) + glyphinfo_height gi.extents)
+      (2 * (band + xd.motif_border) + xftFont_height gi.ftfont)
+      (*glyphinfo_height gi.extents*)
   in
   let w =
     match shortcut with
@@ -186,7 +187,6 @@ value button_wsize (txt, shortcut) att_val xd = do {
         [ Some _ -> wg + xTextWidth (bfs.fs, " ", 1)
         | None -> wg ] ]
   in
-  (* mmm... voir si faut pas prendre plutôt le "height" de la fonte *)
   {sh_width = w; sh_height = hg; sh_border = b; base_width = w;
    base_height = hg; width_inc = -1; height_inc = -1}
 };

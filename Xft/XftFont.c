@@ -18,6 +18,12 @@ value v;
         return new(XGlyphInfo);
 }
 
+value ML_XftFont_height(v)
+value v;
+{
+        return MLINT(((XftFont *)aar())->height);
+}
+
 value ML_XGlyphInfo_width(v)
 value v;
 {
