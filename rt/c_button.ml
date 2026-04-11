@@ -27,6 +27,8 @@ type mutable_gc = { mgc : gC; c_foreg : mutable int; c_font : mutable xfont };
 type button_global_info =
   { dfont : font;
     ftfont : xftfont;
+    attrs : xWindowAttributes;
+    color : xftcolor;
     bgc : mutable_gc };
 
 type button_local_info =
@@ -59,8 +61,12 @@ value make_button_global_info xd = do {
     {mgc = xCreateGC (xd.dpy, xd.rootw, mask, xgcv); c_foreg = 0;
      c_font = dfont.fid}
   in
+  let attrs = alloc_XWindowAttributes () in
+  let color = alloc_XftColor () in
+  let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
   add_ginfo xd "button" button_global_info
-    {dfont = dfont; ftfont = ftfont; bgc = bgc}
+    {dfont = dfont; ftfont = ftfont; attrs = attrs; color = color;
+     bgc = bgc}
 };
 
 value set_gc_foreground xd mgc att =
@@ -120,22 +126,15 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
     else att_val.foreg_att
   in
   set_gc_foreground xd gi.bgc col;
-  let attrs = alloc_XWindowAttributes () in
-  let _s = xGetWindowAttributes(xd.dpy, wid.win, attrs) in
+  let _s = xGetWindowAttributes(xd.dpy, wid.win, gi.attrs) in
   let draw =
     xftDrawCreate
-      (xd.dpy, wid.win, xWindowAttributes_visual attrs,
-       xWindowAttributes_colormap attrs)
-  in
-  let color = alloc_XftColor () in
-  let _b =
-    xftColorAllocName
-      (xd.dpy, xWindowAttributes_visual attrs,
-       xWindowAttributes_colormap attrs, "black", color)
+      (xd.dpy, wid.win, xWindowAttributes_visual gi.attrs,
+       xWindowAttributes_colormap gi.attrs)
   in
   let x = xd.motif_border + band in
   let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
-  xftDrawString8 (draw, color, gi.ftfont, x, y, txt, len);
+  xftDrawString8 (draw, gi.color, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
     [ Some sc -> Some (Printf.sprintf "Alt %c" sc, "Alt m")
@@ -151,7 +150,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
         wid.width - xd.motif_border - band - xTextWidth (bfs.fs, s2, slen)
       in
       let y = (wid.height + bfs.ascent - bfs.descent) / 2 in
-      xftDrawString8 (draw, color, gi.ftfont, x, y, s, slen)
+      xftDrawString8 (draw, gi.color, gi.ftfont, x, y, s, slen)
   | None -> () ];
 };
 
