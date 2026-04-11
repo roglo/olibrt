@@ -177,6 +177,9 @@ value button_wsize (txt, shortcut) att_val xd = do {
     max (opt_val 1 att_val.height_att)
       (2 * (band + xd.motif_border) + bfs.fheight)
   and b = max 0 (opt_val button_border.val att_val.border_att) in
+(*
+Printf.printf "Xlib txt %s w %d h %d b %d\n" txt w h b;
+*)
   let w =
     match shortcut with
     [ Some _ ->
@@ -186,6 +189,21 @@ value button_wsize (txt, shortcut) att_val xd = do {
         [ Some _ -> w + xTextWidth (bfs.fs, " ", 1)
         | None -> w ] ]
   in
+(**)
+  let wg =
+    max (opt_val 1 att_val.width_att)
+      (2 * (band + xd.motif_border) +
+       glyphinfo_width gi.extents)
+  and hg =
+    max (opt_val 1 att_val.height_att)
+      (2 * (band + xd.motif_border) + glyphinfo_height gi.extents)
+  in
+  (* mmm... voir si faut pas prendre plutôt le "height" de la fonte *)
+(*
+Printf.printf "Xft  txt %s w %d h %d\n" txt wg hg;
+*)
+  let w = wg
+  and h = hg in
   {sh_width = w; sh_height = h; sh_border = b; base_width = w;
    base_height = h; width_inc = -1; height_inc = -1}
 };

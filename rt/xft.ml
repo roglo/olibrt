@@ -10,6 +10,9 @@ type xftfont = 'a;
 external alloc_XftColor : unit -> xftcolor = "ML_alloc_XftColor";
 external alloc_glyphinfo : unit -> glyphinfo = "ML_alloc_XGlyphInfo";
 
+external glyphinfo_width : glyphinfo -> int = "ML_XGlyphInfo_width";
+external glyphinfo_height : glyphinfo -> int = "ML_XGlyphInfo_height";
+
 external xftColorAllocName :
   (display * visual * colormap * string * xftcolor) -> bool =
     "ML_XftColorAllocName";

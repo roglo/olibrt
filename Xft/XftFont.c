@@ -18,6 +18,18 @@ value v;
         return new(XGlyphInfo);
 }
 
+value ML_XGlyphInfo_width(v)
+value v;
+{
+        return MLINT(((XGlyphInfo *)aar())->width);
+}
+
+value ML_XGlyphInfo_height(v)
+value v;
+{
+        return MLINT(((XGlyphInfo *)aar())->height);
+}
+
 value ML_XftColorAllocName(v)
 value *v;
 {
