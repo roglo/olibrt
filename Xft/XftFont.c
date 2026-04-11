@@ -12,6 +12,12 @@ value v;
         return new(XftColor);
 }
 
+value ML_alloc_XGlyphInfo(v)
+value v;
+{
+        return new(XGlyphInfo);
+}
+
 value ML_XftColorAllocName(v)
 value *v;
 {
@@ -56,6 +62,17 @@ value *v;
 			  (int) iarv(1),
 			  (const char*) sarv(2));
 	return Val_addr(r);
+}
+
+value ML_XftTextExtents8(v)
+value *v;
+{
+	XftTextExtents8((Display *) aarv(0),
+			(XftFont *) aarv(1),
+			(const FcChar8 *) sarv(2),
+			(int) iarv(3),
+			(XGlyphInfo *) aarv(4));
+	return unit;
 }
 
 value ML_get_screen_size_mm(v)
