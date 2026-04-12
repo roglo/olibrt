@@ -54,7 +54,7 @@ type config =
     board_width : mutable int;
     board_height : mutable int }
 ;
-value square_len = ref 28;
+value square_len = ref 56;
 
 Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
@@ -1767,7 +1767,6 @@ value main dname =
   do {
     Arg.parse speclist anon_fun usage_msg;
     let xd = rt_initialize dname in
-    square_len.val := 2 * square_len.val;
     let xa = rt_args [xd] in
     let (gm, slang, disp_block) = restore_state () in
     let lang = if lang.val = "" then slang else lang.val in
