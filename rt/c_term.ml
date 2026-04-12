@@ -47,8 +47,6 @@ value create_gc xd fs = do {
 };
 
 value make_term_global_info xd =
-let _ = Printf.printf "*** make_term_global_info\n" in
-let _ = flush stdout in
   let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
   let attrs = alloc_XWindowAttributes () in
   let color = alloc_XftColor () in
