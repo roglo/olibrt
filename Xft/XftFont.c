@@ -18,6 +18,12 @@ value v;
         return new(XGlyphInfo);
 }
 
+value ML_XftFont_width(v)
+value v;
+{
+        return MLINT(((XftFont *)aar())->max_advance_width);
+}
+
 value ML_XftFont_height(v)
 value v;
 {

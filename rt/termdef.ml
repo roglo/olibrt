@@ -3,6 +3,7 @@
 open Rtdecl;
 open Util;
 open Xlib;
+open Xft;
 open Keysym;
 
 type term_event =
@@ -94,11 +95,15 @@ module Gstring :
 type term_global_info =
   { dfont : font;
     tgc : gC;
+    ftfont : xftfont;
+    attrs : xWindowAttributes;
+    color : xftcolor;
     c_backg : mutable int;
     c_foreg : mutable int;
     c_font : mutable xfont }
 and term_local_info =
   { term_gi : term_global_info;
+    draw : xftdraw;
     att_val : attribute_values;
     callb : term_event_handler;
     tfs : array (mlazy font);
@@ -328,8 +333,12 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
+(*
             xDrawImageString
               (xd.dpy, wid.win, gi.tgc, x, y, txt, ecol - bcol);
+*)
+  xftDrawString8 (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
+(**)
             if cland vid f_und != 0 then
               let y = y + li.tdescent / 2 in
               xDrawLine

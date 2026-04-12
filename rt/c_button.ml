@@ -32,7 +32,9 @@ type button_global_info =
     extents : glyphinfo };
 
 type button_local_info =
-  { button_gi : button_global_info; in_popup : bool }
+  { button_gi : button_global_info;
+    draw : xftdraw;
+    in_popup : bool }
 ;
 
 value (button_global_info, get_button_global_info) =
@@ -104,6 +106,7 @@ value latin_1_txt xd txt =
 
 value button_draw xd wid li (txt, shortcut) att_val = do {
   let gi = li.button_gi in
+  let li = get_button_local_info wid.info in
   let left_j = att_val.left_justif in
   let band = opt_val button_band.val att_val.band_att in
   let txt = latin_1_txt xd txt in
@@ -118,15 +121,9 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   in
   let len = String.length txt in
   let col = if wid.frozen then gi.frozen_color else gi.color in
-  let _s = xGetWindowAttributes(xd.dpy, wid.win, gi.attrs) in
-  let draw =
-    xftDrawCreate
-      (xd.dpy, wid.win, xWindowAttributes_visual gi.attrs,
-       xWindowAttributes_colormap gi.attrs)
-  in
   let x = xd.motif_border + band in
   let y = (wid.height + xftFont_height gi.ftfont - 5) / 2 in (* -5 : au pif *)
-  xftDrawString8 (draw, col, gi.ftfont, x, y, txt, len);
+  xftDrawString8 (li.draw, col, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
     [ Some sc -> Some (Printf.sprintf "Alt %c" sc, "Alt m")
@@ -142,7 +139,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
       let x =
         wid.width - xd.motif_border - band - glyphinfo_width gi.extents
       in
-      xftDrawString8 (draw, col, gi.ftfont, x, y, s, slen)
+      xftDrawString8 (li.draw, col, gi.ftfont, x, y, s, slen)
     }
   | None -> () ];
 };
@@ -197,7 +194,13 @@ value button_wcreate att_val (_, shortcut) xd pwin is_top in_popup wdesc x y
   [ None -> motif_backg xd win
   | _ -> () ];
   let gi = get_button_global_info (ginfo xd "button") in
-  let li = {button_gi = gi; in_popup = in_popup} in
+  let _s = xGetWindowAttributes(xd.dpy, win, gi.attrs) in
+  let draw =
+    xftDrawCreate
+      (xd.dpy, win, xWindowAttributes_visual gi.attrs,
+       xWindowAttributes_colormap gi.attrs)
+  in
+  let li = {button_gi = gi; draw = draw; in_popup = in_popup} in
   let info = button_local_info li in
   let wid = create_widget xd win is_top x y wsh wdesc info [] in
   match shortcut with

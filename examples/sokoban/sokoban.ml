@@ -1767,7 +1767,6 @@ value main dname =
   do {
     Arg.parse speclist anon_fun usage_msg;
     let xd = rt_initialize dname in
-    square_len.val := 2 * square_len.val;
     let xa = rt_args [xd] in
     let (gm, slang, disp_block) = restore_state () in
     let lang = if lang.val = "" then slang else lang.val in
