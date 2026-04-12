@@ -47,6 +47,8 @@ value create_gc xd fs = do {
 };
 
 value make_term_global_info xd =
+let _ = Printf.printf "*** make_term_global_info\n" in
+let _ = flush stdout in
   let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
   let attrs = alloc_XWindowAttributes () in
   let color = alloc_XftColor () in
@@ -108,7 +110,7 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   xDefineCursor (xd.dpy, win, xCreateFontCursor (xd.dpy, xC_xterm));
   let gi = get_term_global_info (ginfo xd "term") in
 (**)
-  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=5") in
 (*
   let font =
     if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
