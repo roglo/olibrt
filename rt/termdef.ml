@@ -302,14 +302,10 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tband = opt_val term_band.val li.att_val.band_att in
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
-(*
-          let y = tband + row * li.theight + li.tascent in
-*)
           let y =
-            let tband = (wid.height - li.nrow * li.theight + tinter) / 2 in
-            tband + row * li.theight + li.tascent
+            let tband = (wid.height - (li.nrow - 1) * li.theight) / 2 in
+            tband + row * li.theight + 5 (* 5 = au pif *)
           in
-(**)
           let font = unfreeze li.tfs.(cland vid (f_bld lor f_ita)) in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
@@ -333,12 +329,8 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
-(*
-            xDrawImageString
-              (xd.dpy, wid.win, gi.tgc, x, y, txt, ecol - bcol);
-*)
-  xftDrawString8 (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
-(**)
+	    xftDrawString8
+	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
               let y = y + li.tdescent / 2 in
               xDrawLine
