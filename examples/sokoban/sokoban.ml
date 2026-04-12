@@ -54,7 +54,7 @@ type config =
     board_width : mutable int;
     board_height : mutable int }
 ;
-value square_len = ref 32;
+value square_len = ref 28;
 
 Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
