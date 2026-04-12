@@ -1763,18 +1763,19 @@ value speclist =
     sprintf "<dir>: solutions directory (default = %s)" dsol.val)];
 value anon_fun _ = do { Arg.usage speclist usage_msg; exit 1 };
 
-value main dname =
-  do {
-    Arg.parse speclist anon_fun usage_msg;
-    let xd = rt_initialize dname in
-    let xa = rt_args [xd] in
-    let (gm, slang, disp_block) = restore_state () in
-    let lang = if lang.val = "" then slang else lang.val in
-    let main_wid = make_widget xa xd (gm, lang, disp_block) in
-    rt_redirect_key_press_to (widget_named xd "board");
-    rt_map_widget main_wid;
-    rt_main_loop xa
-  }
-;
+value main dname = do {
+  Arg.parse speclist anon_fun usage_msg;
+  let xd = rt_initialize dname in
+  let xa = rt_args [xd] in
+  let (wmm, hmm) = screen_size_mm xd in
+  let w = screen_width xd in
+  square_len.val := 8 * w / wmm;
+  let (gm, slang, disp_block) = restore_state () in
+  let lang = if lang.val = "" then slang else lang.val in
+  let main_wid = make_widget xa xd (gm, lang, disp_block) in
+  rt_redirect_key_press_to (widget_named xd "board");
+  rt_map_widget main_wid;
+  rt_main_loop xa
+};
 
 main "";

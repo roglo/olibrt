@@ -19,7 +19,7 @@ type xdata =
     rootw : window;
     root_width : int;
     root_height : int;
-    root_width_mm : int;
+    root_size_mm : (int * int);
     depth : int;
     cmap : colormap;
     connection_number : int;
