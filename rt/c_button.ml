@@ -122,7 +122,7 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
   let len = String.length txt in
   let col = if wid.frozen then gi.frozen_color else gi.color in
   let x = xd.motif_border + band in
-  let y = (wid.height + xftFont_height gi.ftfont - 5) / 2 in (* -5 : au pif *)
+  let y = (wid.height + xftFont_height gi.ftfont) / 2 - pix_of_mm xd 0.6 in
   xftDrawString8 (li.draw, col, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with

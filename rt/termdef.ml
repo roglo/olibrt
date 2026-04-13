@@ -294,7 +294,7 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let x = tband + bcol * li.twidth in
           let y =
             let tband = (wid.height - (li.nrow - 1) * li.theight) / 2 in
-            tband + row * li.theight + 5 (* 5 = au pif *)
+            tband + row * li.theight + pix_of_mm xd 1.0
           in
           let font = unfreeze li.tfs.(cland vid (f_bld lor f_ita)) in
           let rev =

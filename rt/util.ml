@@ -594,3 +594,7 @@ and dispatch xa xev fds = do {
        else ())
     xa.xdl
 };
+
+value pix_of_mm xd v =
+  truncate (v *. float xd.root_width /. float (fst (xd.root_size_mm)) +. 0.5)
+;
