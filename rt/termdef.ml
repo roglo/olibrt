@@ -107,8 +107,6 @@ and term_local_info =
     tfs : array (mlazy font);
     twidth : int;
     theight : int;
-    tascent : int;
-    tdescent : int;
     max_history_size : mutable int;
     lines : mutable array line;
     nhrow : mutable int;
@@ -305,13 +303,12 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let params = (xd, li, rev, vid, foreg, backg, font) in
           if cursor then do {
             set_backg_foreg params;
-            let y = y - li.tascent in
             xDrawLine
               (xd.dpy, wid.win, gi.tgc, x, y, x, y + li.theight - tinter - 1)
           }
           else if cland vid f_blk != 0 && flg_reset li flg_blink then
             xClearArea
-              (xd.dpy, wid.win, x, y - li.tascent,
+              (xd.dpy, wid.win, x, y,
                li.twidth * Gstring.length str, li.theight, 0)
           else do {
             set_backg_foreg params;
@@ -324,7 +321,6 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
 	    xftDrawString8
 	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
-              let y = y + li.tdescent / 2 in
               xDrawLine
                 (xd.dpy, wid.win, gi.tgc, x, y,
                  x + li.twidth * Gstring.length str, y)

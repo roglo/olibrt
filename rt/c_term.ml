@@ -142,8 +142,8 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   in
   let li =
     {term_gi = gi; draw= draw; att_val = att_val; callb = callb; tfs = tfs;
-     twidth = twidth; theight = theight; tascent = 0; (* font.ascent; *)
-     tdescent = (*font.descent*)0; max_history_size = nhist; lines = lines;
+     twidth = twidth; theight = theight;
+     max_history_size = nhist; lines = lines;
      nhrow = 0; nrow = nrow; ncol = ncol; shift = 0; crow = 0; ccol = 0;
      sreg1 = 0; sreg2 = ncol; vmask = Char.chr 0; foregm = 0; backgm = 0;
      vcrow = 0; vccol = 0; vvmask = Char.chr 0; vforegm = 0; vbackgm = 0;
