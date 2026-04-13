@@ -29,13 +29,6 @@ Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 
 value budget_prog xd = do {
-Printf.eprintf "if errors in loading fonts, do\n";
-Printf.eprintf "  sudo apt install xfonts-terminus\n";
-Printf.eprintf "  xset fp rehash\n";
-Printf.eprintf "screen_width %d\n" (RtN.screen_width xd);
-Printf.eprintf "screen_width_mm %d\n" (RtN.screen_width_mm xd);
-Printf.eprintf "get_dpi %g\n" (get_dpi xd);
-Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   prerr_string "Initialisation... ";
   flush Pervasives.stderr;
   state.action_quit := fun _ -> state.quit := True;

@@ -93,14 +93,12 @@ module Gstring :
 ;
 
 type term_global_info =
-  { dfont : font;
-    tgc : gC;
+  { tgc : gC;
     ftfont : xftfont;
     attrs : xWindowAttributes;
     color : xftcolor;
     c_backg : mutable int;
-    c_foreg : mutable int;
-    c_font : mutable xfont }
+    c_foreg : mutable int }
 and term_local_info =
   { term_gi : term_global_info;
     draw : xftdraw;
@@ -230,7 +228,6 @@ value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
   let (w_foreg, w_backg) =
     if rev then (w_backg, w_foreg) else (w_foreg, w_backg)
   in
-  let w_font = font.fid in
   let gi = li.term_gi in
   if gi.c_foreg != w_foreg then do {
     xSetForeground (xd.dpy, gi.tgc, w_foreg);
@@ -242,11 +239,6 @@ value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
     gi.c_backg := w_backg
   }
   else ();
-  if gi.c_font != w_font then do {
-    xSetFont (xd.dpy, gi.tgc, w_font);
-    gi.c_font := w_font
-  }
-  else ()
 };
 
 value expose_row wid li cursor optim_spaces only_blink row bcol ecol =

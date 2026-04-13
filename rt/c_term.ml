@@ -55,9 +55,8 @@ value make_term_global_info xd =
   let _gstr = gstr () in
   let tgc = create_gc xd fs in
   add_ginfo xd "term" term_global_info
-    {dfont = fs; tgc = tgc;
-     ftfont = ftfont; attrs = attrs; color = color;
-     c_backg = 1; c_foreg = 0; c_font = fs.fid}
+    {tgc = tgc; ftfont = ftfont; attrs = attrs; color = color;
+     c_backg = 1; c_foreg = 0}
 ;
 
 value (term_args, get_term_args) =
