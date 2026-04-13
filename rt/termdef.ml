@@ -304,7 +304,8 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           if cursor then do {
             set_backg_foreg params;
             xDrawLine
-              (xd.dpy, wid.win, gi.tgc, x, y, x, y + li.theight - tinter - 1)
+	      (xd.dpy, wid.win, gi.tgc, x, y - li.theight + tinter + 5,
+	       x, y + 3)
           }
           else if cland vid f_blk != 0 && flg_reset li flg_blink then
             xClearArea
@@ -318,6 +319,9 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
+            xClearArea
+              (xd.dpy, wid.win, x, y - li.theight,
+               li.twidth * Gstring.length str, li.theight + tinter + 5, 0);
 	    xftDrawString8
 	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
