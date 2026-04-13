@@ -304,7 +304,7 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           if cursor then do {
             set_backg_foreg params;
             xDrawLine
-	      (xd.dpy, wid.win, gi.tgc, x, y - li.theight + tinter + 5,
+              (xd.dpy, wid.win, gi.tgc, x, y - li.theight + tinter + 5,
 	       x, y + 3)
           }
           else if cland vid f_blk != 0 && flg_reset li flg_blink then
