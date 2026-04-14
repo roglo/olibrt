@@ -6,8 +6,7 @@ open Jmage;
 open RtN;
 
 value initialisation_pic =
-  "\
-    Initialisation
+  "    Initialisation
     --------------
 
 Entrez le premier mois
