@@ -104,7 +104,6 @@ and term_local_info =
     draw : xftdraw;
     att_val : attribute_values;
     callb : term_event_handler;
-    tfs : array (mlazy font);
     twidth : int;
     theight : int;
     max_history_size : mutable int;
@@ -208,7 +207,7 @@ and term_inter = ref 0
 and term_band = ref 2
 and term_blink = ref (500, 100);
 
-value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
+value set_backg_foreg (xd, li, rev, vid, foreg, backg) = do {
   let w_foreg =
     if cland vid f_foreg != 0 then foreg
     else
@@ -292,19 +291,14 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tband = opt_val term_band.val li.att_val.band_att in
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
-(**)
-          let y = tband + (row + 1) * li.theight in
-(*
           let y =
             let tband = (wid.height - (li.nrow - 1) * li.theight) / 2 in
             tband + row * li.theight + pix_of_mm xd 1.5
           in
-*)
-          let font = unfreeze li.tfs.(cland vid (f_bld lor f_ita)) in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
           in
-          let params = (xd, li, rev, vid, foreg, backg, font) in
+          let params = (xd, li, rev, vid, foreg, backg) in
           if cursor then do {
             set_backg_foreg params;
             xDrawLine
@@ -610,7 +604,6 @@ value term_get_emphasized wid =
   let ((row1, col1), (row2, col2)) = term_emphasized_location wid in
   let li = get_term_local_info wid.info in
   sel_str Gstring.empty row1 col1 where rec sel_str s row col =
-    (**)
     if row == row2 && col == col2 then Gstring.to_string s
     else
       let str = li.lines.(row).str in
@@ -631,10 +624,6 @@ value term_resize wid li nrow ncol = do {
   and ecol1 = li.ecol1 in
   let erow2 = li.erow2
   and ecol2 = li.ecol2 in
-(*
-  let nrow = max nrow li.nrow in
-  let ncol = max ncol li.ncol in
-*)
   display_emphasized_zone wid li False li.erow1 li.ecol1;
   let lines =
     make_array (li.nhrow + nrow)

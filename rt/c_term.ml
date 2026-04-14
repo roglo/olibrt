@@ -33,13 +33,6 @@ and term_band = Termdef.term_band
 and term_blink = Termdef.term_blink
 and term_border = ref 1;
 
-value create_term_font xd font_att i =
-  freeze
-    (fun () ->
-       if i < Array.length font_att then font_att.(i)
-       else rt_load_query_font xd term_font.(i))
-;
-
 value create_gc xd fs = do {
   let gstr = gstr () in
   let _mask = fs.gc_mask in set_XGCValues_font (fs.fid, gstr.xgcv);
@@ -69,23 +62,11 @@ value term_wsize wargs att_val xd =
     try get_term_global_info (ginfo xd "term") with _ ->
       make_term_global_info xd
   in
-(**)
   let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
-(*
-  let font =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
-  in
-*)
   let tinter = opt_val term_inter.val att_val.inter_att in
   let tband = opt_val term_band.val att_val.band_att in
-(**)
   let twidth = xftFont_width ftfont in
   let theight = xftFont_height ftfont + tinter in
-(*
-  let twidth = font.fwidth in
-  let theight = font.fheight + tinter in
-*)
   {sh_width = cols * twidth + 2 * tband;
    sh_height = rows * theight - tinter + 2 * tband;
    sh_border = opt_val term_border.val att_val.border_att;
@@ -106,23 +87,11 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   let win = create_window xd pwin is_top x y wsh att_val select_mask in
   xDefineCursor (xd.dpy, win, xCreateFontCursor (xd.dpy, xC_xterm));
   let gi = get_term_global_info (ginfo xd "term") in
-(**)
   let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
-(*
-  let font =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
-  in
-*)
   let tband = opt_val term_band.val att_val.band_att in
   let tinter = opt_val term_inter.val att_val.inter_att in
-(**)
   let twidth = xftFont_width ftfont in
   let theight = xftFont_height ftfont + tinter in
-(*
-  let twidth = font.fwidth in
-  let theight = font.fheight + tinter in
-*)
   let ncol = max 1 ((width - 2 * tband) / twidth) in
   let nrow = max 1 ((height - 2 * tband + tinter) / theight) in
   let lines =
@@ -131,9 +100,6 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
          {str = Gstring.create ncol; vid = Bytes.create ncol;
           foreg = Array.make ncol 0; backg = Array.make ncol 0})
   in
-  let tfs =
-    make_array (f_bld lor f_ita + 1) (create_term_font xd att_val.font_att)
-  in
   let _s = xGetWindowAttributes(xd.dpy, win, gi.attrs) in
   let draw =
     xftDrawCreate
@@ -141,7 +107,7 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
        xWindowAttributes_colormap gi.attrs)
   in
   let li =
-    {term_gi = gi; draw= draw; att_val = att_val; callb = callb; tfs = tfs;
+    {term_gi = gi; draw= draw; att_val = att_val; callb = callb;
      twidth = twidth; theight = theight;
      max_history_size = nhist; lines = lines;
      nhrow = 0; nrow = nrow; ncol = ncol; shift = 0; crow = 0; ccol = 0;
