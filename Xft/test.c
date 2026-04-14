@@ -1,5 +1,4 @@
 // sudo apt install libxft-dev libfreetype-dev libxrandr-dev
-// gcc test.c -lX11 -lXft -lXrandr -lfontconfig -I/usr/include/freetype2
 #include <X11/Xlib.h>
 #include <X11/Xft/Xft.h>
 #include <X11/extensions/Xrandr.h>
@@ -98,7 +97,7 @@ void main ()
   printf("dpmm = %g (not sure)\n", dpmm);
   dpmm = (double)DisplayWidth(display, screen) / (double)width_mm;
   printf("dpmm = %g\n", dpmm);
-  font = XftFontOpenName(display, screen, "mono:size=12");
+  font = XftFontOpenName(display, screen, "mono:size=52");
   if (font) print_font_info(display, font);
   window =
     XCreateSimpleWindow(display, DefaultRootWindow(display),
@@ -106,18 +105,15 @@ void main ()
   XSelectInput(display, window, ExposureMask);
   XMapWindow(display, window);
   XGetWindowAttributes(display, window, &attrs);
-printf("default colormap %ld\n", XDefaultColormap (display, 0));
-fflush(stdout);
-printf("window colormap %ld\n", attrs.colormap);
-fflush(stdout);
   draw = XftDrawCreate(display, window, attrs.visual, attrs.colormap);
   XftColorAllocName(display, attrs.visual, attrs.colormap, "white", &color);
   while (1) {
+    char *s = "Bonjour, Mimi";
     XNextEvent(display, &xev);
     if (xev.type == Expose) {
       if (xev.xexpose.count == 0) {
 	XftDrawString8(draw, &color, font, (int)(10 * dpmm), (int)(20 * dpmm),
-		       (XftChar8 *)"Bonjour", strlen("Bonjour"));
+		       (XftChar8 *)s, strlen(s));
 	XFlush(display);
       }
     }
