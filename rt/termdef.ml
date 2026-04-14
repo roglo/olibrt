@@ -292,10 +292,14 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tband = opt_val term_band.val li.att_val.band_att in
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
+(**)
+          let y = tband + (row + 1) * li.theight in
+(*
           let y =
             let tband = (wid.height - (li.nrow - 1) * li.theight) / 2 in
             tband + row * li.theight + pix_of_mm xd 1.5
           in
+*)
           let font = unfreeze li.tfs.(cland vid (f_bld lor f_ita)) in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)

@@ -803,9 +803,9 @@ value st_csi_question wid li (n, vl) =
       | 35 -> do {
           term_flush wid li;
           reset_flg li flg_cursor_off;
-(*
+(**)
           show_cursor wid li
-*)
+(**)
         }
       | 47 -> not_impl "interface monitor off"
       | _ -> not_unders ("CSI ? ... " ^ string_of_int n) 'l' ]
