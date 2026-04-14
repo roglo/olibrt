@@ -35,7 +35,7 @@ and term_border = ref 1;
 
 value create_gc xd fs = do {
   let gstr = gstr () in
-  let _mask = fs.gc_mask in set_XGCValues_font (fs.fid, gstr.xgcv);
+  set_XGCValues_font (fs.fid, gstr.xgcv);
   xCreateGC (xd.dpy, xd.rootw, fs.gc_mask, gstr.xgcv)
 };
 
