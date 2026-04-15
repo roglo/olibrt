@@ -314,9 +314,16 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
+(*
+	    xDrawRectangle
+	      (xd.dpy, wid.win, xd.gc, x, y - li.theight + tband + 1,
+               li.twidth * Gstring.length str, li.theight);
+*)
             xClearArea
-              (xd.dpy, wid.win, x, y - li.theight,
-               li.twidth * Gstring.length str, li.theight + tinter + 5, 0);
+              (xd.dpy, wid.win, x, y - li.theight + tband + 1,
+               li.twidth * Gstring.length str, li.theight, 0);
+	       (* + tband + 1 = pifomètre *)
+(**)
 	    xftDrawString8
 	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
