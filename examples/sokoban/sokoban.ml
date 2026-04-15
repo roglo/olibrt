@@ -1644,7 +1644,7 @@ value key_pressed conf gm wid km =
         conf.state := Normal
       }
   | Help ->
-      if km.item = K_Ascii ' ' then do {
+      if km.item = K_Ascii ' ' || km.item = K_Ascii 'q' then do {
         display_level conf gm;
         display_blocked conf gm wid;
         rt_raise_widget (widget_named conf.xd "board_pack");

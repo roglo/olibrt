@@ -155,6 +155,8 @@ value term_wselect wid select =
 ;
 
 value term_wdispatch callb wid xev =
+let _ = Printf.printf "term_wdispatch 1\n" in
+let _ = flush stdout in
   let xd = wid.wid_xd
   and t = xEvent_type xev in
   if t == expose then
@@ -192,7 +194,12 @@ value term_wdispatch callb wid xev =
       term_reinit wid li;
       xClearWindow (xd.dpy, wid.win);
       for row = 0 to li.nrow - 1 do { term_expose_row wid li row 0 li.ncol };
+let _ = Printf.printf "term_wdispatch 5 w %d h %d\n" width height in
+let _ = flush stdout in
+let r =
       callb wid (TermEvSizeChange li.nrow li.ncol)
+in let _ = Printf.printf "term_wdispatch 5.5\n" in
+let _ = flush stdout in r
     }
     else ()
   }

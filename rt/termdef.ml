@@ -291,10 +291,12 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
           let y =
+(*
             let tband =
 	      (wid.height - (li.nrow - 1) * (li.theight + tinter)) / 2
 	    in
-            tband + row * (li.theight + tinter) + pix_of_mm xd 1.5
+*)
+            tband + row * (li.theight + tinter) + li.tascent
           in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
@@ -318,7 +320,10 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
-(**)
+(*
+Printf.printf "txt \"%s\" row %d x %d y %d\n" (Gstring.to_string str) row x y;
+flush stdout;
+*)
 	    xDrawRectangle
 	      (xd.dpy, wid.win, xd.gc, x, y - li.tascent,
                li.twidth * Gstring.length str, li.theight);
@@ -329,9 +334,9 @@ flush stdout;
               (xd.dpy, wid.win, x, y - li.theight + tband + 1,
                li.twidth * Gstring.length str, li.theight, 0);
 	       (* + tband + 1 = pifomètre *)
-*)
 Printf.printf "ascent %d descent %d height %d\n" (xftFont_ascent gi.ftfont) (xftFont_descent gi.ftfont) (xftFont_height gi.ftfont);
 flush stdout;
+*)
 	    xftDrawString8
 	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
