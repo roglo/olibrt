@@ -54,7 +54,6 @@ value term_emphasize_to : widget -> int -> int -> unit;
 value term_emphasized_location : widget -> ((int * int) * (int * int));
 value term_get_emphasized : widget -> string;
 
-value term_font : array string;
 value term_border : ref int;
 value term_inter : ref int;
 value term_band : ref int;

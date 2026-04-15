@@ -444,7 +444,6 @@ value term_emphasize_from = Obj.magic C_term.term_emphasize_from;
 value term_emphasize_to = Obj.magic C_term.term_emphasize_to;
 value term_emphasized_location = Obj.magic C_term.term_emphasized_location;
 value term_get_emphasized = Obj.magic C_term.term_get_emphasized;
-value term_font = Obj.magic C_term.term_font;
 value term_border = Obj.magic C_term.term_border;
 value term_inter = Obj.magic C_term.term_inter;
 value term_band = Obj.magic C_term.term_band;

@@ -58,10 +58,6 @@ value square_len = ref 32;
 
 Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
-Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
-Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
-Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
-Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
 
 value dsol = ref "usol";
 value file_level n = "screens/screen." ^ string_of_int n;

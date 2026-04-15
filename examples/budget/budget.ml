@@ -14,17 +14,9 @@ value mm_to_pixels mm dpi =
 
 Rt.button_font.val := "*-helvetica-bold-r-*--18-*";
 Rt.title_font.val := "*-helvetica-bold-o-*--18-*";
-Rt.term_font.(0) := "*-courier-medium-r-*-18-*";
-Rt.term_font.(1) := "*-courier-bold-r-*-18-*";
-Rt.term_font.(2) := "*-courier-medium-o-*-18-*";
-Rt.term_font.(3) := "*-courier-bold-o-*-18-*";
 
 Rt.button_font.val := "mono:size=12";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
-Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
-Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
-Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
-Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
 
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 

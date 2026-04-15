@@ -200,10 +200,7 @@ and (term_local_info, get_term_local_info) =
     (ref None : ref (option term_local_info))
 ;
 
-value term_font =
-  [| "*-courier-medium-r-*-14-*"; "*-courier-bold-r-*-14-*";
-     "*-courier-medium-o-*-14-*"; "*-courier-bold-o-*-14-*" |]
-and term_inter = ref 0
+value term_inter = ref 0
 and term_band = ref 2
 and term_blink = ref (500, 100);
 

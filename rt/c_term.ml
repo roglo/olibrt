@@ -27,16 +27,14 @@ type term_event_handler = Termdef.term_event_handler;
 
 type term_args = (int * int * int);
 
-value term_font = Termdef.term_font
-and term_inter = Termdef.term_inter
+value term_inter = Termdef.term_inter
 and term_band = Termdef.term_band
 and term_blink = Termdef.term_blink
 and term_border = ref 1;
 
-value create_gc xd fs = do {
+value create_gc xd = do {
   let gstr = gstr () in
-  set_XGCValues_font (fs.fid, gstr.xgcv);
-  xCreateGC (xd.dpy, xd.rootw, fs.gc_mask, gstr.xgcv)
+  xCreateGC (xd.dpy, xd.rootw, 0, gstr.xgcv)
 };
 
 value make_term_global_info xd =
@@ -44,9 +42,8 @@ value make_term_global_info xd =
   let attrs = alloc_XWindowAttributes () in
   let color = alloc_XftColor () in
   let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
-  let fs = rt_load_query_font xd term_font.(0) in
   let _gstr = gstr () in
-  let tgc = create_gc xd fs in
+  let tgc = create_gc xd in
   add_ginfo xd "term" term_global_info
     {tgc = tgc; ftfont = ftfont; attrs = attrs; color = color;
      c_backg = 1; c_foreg = 0}
