@@ -282,17 +282,18 @@ value t_erase_in_display wid li =
         Array.fill line.foreg bcol (li.ncol - bcol) 0;
       };
       let tband = opt_val term_band.val li.att_val.band_att in
+      let tinter = opt_val term_inter.val li.att_val.inter_att in
       if li.ccol < li.ncol then
         xClearArea
           (xd.dpy, wid.win, tband + li.ccol * li.twidth,
-           tband + (li.crow + li.shift) * li.theight,
-           (li.ncol - li.ccol) * li.twidth, li.theight, 0)
+           tband + (li.crow + li.shift) * (li.theight + tinter),
+           (li.ncol - li.ccol) * li.twidth, li.theight + tinter, 0)
       else ();
       if li.crow + 1 < li.nrow then
         xClearArea
           (xd.dpy, wid.win, tband,
-           tband + (li.crow + 1 + li.shift) * li.theight, wid.width,
-           (li.nrow - (li.crow + 1)) * li.theight, 0)
+           tband + (li.crow + 1 + li.shift) * (li.theight + tinter),
+	   wid.width, (li.nrow - (li.crow + 1)) * (li.theight + tinter), 0)
       else ();
       cursor_erased.val := True;
       bcol.val := li.ccol;
@@ -310,14 +311,17 @@ value t_erase_in_display wid li =
         Array.fill line.foreg 0 ecol 0;
       };
       let tband = opt_val term_band.val li.att_val.band_att in
+      let tinter = opt_val term_inter.val li.att_val.inter_att in
       if li.crow > 1 then
         xClearArea
-          (xd.dpy, wid.win, tband, tband + li.shift * li.theight, wid.width,
-           (li.crow - 1) * li.theight, 0)
+          (xd.dpy, wid.win, tband,
+	   tband + li.shift * (li.theight + tinter), wid.width,
+           (li.crow - 1) * (li.theight + tinter), 0)
       else ();
       xClearArea
-        (xd.dpy, wid.win, tband, tband + (li.crow + li.shift) * li.theight,
-         min li.ncol (li.ccol + 1) * li.twidth, wid.height, 0);
+        (xd.dpy, wid.win, tband,
+	 tband + (li.crow + li.shift) * (li.theight + tinter),
+         min li.ncol (li.ccol + 1) * li.twidth, wid.height + tinter, 0);
       cursor_erased.val := True;
       bcol.val := li.ccol;
       ecol.val := li.ccol
@@ -335,8 +339,10 @@ value t_erase_in_display wid li =
       if li.shift == 0 then xClearWindow (xd.dpy, wid.win)
       else
         let tband = opt_val term_band.val li.att_val.band_att in
+        let tinter = opt_val term_inter.val li.att_val.inter_att in
         xClearArea
-          (xd.dpy, wid.win, tband, tband + li.shift * li.theight, 0, 0, 0);
+          (xd.dpy, wid.win, tband,
+	   tband + li.shift * (li.theight + tinter), 0, 0, 0);
       cursor_erased.val := True;
       bcol.val := li.ccol;
       ecol.val := li.ccol
@@ -364,10 +370,11 @@ value t_erase_in_line wid li =
       Array.fill line.foreg li.ccol len 0;
       if li.ccol < li.ncol then
         let tband = opt_val term_band.val li.att_val.band_att in
+        let tinter = opt_val term_inter.val li.att_val.inter_att in
         xClearArea
           (xd.dpy, wid.win, tband + li.ccol * li.twidth,
-           tband + (li.crow + li.shift) * li.theight,
-           (li.ncol - li.ccol) * li.twidth, li.theight, 0)
+           tband + (li.crow + li.shift) * (li.theight + tinter),
+           (li.ncol - li.ccol) * li.twidth, li.theight + tinter, 0)
       else ();
       cursor_erased.val := True;
       bcol.val := li.ccol
@@ -382,9 +389,11 @@ value t_erase_in_line wid li =
       Array.fill line.foreg 0 len 0;
       if li.ccol < li.ncol then
         let tband = opt_val term_band.val li.att_val.band_att in
+        let tinter = opt_val term_inter.val li.att_val.inter_att in
         xClearArea
-          (xd.dpy, wid.win, tband, tband + (li.crow + li.shift) * li.theight,
-           (li.ccol + 1) * li.twidth, li.theight, 0)
+          (xd.dpy, wid.win, tband,
+	   tband + (li.crow + li.shift) * (li.theight + tinter),
+           (li.ccol + 1) * li.twidth, li.theight + tinter, 0)
       else ();
       cursor_erased.val := True
     }
@@ -397,9 +406,11 @@ value t_erase_in_line wid li =
       Array.fill line.backg 0 len 0;
       Array.fill line.foreg 0 len 0;
       let tband = opt_val term_band.val li.att_val.band_att in
+      let tinter = opt_val term_inter.val li.att_val.inter_att in
       xClearArea
-        (xd.dpy, wid.win, tband, tband + (li.crow + li.shift) * li.theight,
-         li.ncol * li.twidth, li.theight, 0);
+        (xd.dpy, wid.win, tband,
+	 tband + (li.crow + li.shift) * (li.theight + tinter),
+         li.ncol * li.twidth, li.theight + tinter, 0);
       cursor_erased.val := True
     }
   | n -> not_unders ("CSI " ^ string_of_int n) 'K' ]
@@ -436,7 +447,9 @@ value t_set_reverse_video wid li rev = do {
   xClearWindow (xd.dpy, wid.win);
   if li.shift > 0 then
     let tband = opt_val term_band.val li.att_val.band_att in
-    term_expose wid tband tband (li.ncol * li.twidth) (li.shift * li.theight)
+    let tinter = opt_val term_inter.val li.att_val.inter_att in
+    term_expose wid tband tband (li.ncol * li.twidth)
+      (li.shift * (li.theight + tinter))
   else ()
 };
 
