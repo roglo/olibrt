@@ -54,6 +54,8 @@ value (term_args, get_term_args) =
 ;
 
 value term_wsize wargs att_val xd =
+let _ = Printf.printf "term_wsize 1\n" in
+let _ = flush stdout in
   let (rows, cols, _) = (get_term_args wargs).val in
   let _gi =
     try get_term_global_info (ginfo xd "term") with _ ->
@@ -64,11 +66,14 @@ value term_wsize wargs att_val xd =
   let tband = opt_val term_band.val att_val.band_att in
   let twidth = xftFont_width ftfont in
   let theight = xftFont_height ftfont in
+let r =
   {sh_width = cols * twidth + 2 * tband;
    sh_height = rows * (theight + tinter) + 2 * tband;
    sh_border = opt_val term_border.val att_val.border_att;
    base_width = 2 * tband; base_height = 2 * tband - tinter;
    width_inc = twidth; height_inc = theight + tinter}
+in let _ = Printf.printf "term_wsize 2 sh_height %d\n" r.base_height in
+let _ = flush stdout in r
 ;
 
 value select_mask =
@@ -79,6 +84,8 @@ value select_mask =
 
 value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
     wsh = do {
+let _ = Printf.printf "term_wcreate 1\n" in
+flush stdout;
   let (_, _, nhist) = (get_term_args wargs).val in
   let {sh_width = width; sh_height = height; sh_border = border} = wsh in
   let win = create_window xd pwin is_top x y wsh att_val select_mask in
@@ -120,7 +127,11 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   term_soft_reset li;
   let info = term_local_info li in
   let wid = create_widget xd win is_top x y wsh wdesc info [] in
+let r =
   add_widget att_val.name_att win wid
+in let _ = Printf.printf "term_wcreate 2\n" in
+flush stdout;
+r
 };
 
 value term_wdestroy att_val wid = remove_widget att_val.name_att wid.win wid;
@@ -155,8 +166,6 @@ value term_wselect wid select =
 ;
 
 value term_wdispatch callb wid xev =
-let _ = Printf.printf "term_wdispatch 1\n" in
-let _ = flush stdout in
   let xd = wid.wid_xd
   and t = xEvent_type xev in
   if t == expose then
@@ -194,12 +203,7 @@ let _ = flush stdout in
       term_reinit wid li;
       xClearWindow (xd.dpy, wid.win);
       for row = 0 to li.nrow - 1 do { term_expose_row wid li row 0 li.ncol };
-let _ = Printf.printf "term_wdispatch 5 w %d h %d\n" width height in
-let _ = flush stdout in
-let r =
       callb wid (TermEvSizeChange li.nrow li.ncol)
-in let _ = Printf.printf "term_wdispatch 5.5\n" in
-let _ = flush stdout in r
     }
     else ()
   }

@@ -383,6 +383,8 @@ value row_col_of_xy li x y =
 ;
 
 value term_expose wid x y width height = do {
+let _ = Printf.printf "term_expose 1\n" in
+let _ = flush stdout in
   let li = get_term_local_info wid.info in
   let tinter = opt_val term_inter.val li.att_val.inter_att in
   let (brow, bcol) = row_col_of_xy li x y in
@@ -421,10 +423,13 @@ value term_expose wid x y width height = do {
   for row = brow to erow - 1 do {
     expose_row wid li False True False row bcol ecol;
   };
+let r =
   if li.crow >= brow && li.crow < erow && li.ccol >= bcol && li.ccol < ecol
   then
     term_expose_cursor wid li
   else ()
+in let _ = Printf.printf "term_expose 2\n" in
+let _ = flush stdout in r
 };
 
 value term_soft_reset li = do {
