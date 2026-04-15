@@ -318,6 +318,8 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
 	    xDrawRectangle
 	      (xd.dpy, wid.win, xd.gc, x, y - li.theight + tband + 1,
                li.twidth * Gstring.length str, li.theight);
+Printf.printf "tband %d tinter %d\n" tband tinter;
+flush stdout;
 *)
             xClearArea
               (xd.dpy, wid.win, x, y - li.theight + tband + 1,
