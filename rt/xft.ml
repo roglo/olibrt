@@ -10,6 +10,8 @@ type xftfont = 'a;
 external alloc_XftColor : unit -> xftcolor = "ML_alloc_XftColor";
 external alloc_glyphinfo : unit -> glyphinfo = "ML_alloc_XGlyphInfo";
 
+external xftFont_ascent : xftfont -> int = "ML_XftFont_ascent";
+external xftFont_descent : xftfont -> int = "ML_XftFont_descent";
 external xftFont_width : xftfont -> int = "ML_XftFont_width";
 external xftFont_height : xftfont -> int = "ML_XftFont_height";
 external glyphinfo_width : glyphinfo -> int = "ML_XGlyphInfo_width";

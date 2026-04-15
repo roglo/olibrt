@@ -18,6 +18,18 @@ value v;
         return new(XGlyphInfo);
 }
 
+value ML_XftFont_ascent(v)
+value v;
+{
+        return MLINT(((XftFont *)aar())->ascent);
+}
+
+value ML_XftFont_descent(v)
+value v;
+{
+        return MLINT(((XftFont *)aar())->descent);
+}
+
 value ML_XftFont_width(v)
 value v;
 {

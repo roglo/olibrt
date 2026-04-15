@@ -106,6 +106,8 @@ and term_local_info =
     callb : term_event_handler;
     twidth : int;
     theight : int;
+    tascent : int;
+    tdescent : int;
     max_history_size : mutable int;
     lines : mutable array line;
     nhrow : mutable int;
@@ -200,8 +202,8 @@ and (term_local_info, get_term_local_info) =
     (ref None : ref (option term_local_info))
 ;
 
-value term_inter = ref 0
-and term_band = ref 2
+value term_inter = ref 20
+and term_band = ref 0
 and term_blink = ref (500, 100);
 
 value set_backg_foreg (xd, li, rev, vid, foreg, backg) = do {
@@ -289,8 +291,10 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
           let y =
-            let tband = (wid.height - (li.nrow - 1) * li.theight) / 2 in
-            tband + row * li.theight + pix_of_mm xd 1.5
+            let tband =
+	      (wid.height - (li.nrow - 1) * (li.theight + tinter)) / 2
+	    in
+            tband + row * (li.theight + tinter) + pix_of_mm xd 1.5
           in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
@@ -305,7 +309,7 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           else if cland vid f_blk != 0 && flg_reset li flg_blink then
             xClearArea
               (xd.dpy, wid.win, x, y,
-               li.twidth * Gstring.length str, li.theight, 0)
+               li.twidth * Gstring.length str, li.theight + tinter, 0)
           else do {
             set_backg_foreg params;
             let txt =
@@ -314,18 +318,20 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
-(*
+(**)
 	    xDrawRectangle
-	      (xd.dpy, wid.win, xd.gc, x, y - li.theight + tband + 1,
+	      (xd.dpy, wid.win, xd.gc, x, y - li.tascent,
                li.twidth * Gstring.length str, li.theight);
+(*
 Printf.printf "tband %d tinter %d\n" tband tinter;
 flush stdout;
-*)
             xClearArea
               (xd.dpy, wid.win, x, y - li.theight + tband + 1,
                li.twidth * Gstring.length str, li.theight, 0);
 	       (* + tband + 1 = pifomètre *)
-(**)
+*)
+Printf.printf "ascent %d descent %d height %d\n" (xftFont_ascent gi.ftfont) (xftFont_descent gi.ftfont) (xftFont_height gi.ftfont);
+flush stdout;
 	    xftDrawString8
 	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
@@ -366,23 +372,26 @@ value term_expose_blink wid li = do {
 
 value row_col_of_xy li x y =
   let tband = opt_val term_band.val li.att_val.band_att in
-  let row = min li.nrow (max 0 ((y - tband) / li.theight)) in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
+  let row = min li.nrow (max 0 ((y - tband) / (li.theight + tinter))) in
   let col = min li.ncol (max 0 ((x - tband) / li.twidth)) in (row, col)
 ;
 
 value term_expose wid x y width height = do {
   let li = get_term_local_info wid.info in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   let (brow, bcol) = row_col_of_xy li x y in
   let (erow, ecol) =
-    row_col_of_xy li (x + width + li.twidth - 1) (y + height + li.theight - 1)
+    row_col_of_xy li (x + width + li.twidth - 1)
+      (y + height + li.theight + tinter - 1)
   in
   if flg_set li flg_bars then do {
     let xd = wid.wid_xd in
     let tb = opt_val term_band.val li.att_val.band_att in
     let bx = tb + bcol * li.twidth in
-    let by = tb + brow * li.theight in
+    let by = tb + brow * (li.theight + tinter) in
     let ex = tb + ecol * li.twidth in
-    let ey = tb + erow * li.theight in
+    let ey = tb + erow * (li.theight + tinter) in
     let rec draw_vertical_lines x =
       if x < ex then do {
         xDrawLine (xd.dpy, wid.win, xd.gc, x, by, x, ey);
@@ -392,7 +401,7 @@ value term_expose wid x y width height = do {
     and draw_horizontal_lines y = do {
       let tinter = opt_val term_inter.val li.att_val.inter_att in
       xDrawLine (xd.dpy, wid.win, xd.gc, bx, y, ex, y);
-      let y = y + li.theight - tinter in
+      let y = y + li.theight in
       if y < ey then do {
         xDrawLine (xd.dpy, wid.win, xd.gc, bx, y, ex, y);
         draw_horizontal_lines (y + tinter)
@@ -449,18 +458,21 @@ value term_scroll_down wid li nb row nrow = do {
   let nb = min nb nrow in
   let xd = wid.wid_xd in
   let tband = opt_val term_band.val li.att_val.band_att in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   if row + nb < li.nrow then do {
     xCopyArea
-      (xd.dpy, wid.win, wid.win, xd.gc, tband, tband + row * li.theight,
-       li.ncol * li.twidth, (nrow - nb) * li.theight, tband,
-       tband + (row + nb) * li.theight);
+      (xd.dpy, wid.win, wid.win, xd.gc, tband,
+       tband + row * (li.theight + tinter),
+       li.ncol * li.twidth, (nrow - nb) * (li.theight + tinter),
+       tband, tband + (row + nb) * (li.theight + tinter));
     li.scroll_cnt := li.scroll_cnt + 1
   }
   else ();
   if row < li.nrow then
     xClearArea
-      (xd.dpy, wid.win, tband, tband + row * li.theight, li.ncol * li.twidth,
-       nb * li.theight, 0)
+      (xd.dpy, wid.win, tband,
+       tband + row * (li.theight + tinter), li.ncol * li.twidth,
+       nb * (li.theight + tinter), 0)
   else ()
 };
 
@@ -470,19 +482,22 @@ value term_scroll_up wid li nb row nrow = do {
   let nb = min nb nrow in
   let xd = wid.wid_xd in
   let tband = opt_val term_band.val li.att_val.band_att in
-  let yband = (wid.height - li.nrow * li.theight) in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
+  let yband = (wid.height - li.nrow * (li.theight + tinter)) in
   if row + nb < li.nrow then do {
     xCopyArea
       (xd.dpy, wid.win, wid.win, xd.gc, tband,
-       yband + (row + nb) * li.theight, li.ncol * li.twidth,
-       (nrow - nb) * li.theight, tband, yband + row * li.theight);
+       yband + (row + nb) * (li.theight + tinter), li.ncol * li.twidth,
+       (nrow - nb) * (li.theight + tinter), tband,
+       yband + row * (li.theight + tinter));
     li.scroll_cnt := li.scroll_cnt + 1
   }
   else ();
   if row + nrow - nb < li.nrow then
     xClearArea
-      (xd.dpy, wid.win, tband, yband + (row + nrow - nb) * li.theight,
-       li.ncol * li.twidth, nb * li.theight, 0)
+      (xd.dpy, wid.win, tband,
+       yband + (row + nrow - nb) * (li.theight + tinter),
+       li.ncol * li.twidth, nb * (li.theight + tinter), 0)
   else ()
 };
 

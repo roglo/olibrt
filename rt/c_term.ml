@@ -63,12 +63,12 @@ value term_wsize wargs att_val xd =
   let tinter = opt_val term_inter.val att_val.inter_att in
   let tband = opt_val term_band.val att_val.band_att in
   let twidth = xftFont_width ftfont in
-  let theight = xftFont_height ftfont + tinter in
+  let theight = xftFont_height ftfont in
   {sh_width = cols * twidth + 2 * tband;
-   sh_height = rows * theight - tinter + 2 * tband;
+   sh_height = rows * (theight + tinter) + 2 * tband;
    sh_border = opt_val term_border.val att_val.border_att;
    base_width = 2 * tband; base_height = 2 * tband - tinter;
-   width_inc = twidth; height_inc = theight}
+   width_inc = twidth; height_inc = theight + tinter}
 ;
 
 value select_mask =
@@ -88,7 +88,9 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   let tband = opt_val term_band.val att_val.band_att in
   let tinter = opt_val term_inter.val att_val.inter_att in
   let twidth = xftFont_width ftfont in
-  let theight = xftFont_height ftfont + tinter in
+  let theight = xftFont_height ftfont in
+  let tascent = xftFont_ascent ftfont in
+  let tdescent = xftFont_descent ftfont in
   let ncol = max 1 ((width - 2 * tband) / twidth) in
   let nrow = max 1 ((height - 2 * tband + tinter) / theight) in
   let lines =
@@ -106,6 +108,7 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   let li =
     {term_gi = gi; draw= draw; att_val = att_val; callb = callb;
      twidth = twidth; theight = theight;
+     tascent = tascent; tdescent = tdescent;
      max_history_size = nhist; lines = lines;
      nhrow = 0; nrow = nrow; ncol = ncol; shift = 0; crow = 0; ccol = 0;
      sreg1 = 0; sreg2 = ncol; vmask = Char.chr 0; foregm = 0; backgm = 0;
@@ -139,7 +142,9 @@ value term_graphics_expose wid li = do {
 value term_reinit wid li =
   let tband = opt_val term_band.val li.att_val.band_att in
   let tinter = opt_val term_inter.val li.att_val.inter_att in
-  let nrow = max 1 ((wid.height - 2 * tband + tinter) / li.theight) in
+  let nrow =
+    max 1 ((wid.height - 2 * tband + tinter) / (li.theight + tinter))
+  in
   let ncol = max 1 ((wid.width - 2 * tband) / li.twidth) in
   term_resize wid li nrow ncol
 ;
@@ -333,6 +338,7 @@ value term_shift_value wid =
 
 value term_shift wid nb =
   let li = get_term_local_info wid.info in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   let _gi = li.term_gi in
   let nb = max 0 (min li.nhrow nb) in
   let d = nb - li.shift in
@@ -342,13 +348,14 @@ value term_shift wid nb =
     if d < 0 then do {
       term_scroll_up wid li (-d) 0 li.nrow;
       let nb = min (-d) li.nrow in
-      term_expose wid tband (tband + (li.nrow - nb) * li.theight)
-        (li.ncol * li.twidth) (nb * li.theight)
+      term_expose wid tband (tband + (li.nrow - nb) * (li.theight + tinter))
+        (li.ncol * li.twidth) (nb * (li.theight + tinter))
     }
     else if d > 0 then do {
       term_scroll_down wid li d 0 li.nrow;
       let nb = min d li.nrow in
-      term_expose wid tband tband (li.ncol * li.twidth) (nb * li.theight)
+      term_expose wid tband tband (li.ncol * li.twidth)
+	(nb * (li.theight + tinter))
     }
     else ()
   }
