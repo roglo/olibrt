@@ -25,8 +25,6 @@ value budget_prog xd = do {
   flush Pervasives.stderr;
   state.action_quit := fun _ -> state.quit := True;
   let rw = rt_root_widget xd in
-let _ = Printf.printf "budget 1\n" in
-let _ = flush stdout in
   let wid =
     rt_create_widget rw "Budget familial" "Budget" 0 0
       (Some (fun wid -> state.action_quit wid)) A_entree.wdesc
