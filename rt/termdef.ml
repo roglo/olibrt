@@ -291,10 +291,10 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
           let y =
-            tband + row * (li.theight + tinter) - tinter + li.tascent
+            tband + row * (li.theight + tinter) + li.tascent
           in
 let _ = if row = 0 then
-  let _ = Printf.printf "y %d\n" y in
+  let _ = Printf.printf "tband %d y %d\n" tband y in
   let _ = flush stdout in ()
   else ()
 in
@@ -321,7 +321,7 @@ in
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
 (*
-Printf.printf "txt \"%s\" row %d x %d y %d\n" (Gstring.to_string str) row x y;
+Printf.printf "row %d txt \"%s\" row %d x %d y %d\n" row (Gstring.to_string str) row x y;
 flush stdout;
 *)
 	    xDrawRectangle
