@@ -294,9 +294,11 @@ value rec interp_stream print lang strm =
 ;
 
 value interp_file print lang fname =
-  try
+  try do {
     let ic = open_in fname in
-    do { interp_stream print lang (Stream.of_channel ic); close_in ic }
+    interp_stream print lang (Stream.of_channel ic);
+    close_in ic
+  }
   with
   [ Sys_error _ ->
       String.iter print (sprintf "Cannot open file \"%s\"" fname) ]
