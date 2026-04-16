@@ -202,7 +202,7 @@ and (term_local_info, get_term_local_info) =
     (ref None : ref (option term_local_info))
 ;
 
-value term_inter = ref 20
+value term_inter = ref 15
 and term_band = ref 0
 and term_blink = ref (500, 100);
 
@@ -291,12 +291,7 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
           let y =
-(*
-            let tband =
-	      (wid.height - (li.nrow - 1) * (li.theight + tinter)) / 2
-	    in
-*)
-            tband + row * (li.theight + tinter) + li.tascent
+            tband + row * (li.theight + tinter) - tinter + li.tascent
           in
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)

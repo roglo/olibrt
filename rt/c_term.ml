@@ -65,7 +65,7 @@ value term_wsize wargs att_val xd =
   let twidth = xftFont_width ftfont in
   let theight = xftFont_height ftfont in
   {sh_width = cols * twidth + 2 * tband;
-   sh_height = rows * (theight + tinter) + 2 * tband;
+   sh_height = rows * (theight + tinter) - tinter + 2 * tband;
    sh_border = opt_val term_border.val att_val.border_att;
    base_width = 2 * tband; base_height = 2 * tband - tinter;
    width_inc = twidth; height_inc = theight + tinter}
