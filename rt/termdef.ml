@@ -202,7 +202,7 @@ and (term_local_info, get_term_local_info) =
     (ref None : ref (option term_local_info))
 ;
 
-value term_inter = ref 15
+value term_inter = ref 0
 and term_band = ref 0
 and term_blink = ref (500, 100);
 
@@ -326,16 +326,20 @@ in
 Printf.printf "row %d txt \"%s\" row %d x %d y %d\n" row (Gstring.to_string str) row x y;
 flush stdout;
 *)
+(*
 	    xDrawRectangle
 	      (xd.dpy, wid.win, xd.gc, x, y - li.tascent,
                li.twidth * Gstring.length str, li.theight);
+*)
 (*
 Printf.printf "tband %d tinter %d\n" tband tinter;
 flush stdout;
+*)
             xClearArea
-              (xd.dpy, wid.win, x, y - li.theight + tband + 1,
+              (xd.dpy, wid.win, x, y - li.tascent,
                li.twidth * Gstring.length str, li.theight, 0);
 	       (* + tband + 1 = pifomètre *)
+(*
 Printf.printf "ascent %d descent %d height %d\n" (xftFont_ascent gi.ftfont) (xftFont_descent gi.ftfont) (xftFont_height gi.ftfont);
 flush stdout;
 *)
