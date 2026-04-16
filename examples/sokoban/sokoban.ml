@@ -464,9 +464,13 @@ value display_move conf gm =
 value display_help conf =
   let twid = widget_named conf.xd "help_term" in
   do {
+Printf.printf "set_newline_mode\n";
     term_send twid set_newline_mode;
-    interp_file (fun c -> term_send twid (String.make 1 c)) conf.lang
+Printf.printf "<<";
+    interp_file (fun c -> let _ = Printf.printf "%c" c in term_send twid (String.make 1 c)) conf.lang
       "help.txt"
+;Printf.printf ">>";
+flush stdout;
   }
 ;
 

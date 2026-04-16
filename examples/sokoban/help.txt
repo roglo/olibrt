@@ -1,5 +1,5 @@
 # $Id: help.txt,v 1.6 2005/10/10 19:30:17 ddr Exp $
-
+***
                     SOKOBAN
 
 [

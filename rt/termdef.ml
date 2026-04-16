@@ -293,11 +293,13 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let y =
             tband + row * (li.theight + tinter) + li.tascent
           in
+(*
 let _ = if row = 0 then
   let _ = Printf.printf "tband %d y %d\n" tband y in
   let _ = flush stdout in ()
   else ()
 in
+*)
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
           in
