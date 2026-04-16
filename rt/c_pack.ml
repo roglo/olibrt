@@ -225,7 +225,7 @@ value do_pack_widlist xd att_val ref_args width height a_cdr a_list b_cons
 let _ = Printf.printf "fH %d\n" fH in
 let _ = flush stdout in
           b_cons k
-            (action_loop (x + dx / fW) (y + dy / fH) err (a_cdr a_list) wdl)
+            (action_loop (x + dx / fW) (y + dy / max 1 fH) err (a_cdr a_list) wdl)
       | _ -> b_nil ]
 ;
 
