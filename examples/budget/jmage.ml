@@ -49,20 +49,19 @@ value utf8_of_string str =
 
 value string_of_utf8 = String.concat "";
 
+value uppercase_char c =
+  Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+;
+
 value utf8_uppercase =
   List.map
     (fun s ->
        match s.[0] with
-       | 'a'..'z' as c ->
-           let c = Char.chr (Char.code c - Char.code 'a' + Char.code 'A') in
-           String.make 1 c
+       | 'a'..'z' as c -> String.make 1 (uppercase_char c)
        | '\195' ->
            match s.[1] with
            | '\160'..'\191' as c ->
-               let c =
-		 Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
-	       in
-               String.make 1 s.[0] ^ String.make 1 c
+               String.make 1 s.[0] ^ String.make 1 (uppercase_char c)
            | _ -> s
            end
        | _ -> s
@@ -74,8 +73,7 @@ value uppercase str = do {
   for i = 0 to String.length str - 1 do {
     str2.[i] :=
       match str.[i] with
-      [ 'a'..'z' as c ->
-          Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+      [ 'a'..'z' as c -> uppercase_char c
       | c -> c ];
   };
   str2
