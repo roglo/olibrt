@@ -1109,7 +1109,9 @@ value help_nlines =
 ;
 
 value window_outl = 68;
+(*
 Rt.term_font.(0) := "*-courier-medium-r-*-12-*";
+*)
 
 value adjust_const xd =
   let hs =
