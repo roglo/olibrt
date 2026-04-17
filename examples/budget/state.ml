@@ -95,18 +95,6 @@ value rec nth _xxx1 _xxx2 =
   | (n, [_ :: l]) -> nth (pred n) l ]
 ;
 
-value uppercase str = do {
-  let str2 = Bytes.of_string str in
-  for i = 0 to String.length str - 1 do {
-    str2.[i] :=
-      match str.[i] with
-      [ 'a'..'z' as c ->
-          Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
-      | c -> c ];
-  };
-  str2
-};
-
 value ligne_marquee () =
   find_selected mois.val.lignes where rec find_selected =
     fun

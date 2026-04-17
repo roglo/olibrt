@@ -43,7 +43,6 @@ value state : state;
 value init_state : unit -> unit;
 value get_ip : unit -> inputPic;
 
-value uppercase : string -> string;
 value ligne_marquee : unit -> ligne;
 value maj_total : (int -> int -> int) -> ligne -> unit;
 

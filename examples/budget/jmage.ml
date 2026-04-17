@@ -252,6 +252,18 @@ value string_of_date j m a = do {
   strj ^ "/" ^ strm ^ "/" ^ stra
 };
 
+value uppercase str = do {
+  let str2 = Bytes.of_string str in
+  for i = 0 to String.length str - 1 do {
+    str2.[i] :=
+      match str.[i] with
+      [ 'a'..'z' as c ->
+          Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+      | c -> c ];
+  };
+  str2
+};
+
 value capitalize str =
   match str.[0] with
   [ 'a'..'z' as c -> do {
