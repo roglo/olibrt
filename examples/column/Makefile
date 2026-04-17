@@ -19,15 +19,15 @@ CAMLP5=camlp5r
 CC=gcc
 ZDEP=ocamldep -pp $(CAMLP5)
 RTDIR=$(TOP)/rt
-RTLIB=$(RTDIR)/librt.cma
-XLIB=$(TOP)/Xlib/$(ARCH)/libx.a
+RTLIB=$(TOP)/rt/xft.cmo $(RTDIR)/librt.cma
+XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
 CONFIG=$(TOP)/config
 
 ARCH=.
 
 BINDIR=/usr/local/bin
 LIBDIR=/usr/local/lib/ocaml
-LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11
+LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11 -cclib -lXft -cclib -lXrandr
 OLIBDIR=/usr/local/lib/ocaml
 
 ZDEPFLAGS=-I $(RTDIR)
@@ -42,7 +42,7 @@ all::
 
 TARGET=$(ARCH)/column.out
 ZOFILES=column.cmo
-XLIB=$(TOP)/Xlib/$(ARCH)/libx.a
+XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
 
 all:: $(TARGET)
 
