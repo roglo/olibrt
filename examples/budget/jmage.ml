@@ -21,7 +21,28 @@ type field =
   | Fempty ]
 ;
 
-(* $Id: jmage.ml,v 1.4 2006/06/02 06:58:16 deraugla Exp $ *)
+value utf8_of_string str =
+  loop 0 [] where rec loop i list =
+    if i >= String.length str then List.rev list
+    else
+      let (s, i) =
+        let c = str.[i] in
+        if Char.code c land 0x80 = 0 then (String.make 1 c, i)
+        else if Char.code c land 0x40 = 0 then
+	  (String.make 1 c, i) (* actually spurious continuous code *)
+        else if Char.code c land 0x20 = 0 then
+          if i + 1 >= String.length str then (String.make 1 c, i)
+          else (String.make 1 c ^ String.make 1 str.[i+1], i + 1)
+        else if Char.code c land 0x10 = 0 then
+          if i + 2 >= String.length str then (String.make 1 c, i)
+          else
+	    (String.make 1 c ^ String.make 1 str.[i+1] ^
+	     String.make 1 str.[i+2],
+	     i + 2)
+        else failwith "utf8_of_string case not implemented"
+      in
+      loop (i + 1) [s :: list]
+;
 
 value rec get_format_len pic len i =
   if i >= String.length pic then invalid_arg "unexpected end of picture"
