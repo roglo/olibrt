@@ -56,12 +56,16 @@ value utf8_uppercase =
        | 'a'..'z' as c ->
            let c = Char.chr (Char.code c - Char.code 'a' + Char.code 'A') in
            String.make 1 c
-       | _ ->
-           match s with
-	   | "é" -> "É"
-	   | "û" -> "Û"
-	   | s -> s
-	   end
+       | '\195' ->
+           match s.[1] with
+           | '\160'..'\191' as c ->
+               let c =
+		 Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+	       in
+               String.make 1 s.[0] ^ String.make 1 c
+           | _ -> s
+           end
+       | _ -> s
        end)
 ;
 
