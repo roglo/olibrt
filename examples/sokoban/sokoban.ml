@@ -464,13 +464,9 @@ value display_move conf gm =
 value display_help conf =
   let twid = widget_named conf.xd "help_term" in
   do {
-Printf.printf "set_newline_mode\n";
     term_send twid set_newline_mode;
-Printf.printf "<<";
-    interp_file (fun c -> let _ = Printf.printf "%c" c in term_send twid (String.make 1 c)) conf.lang
+    interp_file (fun c -> term_send twid (String.make 1 c)) conf.lang
       "help.txt"
-;Printf.printf ">>";
-flush stdout;
   }
 ;
 
@@ -1768,6 +1764,7 @@ value anon_fun _ = do { Arg.usage speclist usage_msg; exit 1 };
 value main dname = do {
   Arg.parse speclist anon_fun usage_msg;
   let xd = rt_initialize dname in
+  Rt.rt_select_char_set xd Rt.Utf_8;
   let xa = rt_args [xd] in
   let (wmm, hmm) = screen_size_mm xd in
   let w = screen_width xd in

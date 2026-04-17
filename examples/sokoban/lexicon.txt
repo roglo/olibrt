@@ -6,7 +6,7 @@ fr: %d coups au lieu de %d
 
     Better solution saved
 en: Better solution saved
-fr: Meilleure solution sauvée
+fr: Meilleure solution sauvÃ©e
 
     Click the destination
 en: Click the destination
@@ -14,11 +14,11 @@ fr: Cliquez sur la destination
 
     Click the object to push
 en: Click the object to push
-fr: Cliquez sur l'objet à pousser
+fr: Cliquez sur l'objet Ã  pousser
 
     Completed from move %d
 en: Completed from move %d
-fr: Complété à partir du coup %d
+fr: ComplÃ©tÃ© Ã  partir du coup %d
 
     Give up current level
 en: Give up current level
@@ -30,7 +30,7 @@ fr: Aller au niveau
 
     Go to move
 en: Go to move
-fr: Aller au coup numéro
+fr: Aller au coup numÃ©ro
 
     Hit 'n' for next level
 en: Hit 'n' for next level
@@ -50,19 +50,19 @@ fr: Pas d'autres niveaux
 
     Optimizing
 en: Optimizing
-fr: Ça optimise
+fr: Ã‡a optimise
 
     Saved %d moves at position (%d)
 en: Saved %d moves at position (%d)
-fr: Gagné %d coups à la position (%d)
+fr: GagnÃ© %d coups Ã  la position (%d)
 
     Searching
 en: Searching
-fr: Ça cherche
+fr: Ã‡a cherche
 
     Solution saved
 en: Solution saved
-fr: Solution sauvée
+fr: Solution sauvÃ©e
 
     Type space to return to board
 en: Type <space> to return to board
@@ -78,11 +78,11 @@ fr: fait
 
     loaded
 en: loaded
-fr: chargé
+fr: chargÃ©
 
     not blocked
 en: not blocked
-fr: non bloqué
+fr: non bloquÃ©
 
     type h for help
 en: type 'h' for help
