@@ -21,27 +21,30 @@ type field =
   | Fempty ]
 ;
 
+
+value is_utf8_cont_byte b =
+  Char.code b land 0b11000000 = 0b10000000
+;
+
+value skip_to_next_utf8_char s =
+  loop where rec loop i =
+    if i >= String.length s then String.length s
+    else if is_utf8_cont_byte s.[i] then loop (i + 1)
+    else i
+;
+
 value utf8_of_string str =
   loop 0 [] where rec loop i u =
     if i >= String.length str then List.rev u
     else
       let (s, i) =
         let c = str.[i] in
-        if Char.code c land 0x80 = 0 then (String.make 1 c, i)
-        else if Char.code c land 0x40 = 0 then
-	  (String.make 1 c, i) (* actually spurious continuous code *)
-        else if Char.code c land 0x20 = 0 then
-          if i + 1 >= String.length str then (String.make 1 c, i)
-          else (String.make 1 c ^ String.make 1 str.[i+1], i + 1)
-        else if Char.code c land 0x10 = 0 then
-          if i + 2 >= String.length str then (String.make 1 c, i)
-          else
-	    (String.make 1 c ^ String.make 1 str.[i+1] ^
-	     String.make 1 str.[i+2],
-	     i + 2)
-        else failwith "utf8_of_string case not implemented"
+        if Char.code c land 0x80 = 0 then (String.make 1 c, i + 1)
+        else
+	  let j = skip_to_next_utf8_char str (i + 1) in
+	  (String.sub str i (j - i), j)
       in
-      loop (i + 1) [s :: u]
+      loop i [s :: u]
 ;
 
 value string_of_utf8 = String.concat "";
