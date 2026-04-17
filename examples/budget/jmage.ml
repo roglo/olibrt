@@ -22,8 +22,8 @@ type field =
 ;
 
 value utf8_of_string str =
-  loop 0 [] where rec loop i list =
-    if i >= String.length str then List.rev list
+  loop 0 [] where rec loop i u =
+    if i >= String.length str then List.rev u
     else
       let (s, i) =
         let c = str.[i] in
@@ -41,7 +41,48 @@ value utf8_of_string str =
 	     i + 2)
         else failwith "utf8_of_string case not implemented"
       in
-      loop (i + 1) [s :: list]
+      loop (i + 1) [s :: u]
+;
+
+value string_of_utf8 = String.concat "";
+
+value utf8_uppercase =
+  List.map
+    (fun s ->
+       match s.[0] with
+       | 'a'..'z' as c ->
+           let c = Char.chr (Char.code c - Char.code 'a' + Char.code 'A') in
+           String.make 1 c
+       | _ ->
+           match s with
+	   | "é" -> "É"
+	   | "û" -> "Û"
+	   | s -> s
+	   end
+       end)
+;
+
+value uppercase str = do {
+  let str2 = Bytes.of_string str in
+  for i = 0 to String.length str - 1 do {
+    str2.[i] :=
+      match str.[i] with
+      [ 'a'..'z' as c ->
+          Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+      | c -> c ];
+  };
+  str2
+};
+
+value capitalize str =
+  match str.[0] with
+  [ 'a'..'z' as c -> do {
+      let str2 = Bytes.create (String.length str) in
+      String.blit str 0 str2 0 (String.length str);
+      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
+      Bytes.to_string str2
+    }
+  | _ -> str ]
 ;
 
 value rec get_format_len pic len i =
@@ -273,47 +314,10 @@ value string_of_date j m a = do {
   strj ^ "/" ^ strm ^ "/" ^ stra
 };
 
-value uppercase str = do {
-  let str2 = Bytes.of_string str in
-  for i = 0 to String.length str - 1 do {
-    str2.[i] :=
-      match str.[i] with
-      [ 'a'..'z' as c ->
-          Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
-      | c -> c ];
-  };
-  str2
-};
-
-value capitalize str =
-  match str.[0] with
-  [ 'a'..'z' as c -> do {
-      let str2 = Bytes.create (String.length str) in
-      String.blit str 0 str2 0 (String.length str);
-      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
-      Bytes.to_string str2
-    }
-  | _ -> str ]
-;
-
 value mois_annee_large m a = do {
   let m = string_of_mois m in
-  let a = Printf.sprintf "%04d" a in
-  let s = Bytes.create (2 * (String.length m + 1 + String.length a)) in
-  loop 0 where rec loop i =
-    if i >= String.length m then ()
-    else do {
-      s.[2 * i] := Char.chr (Char.code m.[i] + Char.code 'A' - Char.code 'a');
-      s.[2 * i + 1] := ' ';
-      loop (i + 1);
-    };
-  s.[2 * String.length m] := ' ';
-  s.[2 * String.length m + 1] := ' ';
-  for i = 0 to String.length a - 1 do {
-    s.[2 * String.length m + 2 + 2 * i] := a.[i];
-    s.[2 * String.length m + 2 + 2 * i + 1] := ' ';
-  };
-  "- " ^ s ^ "-"
+  let u = String.concat " " (utf8_uppercase (utf8_of_string m)) in
+  "- " ^ u ^ "-"
 };
 
 value large str = do {
