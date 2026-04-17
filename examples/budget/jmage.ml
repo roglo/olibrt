@@ -252,6 +252,17 @@ value string_of_date j m a = do {
   strj ^ "/" ^ strm ^ "/" ^ stra
 };
 
+value capitalize str =
+  match str.[0] with
+  [ 'a'..'z' as c -> do {
+      let str2 = Bytes.create (String.length str) in
+      String.blit str 0 str2 0 (String.length str);
+      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
+      Bytes.to_string str2
+    }
+  | _ -> str ]
+;
+
 value mois_annee_large m a = do {
   let m = string_of_mois m in
   let a = Printf.sprintf "%04d" a in
@@ -268,17 +279,6 @@ value mois_annee_large m a = do {
   };
   "- " ^ s ^ "-"
 };
-
-value capitalize str =
-  match str.[0] with
-  [ 'a'..'z' as c -> do {
-      let str2 = Bytes.create (String.length str) in
-      String.blit str 0 str2 0 (String.length str);
-      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
-      Bytes.to_string str2
-    }
-  | _ -> str ]
-;
 
 value large str = do {
   let str2 = String.make (2 * String.length str - 1) ' ' in
