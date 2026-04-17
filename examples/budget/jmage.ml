@@ -279,10 +279,13 @@ value mois_annee_large m a = do {
   let m = string_of_mois m in
   let a = Printf.sprintf "%04d" a in
   let s = Bytes.create (2 * (String.length m + 1 + String.length a)) in
-  for i = 0 to String.length m - 1 do {
-    s.[2 * i] := Char.chr (Char.code m.[i] + Char.code 'A' - Char.code 'a');
-    s.[2 * i + 1] := ' ';
-  };
+  loop 0 where rec loop i =
+    if i >= String.length m then ()
+    else do {
+      s.[2 * i] := Char.chr (Char.code m.[i] + Char.code 'A' - Char.code 'a');
+      s.[2 * i + 1] := ' ';
+      loop (i + 1);
+    };
   s.[2 * String.length m] := ' ';
   s.[2 * String.length m + 1] := ' ';
   for i = 0 to String.length a - 1 do {
