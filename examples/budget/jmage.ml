@@ -66,22 +66,9 @@ value utf8_uppercase =
        end)
 ;
 
-(*
 value uppercase str =
   string_of_utf8 (utf8_uppercase (utf8_of_string str))
 ;
-*)
-value uppercase str = do {
-  let str2 = Bytes.of_string str in
-  for i = 0 to String.length str - 1 do {
-    str2.[i] :=
-      match str.[i] with
-      [ 'a'..'z' as c -> uppercase_char c
-      | c -> c ];
-  };
-  str2
-};
-(**)
 
 value capitalize str =
   match str.[0] with
