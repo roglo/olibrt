@@ -56,9 +56,9 @@ value utf8_uppercase =
     (fun s ->
        match s.[0] with
        | 'a'..'z' as c -> String.make 1 (uppercase_char c)
-       | '\195' ->
+       | '\xC3' ->
            match s.[1] with
-           | '\160'..'\191' as c ->
+           | '\xA0'..'\xBF' as c ->
                String.make 1 s.[0] ^ String.make 1 (uppercase_char c)
            | _ -> s
            end
