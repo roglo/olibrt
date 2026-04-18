@@ -17,11 +17,8 @@ value iterate f =
 value it_vect f i v = List.fold_left f i (Array.to_list v)
 and \*** x y = x mod y + (if x < 0 then y else 0);
 value sigma = List.fold_left add 0
-and random n = do {
-  seed.val := 25173 * seed.val + 13849;
-  (if seed.val < 0 then -seed.val else seed.val) / (maxint / n)
-}
-and init_random n = do { seed.val := n; () }
+and random n = Random.int n
+and init_random n = Random.self_init ()
 and implode_ascii l = do {
   let len = List.length l in
   let s = Bytes.create len in
