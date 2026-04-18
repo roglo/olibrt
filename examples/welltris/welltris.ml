@@ -16,7 +16,7 @@ value it_vect f i v = List.fold_left f i (Array.to_list v)
 and \*** x y = x mod y + (if x < 0 then y else 0);
 value sigma = List.fold_left add 0
 and random n = Random.int n
-and init_random n = Random.self_init ()
+and init_random () = Random.self_init ()
 and implode_ascii l = do {
   let len = List.length l in
   let s = Bytes.create len in
@@ -599,7 +599,7 @@ value welltris dname = do {
         else s;
     };
   };
-  init_random (\*** (ftime ()).time 32768);
+  init_random ();
   let expose (wid, _, _, _, _) = do {
     let drw = WidgetDr wid in
     if gm.state = NotStarted then do {
