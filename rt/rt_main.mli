@@ -185,6 +185,8 @@ value widget_named : xdata -> string -> widget;
       (* [widget_named xd name]
          returns the widget named [name] in the xdata [xd]; see the
          attribute [NameAtt] *)
+value pixmap_width : pixmap -> int;
+value pixmap_height : pixmap -> int;
 value is_mapped : widget -> bool;
       (* [is_mapped wid]
          tells whether the widget is mapped (visible on the screen)

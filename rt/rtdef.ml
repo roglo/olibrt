@@ -92,7 +92,8 @@ and font =
     descent : int;
     fwidth : int;
     fheight : int }
-and pixmap = { pixm_xd : xdata; pixmap : xpixmap }
+and pixmap =
+  { pixm_xd : xdata; pixmap : xpixmap; pixm_width : int; pixm_height : int }
 and color = { col_xd : xdata; pixel : int }
 and mouse = { curs_xd : xdata; cursor : cursor }
 and gc = { gc_xd : xdata; xgc : gC }
@@ -402,6 +403,8 @@ value widget_height = Obj.magic Rt_main.widget_height;
 value widget_border = Obj.magic Rt_main.widget_border;
 value widget_children = Obj.magic Rt_main.widget_children;
 value widget_named = Obj.magic Rt_main.widget_named;
+value pixmap_width = Obj.magic Rt_main.pixmap_width;
+value pixmap_height = Obj.magic Rt_main.pixmap_height;
 value is_mapped = Obj.magic Rt_main.is_mapped;
 value is_frozen = Obj.magic Rt_main.is_frozen;
 value widget_size = Obj.magic Rt_main.widget_size;

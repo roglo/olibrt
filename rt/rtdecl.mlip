@@ -99,7 +99,8 @@ and font =
     descent : int;
     fwidth : int;
     fheight : int }
-and pixmap = { pixm_xd : xdata; pixmap : xpixmap }
+and pixmap =
+  { pixm_xd : xdata; pixmap : xpixmap; pixm_width : int; pixm_height : int }
 and color = { col_xd : xdata; pixel : int }
 and mouse = { curs_xd : xdata; cursor : cursor }
 and gc = { gc_xd : xdata; xgc : gC }

@@ -13,10 +13,10 @@ value iterate f =
     if n > 0 then iterate_f (pred n) (f x) else ()
 ;
 value it_vect f i v = List.fold_left f i (Array.to_list v)
-and \*** x y = x mod y + (if x < 0 then y else 0);
+and \*** x y = (abs x) mod (abs y) + (if x < 0 then y else 0);
 value sigma = List.fold_left add 0
 and random n = Random.int n
-and init_random () = Random.self_init ()
+and init_random () = () (*Random.self_init ()*)
 and implode_ascii l = do {
   let len = List.length l in
   let s = Bytes.create len in
@@ -298,7 +298,16 @@ value (disp_square, clear_square, mark_square) =
           (x + (if dx = dy then 0 else dx), y + (if dx = -dy then 0 else dy),
            z)
       in
+(*
+let _ = Printf.printf "rt_fill_polygon (%d, %d) (%d, %d) (%d, %d) (%d, %d)\n" (fst p1) (snd p1) (fst p2) (snd p2) (fst p3) (snd p3) (fst p4) (snd p4) in
+let _ = flush stdout in
+*)
+let r =
       rt_fill_polygon wid [p1; p2; p3; p4]
+in
+(*
+let _ = rt_cancel_timeout gm.xargs "" in r
+*)r
     else ()
   in
   (fun ((wid, gm, i, j, redraw_lines) as a) -> do {
@@ -325,6 +334,18 @@ value subtract f =
         | [elem :: l] ->
             if List.mem elem e then subtract_e l
             else [elem :: subtract_e l] ] ]
+;
+
+value drawable_width =
+  fun
+  [ WidgetDr wid -> widget_width wid
+  | PixmapDr pxm -> pixmap_width pxm ]
+;
+
+value drawable_height =
+  fun
+  [ WidgetDr wid -> widget_height wid
+  | PixmapDr pxm -> pixmap_height pxm ]
 ;
 
 value disp_runner (wid, gm) = do {
