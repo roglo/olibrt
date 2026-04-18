@@ -7,9 +7,7 @@ value tee (f, g) x = (f x, g x);
 value max x y = if x > y then x else y
 and min x y = if x < y then x else y
 and add x y = x + y
-and b f g x = f (g x)
-and seed = ref 7
-and maxint = 536870911 * 2 + 1;
+and b f g x = f (g x);
 value iterate f =
   iterate_f where rec iterate_f n x =
     if n > 0 then iterate_f (pred n) (f x) else ()
