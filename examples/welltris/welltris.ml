@@ -580,11 +580,21 @@ value col_init xd =
   C'Color col
 ;
 
+value pix_of_mm xd x =
+  let (wmm, hmm) = screen_size_mm xd in
+  let w = screen_width xd in
+  truncate (x *. float w /. float wmm +. 0.5)
+;
+
 value welltris dname = do {
   let xd = rt_initialize dname in
-(*
-  let u = pix_of_mm in
-*)
+  eCH.val := pix_of_mm xd 18.0;
+  w.val := eCH.val * xM;
+  h.val := eCH.val * yM;
+  cXE.val := eCH.val * (xM / 2);
+  cYE.val := eCH.val * (yM / 2);
+  gW.val := leftB + w.val + 1 + rightB;
+  gH.val := upperB + h.val + 1 + lowerB;
   let xargs = rt_args [xd] in
   let gm =
     {xd = xd; xargs = xargs; woops = woops_fun;
