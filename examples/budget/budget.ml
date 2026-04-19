@@ -122,9 +122,8 @@ value budget_prog xd = do {
 
 value go dname = do {
   let xd = rt_open dname in
-  let fs = Rt.pix_of_mm (rt_xdata_of_xdata xd) 1.5 in
-  Rt.button_font.val := Printf.sprintf "mono:size=%d" fs;
-  Rt.term_font.val := Printf.sprintf "mono:size=%d" fs;
+  Rt.button_font.val := "mono:size=14";
+  Rt.term_font.val := "mono:size=14";
   let r = try budget_prog xd with x -> do { rt_close xd; raise x } in
   rt_close xd;
   r
