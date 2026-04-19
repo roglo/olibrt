@@ -81,7 +81,7 @@ value xM = 8;
 value yM = 8;
 value zM = 12;
 
-value eCH = 80;
+value eCH = ref 80;
 
 value (speed_tab, nlevels) =
   tee (Array.get, Array.length) [| 1000; 800; 600; 500; 400; 300 |]
@@ -97,15 +97,17 @@ and l1 = xM
 and l2 = xM + yM
 and l3 = xM + yM + xM
 and l4 = xM + yM + xM + yM;
-value w = eCH * xM
-and h = eCH * yM
-and cXE = eCH * (xM / 2)
-and cYE = eCH * (yM / 2)
-and z1E = 520;
 
-value gW = leftB + w + 1 + rightB
-and gH = upperB + h + 1 + lowerB
-and cONDEMN_COUNT = 60;
+value w = ref (eCH.val * xM);
+value h = ref (eCH.val * yM);
+
+value cXE = ref (eCH.val * (xM / 2));
+value cYE = ref (eCH.val * (yM / 2));
+value z1E = 520;
+
+value gW = ref (leftB + w.val + 1 + rightB);
+value gH = ref (upperB + h.val + 1 + lowerB);
+value cONDEMN_COUNT = 60;
 
 value sigma = List.fold_left add 0;
 
@@ -141,8 +143,8 @@ and dijm_of_p =
 ;
 
 value proj (x, y, z) =
-  (leftB + cXE + (x * eCH - cXE) * z1E / (z * eCH + z1E),
-   upperB + cYE + (y * eCH - cYE) * z1E / (z * eCH + z1E))
+  (leftB + cXE.val + (x * eCH.val - cXE.val) * z1E / (z * eCH.val + z1E),
+   upperB + cYE.val + (y * eCH.val - cYE.val) * z1E / (z * eCH.val + z1E))
 and p_of_i i =
   if i < l1 then 0 else if i < l2 then 1 else if i < l3 then 2 else 3
 ;
@@ -194,7 +196,7 @@ and disp_nlines (wid, gm) =
   rt_erase_draw_string wid (leftB + 10, upperB - 15)
     ("nb lines " ^ string_of_int gm.nlines)
 and disp_state (wid, gm) =
-  rt_erase_draw_string wid (gW - rightB - 80, upperB - 15)
+  rt_erase_draw_string wid (gW.val - rightB - 80, upperB - 15)
     (match gm.state with
      [ Pausing -> "    <pause>"
      | Ended -> "<game over>"
@@ -583,7 +585,7 @@ value welltris dname = do {
   let xargs = rt_args [xd] in
   let gm =
     {xd = xd; xargs = xargs; woops = woops_fun;
-     pix = rt_create_pixmap xd gW gH; state = NotStarted; level = 0;
+     pix = rt_create_pixmap xd gW.val gH.val; state = NotStarted; level = 0;
      score = 0; nlines = 0; explosions_to_do = False;
      expl_list = [| []; []; []; [] |]; condemn = [| 0; 0; 0; 0 |];
      patt = if is_colored xd then col_init xd else patt_init xd;
@@ -591,7 +593,7 @@ value welltris dname = do {
      board = Array.make iM [| |]}
   in
   rt_select_color (rt_black_color xd);
-  rt_fill_rectangle (PixmapDr gm.pix) (0, 0, gW, gH);
+  rt_fill_rectangle (PixmapDr gm.pix) (0, 0, gW.val, gH.val);
   let x = ref Empty in
   for p = 0 to Array.length gm.board - 1 do {
     gm.board.(p) := Array.make jM x;
@@ -715,7 +717,7 @@ value welltris dname = do {
           else ()
       | "c" -> do {
           select_pattern (gm, C'WhiteP);
-          rt_fill_rectangle drw (0, 0, gW, gH)
+          rt_fill_rectangle drw (0, 0, gW.val, gH.val)
         }
       | "e" -> do { rt_clear_widget wid; disp_board (drw, gm) }
       | " " | "Ins" | "K0" | "Insert" ->
@@ -770,7 +772,7 @@ value welltris dname = do {
   try do {
     let draw = PixmapDr gm.pix in
     select_pattern (gm, C'WhiteP);
-    rt_fill_rectangle draw (0, 0, gW, gH);
+    rt_fill_rectangle draw (0, 0, gW.val, gH.val);
     select_pattern (gm, C'BlackP);
     iterate
       (fun z -> do {
@@ -804,7 +806,7 @@ value welltris dname = do {
       rt_create_widget xd "welltris" "welltris" AutoPosition
         (Some (fun _ -> rt_stop_main_loop gm.xargs))
         (raw_desc [BackgroundAtt (PixmapPn gm.pix)]
-           (gW, gH, 0, [SelExposure; SelKeyPress])
+           (gW.val, gH.val, 0, [SelExposure; SelKeyPress])
            (fun wid ->
               fun
               [ RawEvExpose x y width height ->
