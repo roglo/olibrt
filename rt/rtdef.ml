@@ -408,6 +408,7 @@ value pixmap_height = Obj.magic Rt_main.pixmap_height;
 value is_mapped = Obj.magic Rt_main.is_mapped;
 value is_frozen = Obj.magic Rt_main.is_frozen;
 value widget_size = Obj.magic Rt_main.widget_size;
+value pix_of_mm = Obj.magic Rt_main.pix_of_mm;
 value arrow_desc = Obj.magic C_arrow.arrow_desc;
 value button_desc = Obj.magic C_button.button_desc;
 value button_border = Obj.magic C_button.button_border;

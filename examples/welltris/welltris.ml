@@ -579,12 +579,6 @@ value col_init xd =
   C'Color col
 ;
 
-value pix_of_mm xd x =
-  let (wmm, hmm) = screen_size_mm xd in
-  let w = screen_width xd in
-  truncate (x *. float w /. float wmm +. 0.5)
-;
-
 value welltris dname = do {
   let xd = rt_initialize dname in
   eCH.val := pix_of_mm xd 18.0;

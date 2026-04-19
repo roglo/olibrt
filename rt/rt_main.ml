@@ -351,3 +351,9 @@ value rt_freeze_widget = freeze_unfreeze True
 and rt_unfreeze_widget = freeze_unfreeze False;
 
 value is_frozen wid = wid.frozen;
+
+value pix_of_mm xd x =
+  let (wmm, hmm) = screen_size_mm xd in
+  let w = screen_width xd in
+  truncate (x *. float w /. float wmm +. 0.5)
+;

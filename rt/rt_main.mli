@@ -195,3 +195,5 @@ value is_frozen : widget -> bool;
       (* [is_frozen wid]
          tells whether the widget is frozen or not *)
 value widget_size : xdata -> widget_desc -> (int * int);
+
+value pix_of_mm : xdata -> float -> int;
