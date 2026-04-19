@@ -1766,9 +1766,7 @@ value main dname = do {
   let xd = rt_initialize dname in
   Rt.rt_select_char_set xd Rt.Utf_8;
   let xa = rt_args [xd] in
-  let (wmm, hmm) = screen_size_mm xd in
-  let w = screen_width xd in
-  square_len.val := 8 * w / wmm;
+  square_len.val := pix_of_mm xd 9.0;
   let (gm, slang, disp_block) = restore_state () in
   let lang = if lang.val = "" then slang else lang.val in
   let main_wid = make_widget xa xd (gm, lang, disp_block) in
