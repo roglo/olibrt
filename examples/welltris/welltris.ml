@@ -16,7 +16,7 @@ value it_vect f i v = List.fold_left f i (Array.to_list v)
 and \*** x y = x mod y + (if x < 0 then y else 0);
 value sigma = List.fold_left add 0
 and random n = Random.int n
-and init_random () = () (*Random.self_init ()*)
+and init_random () = Random.self_init ()
 and implode_ascii l = do {
   let len = List.length l in
   let s = Bytes.create len in
@@ -75,14 +75,20 @@ value welltris_wizard = ref False;
 value upperB = 70
 and leftB = 10
 and lowerB = 10
-and rightB = 10
-and xM = 8
-and yM = 8
-and zM = 12
-and eCH = 80
-and (speed_tab, nlevels) =
+and rightB = 10;
+
+value xM = 8;
+value yM = 8;
+value zM = 12;
+
+value eCH = 80;
+
+value (speed_tab, nlevels) =
   tee (Array.get, Array.length) [| 1000; 800; 600; 500; 400; 300 |]
-and change_level = 500;
+;
+
+value change_level = 500;
+
 value iM = 2 * (xM + yM)
 and jM = zM + max xM yM
 and xZM = zM + xM
