@@ -4,10 +4,6 @@ open State;
 open File;
 open RtN;
 
-Rt.button_font.val := "*-helvetica-bold-r-*--18-*";
-Rt.title_font.val := "*-helvetica-bold-o-*--18-*";
-
-Rt.button_font.val := "mono:size=12";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
 
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
@@ -125,8 +121,11 @@ value budget_prog xd = do {
 };
 
 value go dname = do {
-  let _ = "$Id: budget.ml,v 1.8 2007/06/12 16:12:59 deraugla Exp $" in
   let xd = rt_open dname in
+  Rt.button_font.val := "mono:size=12";
+  Rt.term_font.val := "mono:size=14";
+Printf.printf "pix_of_mm = %d\n" (Rt.pix_of_mm (rt_xdata_of_xdata xd) 1.5);
+flush stdout;
   let r = try budget_prog xd with x -> do { rt_close xd; raise x } in
   rt_close xd;
   r

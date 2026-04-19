@@ -399,6 +399,7 @@ value term_border = Obj.magic C_term.term_border;
 value term_inter = Obj.magic C_term.term_inter;
 value term_band = Obj.magic C_term.term_band;
 value term_blink = Obj.magic C_term.term_blink;
+value term_font = Obj.magic C_term.term_font;
 value term_send = Obj.magic Term.term_send;
 value title_change = Obj.magic C_title.title_change;
 value title_desc = Obj.magic C_title.title_desc;

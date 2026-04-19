@@ -37,8 +37,10 @@ value create_gc xd = do {
   xCreateGC (xd.dpy, xd.rootw, 0, gstr.xgcv)
 };
 
+value term_font = ref "mono:size=12";
+
 value make_term_global_info xd =
-  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
   let attrs = alloc_XWindowAttributes () in
   let color = alloc_XftColor () in
   let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
@@ -59,7 +61,7 @@ value term_wsize wargs att_val xd =
     try get_term_global_info (ginfo xd "term") with _ ->
       make_term_global_info xd
   in
-  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
   let tinter = opt_val term_inter.val att_val.inter_att in
   let tband = opt_val term_band.val att_val.band_att in
   let twidth = xftFont_width ftfont in
@@ -84,7 +86,7 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   let win = create_window xd pwin is_top x y wsh att_val select_mask in
   xDefineCursor (xd.dpy, win, xCreateFontCursor (xd.dpy, xC_xterm));
   let gi = get_term_global_info (ginfo xd "term") in
-  let ftfont = xftFontOpenName (xd.dpy, xd.scr, "mono:size=12") in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
   let tband = opt_val term_band.val att_val.band_att in
   let tinter = opt_val term_inter.val att_val.inter_att in
   let twidth = xftFont_width ftfont in

@@ -58,3 +58,4 @@ value term_border : ref int;
 value term_inter : ref int;
 value term_band : ref int;
 value term_blink : ref (int * int);
+value term_font : ref string;

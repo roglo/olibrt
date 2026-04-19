@@ -50,6 +50,8 @@ type widget_desc =
       list Rt.attribute and (int * int) and widget -> term_event -> unit ]
 ;
 
+value rt_xdata_of_xdata xd = xd;
+
 value alert_wid = ref None;
 value popup_wid = ref [];
 value term_wid = ref [];

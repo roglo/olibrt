@@ -33,6 +33,8 @@ type term_event =
   | TermEvSizeChanged ]
 ;
 
+value rt_xdata_of_xdata : xdata -> Rt.xdata;
+
 value int_of_keysym : keysym -> int;
 
 value arrow_desc :
