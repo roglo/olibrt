@@ -1,5 +1,3 @@
-(* $Id: rtN.ml,v 1.17 2006/06/07 14:53:39 deraugla Exp $ *)
-
 type xdata = Rt.xdata;
 type widget = Rt.widget;
 type delete_callback = Rt.delete_callback;
@@ -297,8 +295,5 @@ value rt_unmap_alert _ = do {
   alert_wid.val := None
 };
 value rt_unmap_widget = Rt.rt_unmap_widget;
-
-value screen_width = Rt.screen_width;
-value screen_width_mm xd = fst (Rt.screen_size_mm xd);
 
 value is_frozen = Rt.is_frozen;

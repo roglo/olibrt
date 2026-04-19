@@ -4,14 +4,6 @@ open State;
 open File;
 open RtN;
 
-value get_dpi xd =
-  let width_px = RtN.screen_width xd in
-  let width_mm = RtN.screen_width_mm xd in
-  (float width_px *. 25.4) /. (float width_mm);
-
-value mm_to_pixels mm dpi =
-  int_of_float (mm /. 25.4 *. dpi);
-
 Rt.button_font.val := "*-helvetica-bold-r-*--18-*";
 Rt.title_font.val := "*-helvetica-bold-o-*--18-*";
 

@@ -1,5 +1,3 @@
-(* $Id: rtN.mli,v 1.7 2006/06/02 00:22:01 deraugla Exp $ *)
-
 type xdata = 'abstract;
 type widget = 'abstract;
 type widget_desc = 'abstract;
@@ -84,8 +82,5 @@ value rt_widget_y : widget -> int;
 value rt_xdata_of_widget : widget -> xdata;
 value rt_unmap_alert : 'a -> unit;
 value rt_unmap_widget : widget -> unit;
-
-value screen_width : xdata -> int;
-value screen_width_mm : xdata -> int;
 
 value is_frozen : widget -> bool;
