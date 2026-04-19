@@ -582,6 +582,9 @@ value col_init xd =
 
 value welltris dname = do {
   let xd = rt_initialize dname in
+(*
+  let u = pix_of_mm in
+*)
   let xargs = rt_args [xd] in
   let gm =
     {xd = xd; xargs = xargs; woops = woops_fun;
