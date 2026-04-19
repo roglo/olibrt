@@ -315,7 +315,9 @@ let _ = rt_cancel_timeout gm.xargs "" in r
      disp_or_clear_square a
    },
    fun ((wid, gm, i, j, redraw_lines) as a) -> do {
+(*
      rt_select_pixmap gm.pix;
+*)
      disp_or_clear_square a
    },
    fun ((wid, gm, i, j, redraw_lines) as a) -> do {
@@ -348,27 +350,6 @@ value drawable_height =
   | PixmapDr pxm -> pixmap_height pxm ]
 ;
 
-value disp_runner (wid, gm) = do {
-  let i = gm.runner.i
-  and j = gm.runner.j
-  and p = gm.runner.p
-  and s = gm.runner.s
-  and r = gm.runner.r
-  and dl = gm.runner.dl in
-  let dl2 =
-    let (a, b0, c, d) = rotmat s r in
-    List.map
-      (fun (di, dj) -> (\*** (i + a * di + c * dj) iM, j + b0 * di + d * dj))
-      (pieces p).dsc
-  in
-  List.iter (fun (i, j) -> clear_square (wid, gm, i, j, True))
-    (subtract dl dl2);
-  List.iter (fun (i, j) -> disp_square (wid, gm, i, j, True))
-    (subtract dl2 dl);
-  gm.runner.dl := dl2;
-  ()
-};
-
 value disp_condemn (wid, gm, p) = do {
   select_pattern (gm, C'SandP);
   rt_fill_polygon wid (condemn_polyg p)
@@ -399,6 +380,33 @@ value disp_uncondemn (wid, gm, p) = do {
   rt_select_pixmap gm.pix;
   rt_fill_polygon wid (condemn_polyg p);
   disp_board (wid, gm)
+};
+
+value disp_runner (wid, gm) = do {
+  let i = gm.runner.i
+  and j = gm.runner.j
+  and p = gm.runner.p
+  and s = gm.runner.s
+  and r = gm.runner.r in
+  let dl2 =
+    let (a, b0, c, d) = rotmat s r in
+    List.map
+      (fun (di, dj) -> (\*** (i + a * di + c * dj) iM, j + b0 * di + d * dj))
+      (pieces p).dsc
+  in
+(*
+  let dl = gm.runner.dl in
+  List.iter (fun (i, j) -> clear_square (wid, gm, i, j, True))
+    (subtract dl dl2);
+  List.iter (fun (i, j) -> disp_square (wid, gm, i, j, True))
+    (subtract dl2 dl);
+*)
+  gm.runner.dl := dl2;
+match wid with
+| WidgetDr wid -> rt_clear_widget wid
+| _ -> ()
+end;
+disp_board (wid, gm);
 };
 
 value mark_explosions (wid, gm) = do {
@@ -496,10 +504,15 @@ and explose (wid, gm) =
   }
 ;
 
+value cnt = ref 1;
+
 value woops_fun wid gm () = do {
   if gm.state <> Running then failwith "erreur dans woops_fun" else ();
+decr cnt;
+if True || cnt.val >= 0 then
   rt_set_timeout gm.xargs "" (rt_current_time gm.xargs + speed_tab gm.level)
-    (gm.woops wid gm);
+    (gm.woops wid gm)
+else ();
   if gm.explosions_to_do then do {
     explose (wid, gm);
     mark_explosions (wid, gm)
@@ -535,7 +548,10 @@ value woops_fun wid gm () = do {
         gm.runner.dl;
       mark_explosions (wid, gm)
     }
-    else do { gm.runner.j := gm.runner.j + 1; disp_runner (wid, gm) }
+    else do {
+      gm.runner.j := gm.runner.j + 1;
+      disp_runner (wid, gm)
+    }
   }
 };
 
@@ -785,6 +801,14 @@ value welltris dname = do {
       (fun z -> do {
          let (x1, y1) = proj (0, 0, z)
          and (x2, y2) = proj (xM, yM, z) in
+(*
+let x1 = x1 - leftB in
+let x2 = x2 - leftB in
+*)
+(*
+let y1 = y1 - upperB in
+let y2 = y2 - upperB in
+*)
          rt_draw_rectangle draw (x1, y1, x2 - x1, y2 - y1);
          z + 1
        })
@@ -795,6 +819,12 @@ value welltris dname = do {
          and p2 = proj (x, 0, zM)
          and p3 = proj (x, yM, zM)
          and p4 = proj (x, yM, 0) in
+(*
+let p1 = (fst p1(* - leftB*), snd p1 - upperB) in
+let p2 = (fst p2(* - leftB*), snd p2 - upperB) in
+let p3 = (fst p3(* - leftB*), snd p3 - upperB) in
+let p4 = (fst p4(* - leftB*), snd p4 - upperB) in
+*)
          rt_draw_lines draw [p1; p2; p3; p4];
          x + 1
        })
@@ -805,6 +835,12 @@ value welltris dname = do {
          and p2 = proj (0, y, zM)
          and p3 = proj (xM, y, zM)
          and p4 = proj (xM, y, 0) in
+(*
+let p1 = (fst p1(* - leftB*), snd p1 - upperB) in
+let p2 = (fst p2(* - leftB*), snd p2 - upperB) in
+let p3 = (fst p3(* - leftB*), snd p3 - upperB) in
+let p4 = (fst p4(* - leftB*), snd p4 - upperB) in
+*)
          rt_draw_lines draw [p1; p2; p3; p4];
          y + 1
        })
