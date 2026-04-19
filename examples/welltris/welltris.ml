@@ -81,7 +81,13 @@ value xM = 8;
 value yM = 8;
 value zM = 12;
 
-value eCH = ref 80;
+value eCH = ref 0;
+value w = ref 0;
+value h = ref 0;
+value cXE = ref 0;
+value cYE = ref 0;
+value gW = ref 0;
+value gH = ref 0;
 
 value (speed_tab, nlevels) =
   tee (Array.get, Array.length) [| 1000; 800; 600; 500; 400; 300 |]
@@ -98,15 +104,8 @@ and l2 = xM + yM
 and l3 = xM + yM + xM
 and l4 = xM + yM + xM + yM;
 
-value w = ref (eCH.val * xM);
-value h = ref (eCH.val * yM);
-
-value cXE = ref (eCH.val * (xM / 2));
-value cYE = ref (eCH.val * (yM / 2));
 value z1E = 520;
 
-value gW = ref (leftB + w.val + 1 + rightB);
-value gH = ref (upperB + h.val + 1 + lowerB);
 value cONDEMN_COUNT = 60;
 
 value sigma = List.fold_left add 0;
