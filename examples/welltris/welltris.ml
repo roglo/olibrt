@@ -13,7 +13,7 @@ value iterate f =
     if n > 0 then iterate_f (pred n) (f x) else ()
 ;
 value it_vect f i v = List.fold_left f i (Array.to_list v)
-and \*** x y = (abs x) mod (abs y) + (if x < 0 then y else 0);
+and \*** x y = x mod y + (if x < 0 then y else 0);
 value sigma = List.fold_left add 0
 and random n = Random.int n
 and init_random () = () (*Random.self_init ()*)
@@ -298,16 +298,7 @@ value (disp_square, clear_square, mark_square) =
           (x + (if dx = dy then 0 else dx), y + (if dx = -dy then 0 else dy),
            z)
       in
-(*
-let _ = Printf.printf "rt_fill_polygon (%d, %d) (%d, %d) (%d, %d) (%d, %d)\n" (fst p1) (snd p1) (fst p2) (snd p2) (fst p3) (snd p3) (fst p4) (snd p4) in
-let _ = flush stdout in
-*)
-let r =
       rt_fill_polygon wid [p1; p2; p3; p4]
-in
-(*
-let _ = rt_cancel_timeout gm.xargs "" in r
-*)r
     else ()
   in
   (fun ((wid, gm, i, j, redraw_lines) as a) -> do {
@@ -315,9 +306,7 @@ let _ = rt_cancel_timeout gm.xargs "" in r
      disp_or_clear_square a
    },
    fun ((wid, gm, i, j, redraw_lines) as a) -> do {
-(*
      rt_select_pixmap gm.pix;
-*)
      disp_or_clear_square a
    },
    fun ((wid, gm, i, j, redraw_lines) as a) -> do {
@@ -336,18 +325,6 @@ value subtract f =
         | [elem :: l] ->
             if List.mem elem e then subtract_e l
             else [elem :: subtract_e l] ] ]
-;
-
-value drawable_width =
-  fun
-  [ WidgetDr wid -> widget_width wid
-  | PixmapDr pxm -> pixmap_width pxm ]
-;
-
-value drawable_height =
-  fun
-  [ WidgetDr wid -> widget_height wid
-  | PixmapDr pxm -> pixmap_height pxm ]
 ;
 
 value disp_condemn (wid, gm, p) = do {
@@ -504,15 +481,10 @@ and explose (wid, gm) =
   }
 ;
 
-value cnt = ref 1;
-
 value woops_fun wid gm () = do {
   if gm.state <> Running then failwith "erreur dans woops_fun" else ();
-decr cnt;
-if True || cnt.val >= 0 then
   rt_set_timeout gm.xargs "" (rt_current_time gm.xargs + speed_tab gm.level)
-    (gm.woops wid gm)
-else ();
+    (gm.woops wid gm);
   if gm.explosions_to_do then do {
     explose (wid, gm);
     mark_explosions (wid, gm)
@@ -548,10 +520,7 @@ else ();
         gm.runner.dl;
       mark_explosions (wid, gm)
     }
-    else do {
-      gm.runner.j := gm.runner.j + 1;
-      disp_runner (wid, gm)
-    }
+    else do { gm.runner.j := gm.runner.j + 1; disp_runner (wid, gm) }
   }
 };
 
@@ -801,14 +770,6 @@ value welltris dname = do {
       (fun z -> do {
          let (x1, y1) = proj (0, 0, z)
          and (x2, y2) = proj (xM, yM, z) in
-(*
-let x1 = x1 - leftB in
-let x2 = x2 - leftB in
-*)
-(*
-let y1 = y1 - upperB in
-let y2 = y2 - upperB in
-*)
          rt_draw_rectangle draw (x1, y1, x2 - x1, y2 - y1);
          z + 1
        })
@@ -819,12 +780,6 @@ let y2 = y2 - upperB in
          and p2 = proj (x, 0, zM)
          and p3 = proj (x, yM, zM)
          and p4 = proj (x, yM, 0) in
-(*
-let p1 = (fst p1(* - leftB*), snd p1 - upperB) in
-let p2 = (fst p2(* - leftB*), snd p2 - upperB) in
-let p3 = (fst p3(* - leftB*), snd p3 - upperB) in
-let p4 = (fst p4(* - leftB*), snd p4 - upperB) in
-*)
          rt_draw_lines draw [p1; p2; p3; p4];
          x + 1
        })
@@ -835,12 +790,6 @@ let p4 = (fst p4(* - leftB*), snd p4 - upperB) in
          and p2 = proj (0, y, zM)
          and p3 = proj (xM, y, zM)
          and p4 = proj (xM, y, 0) in
-(*
-let p1 = (fst p1(* - leftB*), snd p1 - upperB) in
-let p2 = (fst p2(* - leftB*), snd p2 - upperB) in
-let p3 = (fst p3(* - leftB*), snd p3 - upperB) in
-let p4 = (fst p4(* - leftB*), snd p4 - upperB) in
-*)
          rt_draw_lines draw [p1; p2; p3; p4];
          y + 1
        })
