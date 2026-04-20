@@ -153,7 +153,7 @@ value proj_sh (x, y, z, dx, dy) =
   (x0 + dx, y0 + dy)
 ;
 
-value condemn_polyg =
+value condemn_polyg p =
   Array.get
     [| [proj_sh (0, 0, 0, 1, 0); proj_sh (0, 0, zM, 1, -1);
         proj_sh (xM, 0, zM, -1, -1); proj_sh (xM, 0, 0, -1, 0);
@@ -166,7 +166,7 @@ value condemn_polyg =
         proj_sh (0, yM, 0, 1, 0)];
        [proj_sh (0, 0, 0, 0, 1); proj_sh (0, 0, zM, -1, 1);
         proj_sh (0, yM, zM, -1, -1); proj_sh (0, yM, 0, 0, -1);
-        proj_sh (0, 0, 0, 0, 1)] |]
+        proj_sh (0, 0, 0, 0, 1)] |] p
 ;
 
 value select_pattern (gm, n) =
