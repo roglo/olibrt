@@ -175,7 +175,7 @@ value lock_field ip n =
 ;
 
 value int_of_field str =
-  int 0 (Stream.of_string str) where rec int mant =
+  int 0 (Istream.of_string str) where rec int mant =
     parser
     [ [: `' '; a = int mant :] -> a
     | [: `('0'..'9' as c);
@@ -191,7 +191,7 @@ value decimal_of_field str =
          a = exp (10 * d + Char.code c - Char.code '0') (succ e) :] -> a
     | [: :] -> (d, e) ]
   in
-  decimal 0 (Stream.of_string str) where rec decimal mant =
+  decimal 0 (Istream.of_string str) where rec decimal mant =
     parser
     [ [: `' '; a = decimal mant :] -> a
     | [: `('0'..'9' as c);

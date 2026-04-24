@@ -249,53 +249,53 @@ value rec interp_stream print lang strm =
       fun
       [ '#' ->
           let rec skip_to_eol c =
-            if c = '\n' then loop (Stream.next strm)
-            else skip_to_eol (Stream.next strm)
+            if c = '\n' then loop (Istream.next strm)
+            else skip_to_eol (Istream.next strm)
           in
-          skip_to_eol (Stream.next strm)
+          skip_to_eol (Istream.next strm)
       | '\\' ->
           let c =
-            match Stream.next strm with
+            match Istream.next strm with
             [ 't' -> '\t'
             | c -> c ]
           in
-          do { print c; loop (Stream.next strm) }
+          do { print c; loop (Istream.next strm) }
       | '[' ->
-          let c = Stream.next strm in
+          let c = Istream.next strm in
           if c = '\n' then do {
             let s =
               let b = Buffer.create 50 in
               let rec loop =
                 fun
                 [ '\n' ->
-                    let c = Stream.next strm in
+                    let c = Istream.next strm in
                     if c = ']' then do {
                       let s = Buffer.contents b in
                       Buffer.clear b;
                       interp_stream (Buffer.add_char b) lang
-                        (Stream.of_string s);
+                        (Istream.of_string s);
                       Buffer.contents b
                     }
                     else do { Buffer.add_char b '\n'; loop c }
-                | c -> do { Buffer.add_char b c; loop (Stream.next strm) } ]
+                | c -> do { Buffer.add_char b c; loop (Istream.next strm) } ]
               in
-              loop (Stream.next strm)
+              loop (Istream.next strm)
             in
             String.iter print (transl_inline lang '#' skip_comm s);
-            loop (Stream.next strm)
+            loop (Istream.next strm)
           }
           else do { print '['; loop c }
-      | c -> do { print c; loop (Stream.next strm) } ]
+      | c -> do { print c; loop (Istream.next strm) } ]
     in
-    loop (Stream.next strm)
+    loop (Istream.next strm)
   with
-  [ Stream.Failure -> () ]
+  [ Istream.Failure -> () ]
 ;
 
 value interp_file print lang fname =
   try do {
     let ic = open_in fname in
-    interp_stream print lang (Stream.of_channel ic);
+    interp_stream print lang (Istream.of_channel ic);
     close_in ic
   }
   with

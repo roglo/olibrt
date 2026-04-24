@@ -42,7 +42,7 @@ XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
 all:: $(TARGET)
 
 $(TARGET): $(RTLIB) $(XLIB) $(ZOFILES)
-	$(CAMLLINK) -custom $(TOP)/rt/xft.cmo $(RTLIB) $(ZOFILES) $(XLIB) $(LIBX11) \
+	$(CAMLLINK) -custom $$(camlp5 -where)/camlp5.cma $(TOP)/rt/xft.cmo $(RTLIB) $(ZOFILES) $(XLIB) $(LIBX11) \
  -o $@
 
 clean::
