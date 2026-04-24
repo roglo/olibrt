@@ -938,51 +938,51 @@ value display_help wid txt = do {
 
 value date_in_sec =
   let num =
-    num 0 where rec num n (strm__ : Stream.t _) =
-      match Stream.peek strm__ with
+    num 0 where rec num n (strm__ : Istream.t _) =
+      match Istream.peek strm__ with
       [ Some ('0'..'9' as c) -> do {
-          Stream.junk strm__;
+          Istream.junk strm__;
           try num (10 * n + Char.code c - Char.code '0') strm__ with
-          [ Stream.Failure -> raise (Stream.Error "") ]
+          [ Istream.Failure -> raise (Istream.Error "") ]
         }
-      | Some _ -> do { Stream.junk strm__; n }
-      | _ -> raise Stream.Failure ]
+      | Some _ -> do { Istream.junk strm__; n }
+      | _ -> raise Istream.Failure ]
   in
-  let rec word (strm__ : Stream.t _) =
-    match Stream.peek strm__ with
-    [ Some ' ' -> do { Stream.junk strm__; "" }
+  let rec word (strm__ : Istream.t _) =
+    match Istream.peek strm__ with
+    [ Some ' ' -> do { Istream.junk strm__; "" }
     | Some x -> do {
-        Stream.junk strm__;
+        Istream.junk strm__;
         let w =
-          try word strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+          try word strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
         in
         String.make 1 x ^ w
       }
-    | _ -> raise Stream.Failure ]
+    | _ -> raise Istream.Failure ]
   in
-  fun (strm__ : Stream.t _) ->
+  fun (strm__ : Istream.t _) ->
     let _ = word strm__ in
     let _ =
-      try word strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+      try word strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
     in
     let day =
-      try num strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+      try num strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
     in
     let hour =
-      try num strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+      try num strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
     in
     let min =
-      try num strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+      try num strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
     in
     let sec =
-      try num strm__ with [ Stream.Failure -> raise (Stream.Error "") ]
+      try num strm__ with [ Istream.Failure -> raise (Istream.Error "") ]
     in
     ((day * 24 + hour) * 60 + min) * 60 + sec
 ;
 
 value set_random_seed date =
-  try Random.init (date_in_sec (Stream.of_string date)) with
-  [ Stream.Failure | Stream.Error _ -> () ]
+  try Random.init (date_in_sec (Istream.of_string date)) with
+  [ Istream.Failure | Istream.Error _ -> () ]
 ;
 
 value usage () = do {
