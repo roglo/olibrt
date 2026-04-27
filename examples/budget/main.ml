@@ -4,7 +4,7 @@ open Stdpp;
 
 value print_version () = do {
   Printf.eprintf "Budget version 1.1\n";
-  flush Pervasives.stderr;
+  flush stderr;
   exit 0
 };
 
@@ -19,7 +19,7 @@ Printexc.catch
      try main () with
      [ Ploc.Exc _ exc -> do {
          Printf.printf "At some location...\n";
-         flush Pervasives.stdout;
+         flush stdout;
          raise exc
        }
      | exc -> raise exc ])

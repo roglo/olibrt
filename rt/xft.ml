@@ -2,11 +2,22 @@
 
 open Xlib.
 
+type glyphinfo = 'a;
 type xftcolor = 'a;
 type xftdraw = 'a;
 type xftfont = 'a;
 
 external alloc_XftColor : unit -> xftcolor = "ML_alloc_XftColor";
+external alloc_glyphinfo : unit -> glyphinfo = "ML_alloc_XGlyphInfo";
+
+external xftFont_ascent : xftfont -> int = "ML_XftFont_ascent";
+external xftFont_descent : xftfont -> int = "ML_XftFont_descent";
+external xftFont_width : xftfont -> int = "ML_XftFont_width";
+external xftFont_height : xftfont -> int = "ML_XftFont_height";
+external glyphinfo_width : glyphinfo -> int = "ML_XGlyphInfo_width";
+external glyphinfo_height : glyphinfo -> int = "ML_XGlyphInfo_height";
+external glyphinfo_yOff : glyphinfo -> int = "ML_XGlyphInfo_yOff";
+
 external xftColorAllocName :
   (display * visual * colormap * string * xftcolor) -> bool =
     "ML_XftColorAllocName";
@@ -17,6 +28,9 @@ external xftDrawString8 :
     "ML_XftDrawString8";
 external xftFontOpenName : (display * int * string) -> xftfont =
   "ML_XftFontOpenName";
+external xftTextExtents8 :
+  (display * xftfont * string * int * glyphinfo) -> unit =
+    "ML_XftTextExtents8";
 
 external get_screen_size_mm : display -> (int * int) =
   "ML_get_screen_size_mm";

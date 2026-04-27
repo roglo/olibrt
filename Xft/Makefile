@@ -8,6 +8,9 @@ all: libxft.a
 clean:
 	rm -f *.[ao] config.h
 
+test.out: test.c
+	gcc test.c -o test.out -lX11 -lXft -lXrandr -lfontconfig -I/usr/include/freetype2
+
 libxft.a: config.h $(OBJS)
 	rm -f $@
 	ar qc $@ $(OBJS)

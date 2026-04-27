@@ -2,9 +2,9 @@ c_arrow.cmo: c_arrow.cmi motif.cmo rtdecl.cmi util.cmo xlib.cmo
 c_arrow.cmx: c_arrow.cmi motif.cmx rtdecl.cmi util.cmx xlib.cmx
 c_arrow.cmi: rtdecl.cmi
 c_button.cmo: c_button.cmi font.cmi motif.cmo rtdecl.cmi std.cmo util.cmo \
-    xlib.cmo
+    xft.cmo xlib.cmo
 c_button.cmx: c_button.cmi font.cmx motif.cmx rtdecl.cmi std.cmx util.cmx \
-    xlib.cmx
+    xft.cmx xlib.cmx
 c_button.cmi: rtdecl.cmi
 c_check.cmo: c_check.cmi motif.cmo rtdecl.cmi util.cmo xlib.cmo
 c_check.cmx: c_check.cmi motif.cmx rtdecl.cmi util.cmx xlib.cmx
@@ -29,9 +29,9 @@ c_table.cmo: c_table.cmi motif.cmo rtdecl.cmi util.cmo xlib.cmo
 c_table.cmx: c_table.cmi motif.cmx rtdecl.cmi util.cmx xlib.cmx
 c_table.cmi: rtdecl.cmi
 c_term.cmo: c_term.cmi font.cmi keysym.cmi mousefont.cmi rtdecl.cmi \
-    termdef.cmo util.cmo xlib.cmo
+    termdef.cmo util.cmo xft.cmo xlib.cmo
 c_term.cmx: c_term.cmi font.cmx keysym.cmx mousefont.cmx rtdecl.cmi \
-    termdef.cmx util.cmx xlib.cmx
+    termdef.cmx util.cmx xft.cmx xlib.cmx
 c_term.cmi: keysym.cmi rtdecl.cmi
 c_title.cmo: c_title.cmi font.cmi rtdecl.cmi std.cmo util.cmo xlib.cmo
 c_title.cmx: c_title.cmi font.cmx rtdecl.cmi std.cmx util.cmx xlib.cmx
@@ -80,8 +80,10 @@ rt_color.cmi: rtdecl.cmi
 rt_image.cmo: rt_image.cmi rtdecl.cmi std.cmo xlib.cmo
 rt_image.cmx: rt_image.cmi rtdecl.cmi std.cmx xlib.cmx
 rt_image.cmi: rtdecl.cmi
-rt_main.cmo: rt_main.cmi rtdecl.cmi std.cmo time.cmi util.cmo xlib.cmo
-rt_main.cmx: rt_main.cmi rtdecl.cmi std.cmx time.cmx util.cmx xlib.cmx
+rt_main.cmo: rt_main.cmi rtdecl.cmi std.cmo time.cmi util.cmo xft.cmo \
+    xlib.cmo
+rt_main.cmx: rt_main.cmi rtdecl.cmi std.cmx time.cmx util.cmx xft.cmx \
+    xlib.cmx
 rt_main.cmi: rtdecl.cmi
 rtdecl.cmi: time.cmi xlib.cmo
 rtdef.cmo: c_arrow.cmi c_button.cmi c_check.cmi c_line.cmi c_pack.cmi \
@@ -95,13 +97,19 @@ rtdef.cmx: c_arrow.cmx c_button.cmx c_check.cmx c_line.cmx c_pack.cmx \
     pixmap.cmx resource.cmx rt_color.cmx rt_image.cmx rt_main.cmx rtdef.cmi \
     term.cmx time.cmx uinfo.cmx xlib.cmx
 rtdef.cmi: time.cmi xlib.cmo
+rtf.cmo: rt.cmi rt_main.cmi
+rtf.cmx: rt.cmx rt_main.cmx
 term.cmo: c_term.cmi rt_color.cmi rtdecl.cmi term.cmi termdef.cmo util.cmo \
     xlib.cmo
 term.cmx: c_term.cmx rt_color.cmx rtdecl.cmi term.cmi termdef.cmx util.cmx \
     xlib.cmx
 term.cmi: rtdecl.cmi
-termdef.cmo: keysym.cmi rtdecl.cmi util.cmo xlib.cmo
-termdef.cmx: keysym.cmx rtdecl.cmi util.cmx xlib.cmx
+termdef.cmo: keysym.cmi rtdecl.cmi util.cmo xft.cmo xlib.cmo
+termdef.cmx: keysym.cmx rtdecl.cmi util.cmx xft.cmx xlib.cmx
+test_rt.cmo: rt.cmi rtf.cmo
+test_rt.cmx: rt.cmx rtf.cmx
+test_xlib.cmo: xft.cmo xlib.cmo
+test_xlib.cmx: xft.cmx xlib.cmx
 time.cmo: time.cmi xlib.cmo
 time.cmx: time.cmi xlib.cmx
 uinfo.cmo: rtdecl.cmi std.cmo uinfo.cmi xlib.cmo
@@ -109,3 +117,5 @@ uinfo.cmx: rtdecl.cmi std.cmx uinfo.cmi xlib.cmx
 uinfo.cmi: rtdecl.cmi
 util.cmo: font.cmi rtdecl.cmi std.cmo xlib.cmo
 util.cmx: font.cmx rtdecl.cmi std.cmx xlib.cmx
+xft.cmo: xlib.cmo
+xft.cmx: xlib.cmx

@@ -3,6 +3,7 @@
 open Rtdecl;
 open Util;
 open Xlib;
+open Xft;
 open Keysym;
 
 type term_event =
@@ -92,16 +93,17 @@ module Gstring :
 ;
 
 type term_global_info =
-  { dfont : font;
-    tgc : gC;
+  { tgc : gC;
+    ftfont : xftfont;
+    attrs : xWindowAttributes;
+    color : xftcolor;
     c_backg : mutable int;
-    c_foreg : mutable int;
-    c_font : mutable xfont }
+    c_foreg : mutable int }
 and term_local_info =
   { term_gi : term_global_info;
+    draw : xftdraw;
     att_val : attribute_values;
     callb : term_event_handler;
-    tfs : array (mlazy font);
     twidth : int;
     theight : int;
     tascent : int;
@@ -200,14 +202,11 @@ and (term_local_info, get_term_local_info) =
     (ref None : ref (option term_local_info))
 ;
 
-value term_font =
-  [| "*-courier-medium-r-*-14-*"; "*-courier-bold-r-*-14-*";
-     "*-courier-medium-o-*-14-*"; "*-courier-bold-o-*-14-*" |]
-and term_inter = ref 0
-and term_band = ref 2
+value term_inter = ref 0
+and term_band = ref 0
 and term_blink = ref (500, 100);
 
-value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
+value set_backg_foreg (xd, li, rev, vid, foreg, backg) = do {
   let w_foreg =
     if cland vid f_foreg != 0 then foreg
     else
@@ -225,7 +224,6 @@ value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
   let (w_foreg, w_backg) =
     if rev then (w_backg, w_foreg) else (w_foreg, w_backg)
   in
-  let w_font = font.fid in
   let gi = li.term_gi in
   if gi.c_foreg != w_foreg then do {
     xSetForeground (xd.dpy, gi.tgc, w_foreg);
@@ -237,11 +235,6 @@ value set_backg_foreg (xd, li, rev, vid, foreg, backg, font) = do {
     gi.c_backg := w_backg
   }
   else ();
-  if gi.c_font != w_font then do {
-    xSetFont (xd.dpy, gi.tgc, w_font);
-    gi.c_font := w_font
-  }
-  else ()
 };
 
 value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
@@ -297,29 +290,30 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
           let tband = opt_val term_band.val li.att_val.band_att in
           let tinter = opt_val term_inter.val li.att_val.inter_att in
           let x = tband + bcol * li.twidth in
-(*
-          let y = tband + row * li.theight + li.tascent in
-*)
           let y =
-            let tband = (wid.height - li.nrow * li.theight + tinter) / 2 in
-            tband + row * li.theight + li.tascent
+            tband + row * (li.theight + tinter) + li.tascent
           in
-(**)
-          let font = unfreeze li.tfs.(cland vid (f_bld lor f_ita)) in
+(*
+let _ = if row = 0 then
+  let _ = Printf.printf "tband %d y %d\n" tband y in
+  let _ = flush stdout in ()
+  else ()
+in
+*)
           let rev =
             xor (flg_set li flg_reverse_video) (cland vid f_rev != 0)
           in
-          let params = (xd, li, rev, vid, foreg, backg, font) in
+          let params = (xd, li, rev, vid, foreg, backg) in
           if cursor then do {
             set_backg_foreg params;
-            let y = y - li.tascent in
             xDrawLine
-              (xd.dpy, wid.win, gi.tgc, x, y, x, y + li.theight - tinter - 1)
+              (xd.dpy, wid.win, gi.tgc, x, y - li.theight + tinter + 5,
+	       x, y + 3)
           }
           else if cland vid f_blk != 0 && flg_reset li flg_blink then
             xClearArea
-              (xd.dpy, wid.win, x, y - li.tascent,
-               li.twidth * Gstring.length str, li.theight, 0)
+              (xd.dpy, wid.win, x, y,
+               li.twidth * Gstring.length str, li.theight + tinter, 0)
           else do {
             set_backg_foreg params;
             let txt =
@@ -328,10 +322,30 @@ value expose_row wid li cursor optim_spaces only_blink row bcol ecol =
               [ Latin_1 -> txt
               | Utf_8 -> latin_1_of_utf_8 txt ]
             in
-            xDrawImageString
-              (xd.dpy, wid.win, gi.tgc, x, y, txt, ecol - bcol);
+(*
+Printf.printf "row %d txt \"%s\" row %d x %d y %d\n" row (Gstring.to_string str) row x y;
+flush stdout;
+*)
+(*
+	    xDrawRectangle
+	      (xd.dpy, wid.win, xd.gc, x, y - li.tascent,
+               li.twidth * Gstring.length str, li.theight);
+*)
+(*
+Printf.printf "tband %d tinter %d\n" tband tinter;
+flush stdout;
+*)
+            xClearArea
+              (xd.dpy, wid.win, x, y - li.tascent,
+               li.twidth * Gstring.length str, li.theight, 0);
+	       (* + tband + 1 = pifomètre *)
+(*
+Printf.printf "ascent %d descent %d height %d\n" (xftFont_ascent gi.ftfont) (xftFont_descent gi.ftfont) (xftFont_height gi.ftfont);
+flush stdout;
+*)
+	    xftDrawString8
+	      (li.draw, gi.color, gi.ftfont, x, y, txt, ecol - bcol);
             if cland vid f_und != 0 then
-              let y = y + li.tdescent / 2 in
               xDrawLine
                 (xd.dpy, wid.win, gi.tgc, x, y,
                  x + li.twidth * Gstring.length str, y)
@@ -369,23 +383,26 @@ value term_expose_blink wid li = do {
 
 value row_col_of_xy li x y =
   let tband = opt_val term_band.val li.att_val.band_att in
-  let row = min li.nrow (max 0 ((y - tband) / li.theight)) in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
+  let row = min li.nrow (max 0 ((y - tband) / (li.theight + tinter))) in
   let col = min li.ncol (max 0 ((x - tband) / li.twidth)) in (row, col)
 ;
 
 value term_expose wid x y width height = do {
   let li = get_term_local_info wid.info in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   let (brow, bcol) = row_col_of_xy li x y in
   let (erow, ecol) =
-    row_col_of_xy li (x + width + li.twidth - 1) (y + height + li.theight - 1)
+    row_col_of_xy li (x + width + li.twidth - 1)
+      (y + height + li.theight + tinter - 1)
   in
   if flg_set li flg_bars then do {
     let xd = wid.wid_xd in
     let tb = opt_val term_band.val li.att_val.band_att in
     let bx = tb + bcol * li.twidth in
-    let by = tb + brow * li.theight in
+    let by = tb + brow * (li.theight + tinter) in
     let ex = tb + ecol * li.twidth in
-    let ey = tb + erow * li.theight in
+    let ey = tb + erow * (li.theight + tinter) in
     let rec draw_vertical_lines x =
       if x < ex then do {
         xDrawLine (xd.dpy, wid.win, xd.gc, x, by, x, ey);
@@ -395,7 +412,7 @@ value term_expose wid x y width height = do {
     and draw_horizontal_lines y = do {
       let tinter = opt_val term_inter.val li.att_val.inter_att in
       xDrawLine (xd.dpy, wid.win, xd.gc, bx, y, ex, y);
-      let y = y + li.theight - tinter in
+      let y = y + li.theight in
       if y < ey then do {
         xDrawLine (xd.dpy, wid.win, xd.gc, bx, y, ex, y);
         draw_horizontal_lines (y + tinter)
@@ -452,18 +469,21 @@ value term_scroll_down wid li nb row nrow = do {
   let nb = min nb nrow in
   let xd = wid.wid_xd in
   let tband = opt_val term_band.val li.att_val.band_att in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   if row + nb < li.nrow then do {
     xCopyArea
-      (xd.dpy, wid.win, wid.win, xd.gc, tband, tband + row * li.theight,
-       li.ncol * li.twidth, (nrow - nb) * li.theight, tband,
-       tband + (row + nb) * li.theight);
+      (xd.dpy, wid.win, wid.win, xd.gc, tband,
+       tband + row * (li.theight + tinter),
+       li.ncol * li.twidth, (nrow - nb) * (li.theight + tinter),
+       tband, tband + (row + nb) * (li.theight + tinter));
     li.scroll_cnt := li.scroll_cnt + 1
   }
   else ();
   if row < li.nrow then
     xClearArea
-      (xd.dpy, wid.win, tband, tband + row * li.theight, li.ncol * li.twidth,
-       nb * li.theight, 0)
+      (xd.dpy, wid.win, tband,
+       tband + row * (li.theight + tinter), li.ncol * li.twidth,
+       nb * (li.theight + tinter), 0)
   else ()
 };
 
@@ -473,19 +493,22 @@ value term_scroll_up wid li nb row nrow = do {
   let nb = min nb nrow in
   let xd = wid.wid_xd in
   let tband = opt_val term_band.val li.att_val.band_att in
-  let yband = (wid.height - li.nrow * li.theight) in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
+  let yband = (wid.height - li.nrow * (li.theight + tinter)) in
   if row + nb < li.nrow then do {
     xCopyArea
       (xd.dpy, wid.win, wid.win, xd.gc, tband,
-       yband + (row + nb) * li.theight, li.ncol * li.twidth,
-       (nrow - nb) * li.theight, tband, yband + row * li.theight);
+       yband + (row + nb) * (li.theight + tinter), li.ncol * li.twidth,
+       (nrow - nb) * (li.theight + tinter), tband,
+       yband + row * (li.theight + tinter));
     li.scroll_cnt := li.scroll_cnt + 1
   }
   else ();
   if row + nrow - nb < li.nrow then
     xClearArea
-      (xd.dpy, wid.win, tband, yband + (row + nrow - nb) * li.theight,
-       li.ncol * li.twidth, nb * li.theight, 0)
+      (xd.dpy, wid.win, tband,
+       yband + (row + nrow - nb) * (li.theight + tinter),
+       li.ncol * li.twidth, nb * (li.theight + tinter), 0)
   else ()
 };
 
@@ -613,7 +636,6 @@ value term_get_emphasized wid =
   let ((row1, col1), (row2, col2)) = term_emphasized_location wid in
   let li = get_term_local_info wid.info in
   sel_str Gstring.empty row1 col1 where rec sel_str s row col =
-    (**)
     if row == row2 && col == col2 then Gstring.to_string s
     else
       let str = li.lines.(row).str in
@@ -634,10 +656,6 @@ value term_resize wid li nrow ncol = do {
   and ecol1 = li.ecol1 in
   let erow2 = li.erow2
   and ecol2 = li.ecol2 in
-(*
-  let nrow = max nrow li.nrow in
-  let ncol = max ncol li.ncol in
-*)
   display_emphasized_zone wid li False li.erow1 li.ecol1;
   let lines =
     make_array (li.nhrow + nrow)

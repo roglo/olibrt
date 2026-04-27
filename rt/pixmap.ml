@@ -9,7 +9,8 @@ open Rtdecl;
 
 value rt_create_pixmap xd width height =
   let pixmap = xCreatePixmap (xd.dpy, xd.rootw, width, height, xd.depth) in
-  {pixm_xd = xd; pixmap = pixmap}
+  {pixm_xd = xd; pixmap = pixmap;
+   pixm_width = width; pixm_height = height}
 ;
 
 value rt_select_pixmap pix = do {

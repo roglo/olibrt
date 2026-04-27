@@ -1,5 +1,5 @@
 # $Id: help.txt,v 1.6 2005/10/10 19:30:17 ddr Exp $
-
+***
                     SOKOBAN
 
 [
@@ -25,18 +25,18 @@ fr:     Commandes:
     
     \tq: quitter
     \th: aide
-    \tp: niveau précédent
+    \tp: niveau prÃ©cÃ©dent
     \tn: niveau suivant
     \tg: aller au niveau
-    \tu: défaire
+    \tu: dÃ©faire
     \tr: refaire
-    \tj: aller à un certain coup
-    \tR: redémarrer niveau
-    \tL: charger solution (si début du niveau)
+    \tj: aller Ã  un certain coup
+    \tR: redÃ©marrer niveau
+    \tL: charger solution (si dÃ©but du niveau)
     \tB: afficher/ne pas afficher blocages
-    \tC: compléter à partir de la solution
+    \tC: complÃ©ter Ã  partir de la solution
     \tO: optimiser les coups suivants
     \t`: pousser automatiquement un objet
-    \tflèches: déplacer
-    \tsouris: déplacer automatiquement
+    \tflÃ¨ches: dÃ©placer
+    \tsouris: dÃ©placer automatiquement
 ]

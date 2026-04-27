@@ -1,5 +1,3 @@
-(* $Id: jmage.ml,v 1.4 2006/06/02 06:58:16 deraugla Exp $ *)
-
 open RtN;
 
 type inputPic =
@@ -21,7 +19,67 @@ type field =
   | Fempty ]
 ;
 
-(* $Id: jmage.ml,v 1.4 2006/06/02 06:58:16 deraugla Exp $ *)
+
+value is_utf8_cont_byte b =
+  Char.code b land 0b11000000 = 0b10000000
+;
+
+value skip_to_next_utf8_char s =
+  loop where rec loop i =
+    if i >= String.length s then String.length s
+    else if is_utf8_cont_byte s.[i] then loop (i + 1)
+    else i
+;
+
+value utf8_of_string str =
+  loop 0 [] where rec loop i u =
+    if i >= String.length str then List.rev u
+    else
+      let (s, i) =
+        let c = str.[i] in
+        if Char.code c land 0x80 = 0 then (String.make 1 c, i + 1)
+        else
+	  let j = skip_to_next_utf8_char str (i + 1) in
+	  (String.sub str i (j - i), j)
+      in
+      loop i [s :: u]
+;
+
+value string_of_utf8 = String.concat "";
+
+value uppercase_char c =
+  Char.chr (Char.code c - Char.code 'a' + Char.code 'A')
+;
+
+value utf8_uppercase =
+  List.map
+    (fun s ->
+       match s.[0] with
+       | 'a'..'z' as c -> String.make 1 (uppercase_char c)
+       | '\xC3' ->
+           match s.[1] with
+           | '\xA0'..'\xBF' as c ->
+               String.make 1 s.[0] ^ String.make 1 (uppercase_char c)
+           | _ -> s
+           end
+       | _ -> s
+       end)
+;
+
+value uppercase str =
+  string_of_utf8 (utf8_uppercase (utf8_of_string str))
+;
+
+value capitalize str =
+  match str.[0] with
+  [ 'a'..'z' as c -> do {
+      let str2 = Bytes.create (String.length str) in
+      String.blit str 0 str2 0 (String.length str);
+      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
+      Bytes.to_string str2
+    }
+  | _ -> str ]
+;
 
 value rec get_format_len pic len i =
   if i >= String.length pic then invalid_arg "unexpected end of picture"
@@ -117,7 +175,7 @@ value lock_field ip n =
 ;
 
 value int_of_field str =
-  int 0 (Stream.of_string str) where rec int mant =
+  int 0 (Istream.of_string str) where rec int mant =
     parser
     [ [: `' '; a = int mant :] -> a
     | [: `('0'..'9' as c);
@@ -133,7 +191,7 @@ value decimal_of_field str =
          a = exp (10 * d + Char.code c - Char.code '0') (succ e) :] -> a
     | [: :] -> (d, e) ]
   in
-  decimal 0 (Stream.of_string str) where rec decimal mant =
+  decimal 0 (Istream.of_string str) where rec decimal mant =
     parser
     [ [: `' '; a = decimal mant :] -> a
     | [: `('0'..'9' as c);
@@ -254,31 +312,9 @@ value string_of_date j m a = do {
 
 value mois_annee_large m a = do {
   let m = string_of_mois m in
-  let a = Printf.sprintf "%04d" a in
-  let s = Bytes.create (2 * (String.length m + 1 + String.length a)) in
-  for i = 0 to String.length m - 1 do {
-    s.[2 * i] := Char.chr (Char.code m.[i] + Char.code 'A' - Char.code 'a');
-    s.[2 * i + 1] := ' ';
-  };
-  s.[2 * String.length m] := ' ';
-  s.[2 * String.length m + 1] := ' ';
-  for i = 0 to String.length a - 1 do {
-    s.[2 * String.length m + 2 + 2 * i] := a.[i];
-    s.[2 * String.length m + 2 + 2 * i + 1] := ' ';
-  };
-  "- " ^ s ^ "-"
+  let u = String.concat " " (utf8_uppercase (utf8_of_string m)) in
+  "- " ^ u ^ "-"
 };
-
-value capitalize str =
-  match str.[0] with
-  [ 'a'..'z' as c -> do {
-      let str2 = Bytes.create (String.length str) in
-      String.blit str 0 str2 0 (String.length str);
-      str2.[0] := Char.chr (Char.code c - Char.code 'a' + Char.code 'A');
-      Bytes.to_string str2
-    }
-  | _ -> str ]
-;
 
 value large str = do {
   let str2 = String.make (2 * String.length str - 1) ' ' in

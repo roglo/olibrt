@@ -142,9 +142,6 @@ value is_colored : xdata -> bool;
 value screen_width : xdata -> int;
       (* [screen_width xd]
          returns the width of the screen [xd] *)
-value screen_width_mm : xdata -> int;
-      (* [screen_width_mm xd]
-         returns the width of the screen [xd] in millimeters *)
 value screen_height : xdata -> int;
       (* [screen_height xd]
          returns the height of the screen [xd] *)
@@ -153,6 +150,9 @@ value screen_depth : xdata -> int;
          returns the depth of the screen [xd]; a black and white screen
          has a depth 1, a colored screen with 256 colors has a depth 8;
          the depth is the number of bits by pixels in the screen *)
+value screen_size_mm : xdata -> (int * int);
+      (* [screen_size_mm xd]
+         returns (width, height) of the screen [xd] in millimeters *)
 value xdata_of_widget : widget -> xdata;
       (* [xdata_of_widget wid]
          returns the [xdata] where the widget [wid] is *)
@@ -185,6 +185,8 @@ value widget_named : xdata -> string -> widget;
       (* [widget_named xd name]
          returns the widget named [name] in the xdata [xd]; see the
          attribute [NameAtt] *)
+value pixmap_width : pixmap -> int;
+value pixmap_height : pixmap -> int;
 value is_mapped : widget -> bool;
       (* [is_mapped wid]
          tells whether the widget is mapped (visible on the screen)
@@ -193,3 +195,5 @@ value is_frozen : widget -> bool;
       (* [is_frozen wid]
          tells whether the widget is frozen or not *)
 value widget_size : xdata -> widget_desc -> (int * int);
+
+value pix_of_mm : xdata -> float -> int;

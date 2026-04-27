@@ -6,12 +6,12 @@
 # $Id: Makefile,v 1.6 2010/11/17 17:28:41 deraugla Exp $
 
 TOP=../../.
-CURRENT_DIR=./examples/column
+CURRENT_DIR=./examples/welltris
 AR=ar
 ARFLAGS=qc
-OCAMLC=ocamlc.opt -g
+OCAMLC=ocamlc.opt
 OCAMLOPT=ocamlopt.opt
-CAMLLINK=ocamlc.opt -g
+CAMLLINK=ocamlc.opt
 CAMLLIBR=ocamlc.opt -a
 CAMLOPTLIBR=ocamlopt -a
 CAMLMKTOP=ocamlmktop
@@ -20,7 +20,7 @@ CC=gcc
 ZDEP=ocamldep -pp $(CAMLP5)
 RTDIR=$(TOP)/rt
 RTLIB=$(TOP)/rt/xft.cmo $(RTDIR)/librt.cma
-XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
+XLIB=$(TOP)/Xlib/$(ARCH)/libx.a
 CONFIG=$(TOP)/config
 
 ARCH=.
@@ -31,7 +31,7 @@ LIBX11=-cclib -L/usr/X11R6/lib -cclib -lX11 -cclib -lXft -cclib -lXrandr
 OLIBDIR=/usr/local/lib/ocaml
 
 ZDEPFLAGS=-I $(RTDIR)
-ZFLAGS=-I $(RTDIR) -I `camlp5 -where` -unsafe-string
+ZFLAGS=-I $(RTDIR) -I `camlp5 -where`
 CFLAGS=-O -I$(OLIBDIR) -I/usr/X11R6/include
 
 all::
@@ -40,8 +40,8 @@ all::
 
 # $Id: Makefile,v 1.6 2010/11/17 17:28:41 deraugla Exp $
 
-TARGET=$(ARCH)/column.out
-ZOFILES=column.cmo
+TARGET=$(ARCH)/welltris.out
+ZOFILES=welltris.cmo
 XLIB=$(TOP)/Xlib/$(ARCH)/libx.a $(TOP)/Xft/XftFont.o
 
 all:: $(TARGET)
@@ -61,8 +61,8 @@ depend::
 	$(ZDEP) $(ZDEPFLAGS) $$(ls *.ml *.mli | LC_ALL=C sort) >> Imakefile
 
 # ## DO NOT DELETE THIS LINE
-column.cmo: ../.././rt/xlib.cmi ../.././rt/rt.cmi
-column.cmx: ../.././rt/xlib.cmx ../.././rt/rt.cmx
+welltris.cmo: ../.././rt/rt.cmi
+welltris.cmx: ../.././rt/rt.cmx
 
 # (end Imakefile)
 

@@ -10,6 +10,7 @@ open Rtdecl;
 open Termdef;
 open Util;
 open Xlib;
+open Xft;
 
 type term_event =
   Termdef.term_event ==
@@ -26,31 +27,28 @@ type term_event_handler = Termdef.term_event_handler;
 
 type term_args = (int * int * int);
 
-value term_font = Termdef.term_font
-and term_inter = Termdef.term_inter
+value term_inter = Termdef.term_inter
 and term_band = Termdef.term_band
 and term_blink = Termdef.term_blink
 and term_border = ref 1;
 
-value create_term_font xd font_att i =
-  freeze
-    (fun () ->
-       if i < Array.length font_att then font_att.(i)
-       else rt_load_query_font xd term_font.(i))
-;
-
-value create_gc xd fs = do {
+value create_gc xd = do {
   let gstr = gstr () in
-  let _mask = fs.gc_mask in set_XGCValues_font (fs.fid, gstr.xgcv);
-  xCreateGC (xd.dpy, xd.rootw, fs.gc_mask, gstr.xgcv)
+  xCreateGC (xd.dpy, xd.rootw, 0, gstr.xgcv)
 };
 
+value term_font = ref "mono:size=12";
+
 value make_term_global_info xd =
-  let fs = rt_load_query_font xd term_font.(0) in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
+  let attrs = alloc_XWindowAttributes () in
+  let color = alloc_XftColor () in
+  let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
   let _gstr = gstr () in
-  let tgc = create_gc xd fs in
+  let tgc = create_gc xd in
   add_ginfo xd "term" term_global_info
-    {dfont = fs; tgc = tgc; c_backg = 1; c_foreg = 0; c_font = fs.fid}
+    {tgc = tgc; ftfont = ftfont; attrs = attrs; color = color;
+     c_backg = 1; c_foreg = 0}
 ;
 
 value (term_args, get_term_args) =
@@ -59,23 +57,20 @@ value (term_args, get_term_args) =
 
 value term_wsize wargs att_val xd =
   let (rows, cols, _) = (get_term_args wargs).val in
-  let gi =
+  let _gi =
     try get_term_global_info (ginfo xd "term") with _ ->
       make_term_global_info xd
   in
-  let font =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
-  in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
   let tinter = opt_val term_inter.val att_val.inter_att in
   let tband = opt_val term_band.val att_val.band_att in
-  let twidth = font.fwidth in
-  let theight = font.fheight + tinter in
+  let twidth = xftFont_width ftfont in
+  let theight = xftFont_height ftfont in
   {sh_width = cols * twidth + 2 * tband;
-   sh_height = rows * theight - tinter + 2 * tband;
+   sh_height = rows * (theight + tinter) - tinter + 2 * tband;
    sh_border = opt_val term_border.val att_val.border_att;
    base_width = 2 * tband; base_height = 2 * tband - tinter;
-   width_inc = twidth; height_inc = theight}
+   width_inc = twidth; height_inc = theight + tinter}
 ;
 
 value select_mask =
@@ -91,14 +86,13 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
   let win = create_window xd pwin is_top x y wsh att_val select_mask in
   xDefineCursor (xd.dpy, win, xCreateFontCursor (xd.dpy, xC_xterm));
   let gi = get_term_global_info (ginfo xd "term") in
-  let font =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
-  in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, term_font.val) in
   let tband = opt_val term_band.val att_val.band_att in
   let tinter = opt_val term_inter.val att_val.inter_att in
-  let twidth = font.fwidth in
-  let theight = font.fheight + tinter in
+  let twidth = xftFont_width ftfont in
+  let theight = xftFont_height ftfont in
+  let tascent = xftFont_ascent ftfont in
+  let tdescent = xftFont_descent ftfont in
   let ncol = max 1 ((width - 2 * tband) / twidth) in
   let nrow = max 1 ((height - 2 * tband + tinter) / theight) in
   let lines =
@@ -107,13 +101,17 @@ value term_wcreate att_val wargs callb xd pwin is_top in_popup wdesc x y
          {str = Gstring.create ncol; vid = Bytes.create ncol;
           foreg = Array.make ncol 0; backg = Array.make ncol 0})
   in
-  let tfs =
-    make_array (f_bld lor f_ita + 1) (create_term_font xd att_val.font_att)
+  let _s = xGetWindowAttributes(xd.dpy, win, gi.attrs) in
+  let draw =
+    xftDrawCreate
+      (xd.dpy, win, xWindowAttributes_visual gi.attrs,
+       xWindowAttributes_colormap gi.attrs)
   in
   let li =
-    {term_gi = gi; att_val = att_val; callb = callb; tfs = tfs;
-     twidth = twidth; theight = theight; tascent = font.ascent;
-     tdescent = font.descent; max_history_size = nhist; lines = lines;
+    {term_gi = gi; draw= draw; att_val = att_val; callb = callb;
+     twidth = twidth; theight = theight;
+     tascent = tascent; tdescent = tdescent;
+     max_history_size = nhist; lines = lines;
      nhrow = 0; nrow = nrow; ncol = ncol; shift = 0; crow = 0; ccol = 0;
      sreg1 = 0; sreg2 = ncol; vmask = Char.chr 0; foregm = 0; backgm = 0;
      vcrow = 0; vccol = 0; vvmask = Char.chr 0; vforegm = 0; vbackgm = 0;
@@ -146,7 +144,9 @@ value term_graphics_expose wid li = do {
 value term_reinit wid li =
   let tband = opt_val term_band.val li.att_val.band_att in
   let tinter = opt_val term_inter.val li.att_val.inter_att in
-  let nrow = max 1 ((wid.height - 2 * tband + tinter) / li.theight) in
+  let nrow =
+    max 1 ((wid.height - 2 * tband + tinter) / (li.theight + tinter))
+  in
   let ncol = max 1 ((wid.width - 2 * tband) / li.twidth) in
   term_resize wid li nrow ncol
 ;
@@ -340,6 +340,7 @@ value term_shift_value wid =
 
 value term_shift wid nb =
   let li = get_term_local_info wid.info in
+  let tinter = opt_val term_inter.val li.att_val.inter_att in
   let _gi = li.term_gi in
   let nb = max 0 (min li.nhrow nb) in
   let d = nb - li.shift in
@@ -349,13 +350,14 @@ value term_shift wid nb =
     if d < 0 then do {
       term_scroll_up wid li (-d) 0 li.nrow;
       let nb = min (-d) li.nrow in
-      term_expose wid tband (tband + (li.nrow - nb) * li.theight)
-        (li.ncol * li.twidth) (nb * li.theight)
+      term_expose wid tband (tband + (li.nrow - nb) * (li.theight + tinter))
+        (li.ncol * li.twidth) (nb * (li.theight + tinter))
     }
     else if d > 0 then do {
       term_scroll_down wid li d 0 li.nrow;
       let nb = min d li.nrow in
-      term_expose wid tband tband (li.ncol * li.twidth) (nb * li.theight)
+      term_expose wid tband tband (li.ncol * li.twidth)
+	(nb * (li.theight + tinter))
     }
     else ()
   }

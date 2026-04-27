@@ -8,6 +8,7 @@ open Std;
 open Time;
 open Util;
 open Xlib;
+open Xft;
 
 value rt_version = "1.09-exp";
 
@@ -60,7 +61,7 @@ value rt_initialize =
           let motif_border = try int_of_string v with _ -> 3 in
     *)
     let motif_border = 2 in
-    (**)
+    let sz = get_screen_size_mm dpy in
     let xgcv = (gstr ()).xgcv in set_XGCValues_background (white, xgcv);
     set_XGCValues_foreground (black, xgcv);
     let gc = xCreateGC (dpy, rootw, gCBackground lor gCForeground, xgcv) in
@@ -70,7 +71,7 @@ value rt_initialize =
      backg_pix = backg_pix; bord_pix = [| light_pix; dark_pix |];
      rootw = rootw; root_width = xDisplayWidth (dpy, scr);
      root_height = xDisplayHeight (dpy, scr);
-     root_width_mm = xDisplayWidthMM (dpy, scr);
+     root_size_mm = sz;
      depth = depth; cmap = cmap;
      connection_number = xConnectionNumber dpy; motif_border = motif_border;
      gray_pixm =
@@ -314,9 +315,9 @@ value widget_named xd wname =
 ;
 
 value screen_width xd = xd.root_width
-and screen_width_mm xd = xd.root_width_mm
 and screen_height xd = xd.root_height
 and screen_depth xd = xd.depth
+and screen_size_mm xd = xd.root_size_mm
 and rt_display_name dname =
   let s = xDisplayName dname in string_of_C_String (s, c_String_length s)
 and is_colored xd = List.mem (visual_class xd.vis) [pseudoColor; trueColor];
@@ -330,6 +331,8 @@ and widget_width wid = wid.width
 and widget_height wid = wid.height
 and widget_border wid = wid.border
 and widget_children wid = wid.children
+and pixmap_width pxm = pxm.pixm_width
+and pixmap_height pxm = pxm.pixm_height
 and is_mapped wid = wid.is_mapped
 and widget_size xd wdesc =
   let wsh = wdesc.wsize xd in (wsh.sh_width, wsh.sh_height)
@@ -348,3 +351,9 @@ value rt_freeze_widget = freeze_unfreeze True
 and rt_unfreeze_widget = freeze_unfreeze False;
 
 value is_frozen wid = wid.frozen;
+
+value pix_of_mm xd x =
+  let (wmm, hmm) = screen_size_mm xd in
+  let w = screen_width xd in
+  truncate (x *. float w /. float wmm +. 0.5)
+;

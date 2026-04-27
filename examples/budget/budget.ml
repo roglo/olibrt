@@ -4,47 +4,13 @@ open State;
 open File;
 open RtN;
 
-value get_dpi xd =
-  let width_px = RtN.screen_width xd in
-  let width_mm = RtN.screen_width_mm xd in
-  (float width_px *. 25.4) /. (float width_mm);
-
-value mm_to_pixels mm dpi =
-  int_of_float (mm /. 25.4 *. dpi);
-
-Rt.button_font.val := "*-helvetica-bold-r-*--18-*";
-Rt.title_font.val := "*-helvetica-bold-o-*--18-*";
-Rt.term_font.(0) := "*-courier-medium-r-*-18-*";
-Rt.term_font.(1) := "*-courier-bold-r-*-18-*";
-Rt.term_font.(2) := "*-courier-medium-o-*-18-*";
-Rt.term_font.(3) := "*-courier-bold-o-*-18-*";
-
-Rt.button_font.val := "-*-nimbus roman*-bold-r-*";
-Rt.title_font.val := "-*-nimbus roman*-bold-o-*";
-Rt.term_font.(0) := "-*-courier-medium-r-*";
-Rt.term_font.(1) := "-*-courier-bold-r-*";
-Rt.term_font.(2) := "-*-courier-medium-o-*";
-Rt.term_font.(3) := "-*-courier-bold-o-*";
-
-Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
 Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
-Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
-Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
-Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
-Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
 
 value no_del wid = do {Printf.printf "no del implemented\n"; flush stdout};
 
 value budget_prog xd = do {
-Printf.eprintf "if errors in loading fonts, do\n";
-Printf.eprintf "  sudo apt install xfonts-terminus\n";
-Printf.eprintf "  xset fp rehash\n";
-Printf.eprintf "screen_width %d\n" (RtN.screen_width xd);
-Printf.eprintf "screen_width_mm %d\n" (RtN.screen_width_mm xd);
-Printf.eprintf "get_dpi %g\n" (get_dpi xd);
-Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   prerr_string "Initialisation... ";
-  flush Pervasives.stderr;
+  flush stderr;
   state.action_quit := fun _ -> state.quit := True;
   let rw = rt_root_widget xd in
   let wid =
@@ -139,10 +105,10 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
   let ind = List.length mois.val.lignes - 1 in
   let (nlin, _) = term_get_params (rt_widget_named xd "Libelle term") in
   prerr_string "Lecture données... ";
-  flush Pervasives.stderr;
+  flush stderr;
   charger_fichier ();
   prerr_string "ok\n";
-  flush Pervasives.stderr;
+  flush stderr;
   init_state ();
   state.nlin := nlin;
   state.noPage := ind / nlin;
@@ -155,8 +121,9 @@ Printf.eprintf "mm_to_pixels %d\n" (mm_to_pixels 5. (get_dpi xd));
 };
 
 value go dname = do {
-  let _ = "$Id: budget.ml,v 1.8 2007/06/12 16:12:59 deraugla Exp $" in
   let xd = rt_open dname in
+  Rt.button_font.val := "mono:size=14";
+  Rt.term_font.val := "mono:size=14";
   let r = try budget_prog xd with x -> do { rt_close xd; raise x } in
   rt_close xd;
   r

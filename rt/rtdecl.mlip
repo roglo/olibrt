@@ -19,7 +19,7 @@ type xdata =
     rootw : window;
     root_width : int;
     root_height : int;
-    root_width_mm : int;
+    root_size_mm : (int * int);
     depth : int;
     cmap : colormap;
     connection_number : int;
@@ -99,7 +99,8 @@ and font =
     descent : int;
     fwidth : int;
     fheight : int }
-and pixmap = { pixm_xd : xdata; pixmap : xpixmap }
+and pixmap =
+  { pixm_xd : xdata; pixmap : xpixmap; pixm_width : int; pixm_height : int }
 and color = { col_xd : xdata; pixel : int }
 and mouse = { curs_xd : xdata; cursor : cursor }
 and gc = { gc_xd : xdata; xgc : gC }

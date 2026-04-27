@@ -6,8 +6,7 @@ open Jmage;
 open RtN;
 
 value initialisation_pic =
-  "\
-    Initialisation
+  "    Initialisation
     --------------
 
 Entrez le premier mois
@@ -95,13 +94,16 @@ value action wid = do {
   let ip = input_of_pic twid initialisation_pic in
   term_send twid "\027[H\027[2J\027[?35l";
   term_send twid (empty_pic initialisation_pic);
-  set_field ip 1 (Fint 19);
+  set_field ip 1 (Fint 20);
   goto_field ip 0 False;
   state.action_quit := action_annule;
   rt_map_widget (rt_widget_named xd "initialisation");
   state.keyPressAct :=
     Action.input ip
-      (fun _ -> rt_map_widget (rt_widget_named xd "Init NoErr")) verif_init;
+      (fun s ->
+let _ = Printf.printf "keypress %d\n" (int_of_keysym s) in
+let _ = flush stdout in
+         rt_map_widget (rt_widget_named xd "Init NoErr")) verif_init;
   state.iP := Some ip
 };
 

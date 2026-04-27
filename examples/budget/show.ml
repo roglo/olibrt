@@ -64,7 +64,7 @@ value titres xd = do {
   texte_titre xd "Supprimer titre" "Supprimer : ";
   texte_titre xd "AJOUT titre" "AJOUT/MODIF";
   texte_titre xd "MODIF titre" "AJOUT/MODIF";
-  texte_titre xd "TRANSF titre" "TRANSFERER";
+  texte_titre xd "TRANSF titre" "TRANSFÉRER";
   texte_titre xd "Liste mois titre" "MOIS";
   texte_titre xd "Ajouter mois question titre"
     "Création d'un nouveau mois ?";
@@ -93,7 +93,7 @@ value titres xd = do {
   texte_titre xd "PT Libelle titre" "Libellé";
   texte_titre xd "PT Debit titre" "Débit";
   texte_titre xd "PT Credit titre" "Crédit";
-  texte_titre xd "BI Depenses titre" "D E P E N S E S";
+  texte_titre xd "BI Depenses titre" "D É P E N S E S";
   texte_titre xd "BI Recettes titre" "R E C E T T E S";
   texte_titre xd "MAJ AUTO titre" "MISE À JOUR DES VIREMENTS AUTOMATIQUES";
   texte_titre xd "MA Selection titre" "S";

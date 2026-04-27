@@ -9,6 +9,7 @@ open Rtdecl;
 open Std;
 open Util;
 open Xlib;
+open Xft;
 
 type button_event =
   [ ButtonEvEnter of int and int
@@ -23,10 +24,17 @@ type button_event_handler = widget -> button_event -> unit;
 
 type mutable_gc = { mgc : gC; c_foreg : mutable int; c_font : mutable xfont };
 
-type button_global_info = { dfont : font; bgc : mutable_gc };
+type button_global_info =
+  { ftfont : xftfont;
+    attrs : xWindowAttributes;
+    color : xftcolor;
+    frozen_color : xftcolor;
+    extents : glyphinfo };
 
 type button_local_info =
-  { button_gi : button_global_info; bfont : font; in_popup : bool }
+  { button_gi : button_global_info;
+    draw : xftdraw;
+    in_popup : bool }
 ;
 
 value (button_global_info, get_button_global_info) =
@@ -42,19 +50,23 @@ value (button_local_info, get_button_local_info) =
 value button_border = ref 0
 and button_band = ref 1
 and button_bold = ref 2
-and button_bold_band = ref 0
-and button_font = ref "*-helvetica-bold-r-*--14-*";
+and button_font = ref "mono:size=12"
+and button_bold_band = ref 0;
 
 value make_button_global_info xd = do {
-  let dfont = rt_load_query_font xd button_font.val in
-  let mask = gCLineWidth lor gCCapStyle lor dfont.gc_mask in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, button_font.val) in
   let xgcv = (gstr ()).xgcv in set_XGCValues_cap_style (capProjecting, xgcv);
-  set_XGCValues_font (dfont.fid, xgcv);
-  let bgc =
-    {mgc = xCreateGC (xd.dpy, xd.rootw, mask, xgcv); c_foreg = 0;
-     c_font = dfont.fid}
+  let attrs = alloc_XWindowAttributes () in
+  let color = alloc_XftColor () in
+  let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
+  let frozen_color = alloc_XftColor () in
+  let _b =
+    xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "white", frozen_color)
   in
-  add_ginfo xd "button" button_global_info {dfont = dfont; bgc = bgc}
+  let extents = alloc_glyphinfo () in
+  add_ginfo xd "button" button_global_info
+    {ftfont = ftfont; attrs = attrs; color = color;
+     frozen_color = frozen_color; extents = extents}
 };
 
 value set_gc_foreground xd mgc att =
@@ -94,9 +106,9 @@ value latin_1_txt xd txt =
 
 value button_draw xd wid li (txt, shortcut) att_val = do {
   let gi = li.button_gi in
+  let li = get_button_local_info wid.info in
   let left_j = att_val.left_justif in
   let band = opt_val button_band.val att_val.band_att in
-  let bfs = li.bfont in
   let txt = latin_1_txt xd txt in
   let (txt, s_opt, left_j) =
     match try Some (String.index txt '\t') with [ Not_found -> None ] with
@@ -108,21 +120,10 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
         (txt, None, left_j) ]
   in
   let len = String.length txt in
-  set_gc_font xd gi.bgc li.bfont.fid;
-  let col =
-    if wid.frozen then Some (ColorPn {col_xd = xd; pixel = xd.bord_pix.(0)})
-    else att_val.foreg_att
-  in
-  set_gc_foreground xd gi.bgc col;
-  let f =
-    if List.mem (visual_class xd.vis) [pseudoColor; trueColor] then
-      xDrawString
-    else xDrawImageString
-  in
-  f (xd.dpy, wid.win, gi.bgc.mgc,
-     if left_j then xd.motif_border + band
-     else (wid.width - xTextWidth (bfs.fs, txt, len)) / 2,
-     (wid.height + bfs.ascent - bfs.descent) / 2, txt, len);
+  let col = if wid.frozen then gi.frozen_color else gi.color in
+  let x = xd.motif_border + band in
+  let y = (wid.height + xftFont_height gi.ftfont) / 2 - pix_of_mm xd 0.6 in
+  xftDrawString8 (li.draw, col, gi.ftfont, x, y, txt, len);
   let s_opt =
     match shortcut with
     [ Some sc -> Some (Printf.sprintf "Alt %c" sc, "Alt m")
@@ -132,47 +133,53 @@ value button_draw xd wid li (txt, shortcut) att_val = do {
         | None -> None ] ]
   in
   match s_opt with
-  [ Some (s, s2) ->
+  [ Some (s, s2) -> do {
       let slen = String.length s2 in
+      xftTextExtents8 (xd.dpy, gi.ftfont, s2, slen, gi.extents);
       let x =
-        wid.width - xd.motif_border - band - xTextWidth (bfs.fs, s2, slen)
+        wid.width - xd.motif_border - band - glyphinfo_width gi.extents
       in
-      f (xd.dpy, wid.win, gi.bgc.mgc, x,
-         (wid.height + bfs.ascent - bfs.descent) / 2, s, slen)
+      xftDrawString8 (li.draw, col, gi.ftfont, x, y, s, slen)
+    }
   | None -> () ];
 };
 
-value button_wsize (txt, shortcut) att_val xd =
+value button_wsize (txt, shortcut) att_val xd = do {
   let gi =
     try get_button_global_info (ginfo xd "button") with _ ->
       make_button_global_info xd
   in
   let band = opt_val button_band.val att_val.band_att in
-  let bfs =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
-  in
   let txt = latin_1_txt xd txt in
-  let w =
+  xftTextExtents8 (xd.dpy, gi.ftfont, txt, String.length txt, gi.extents);
+  let b = max 0 (opt_val button_border.val att_val.border_att) in
+  let wg =
     max (opt_val 1 att_val.width_att)
-      (2 * (band + xd.motif_border) +
-       xTextWidth (bfs.fs, txt, String.length txt))
-  and h =
+      (2 * (band + xd.motif_border) + glyphinfo_width gi.extents)
+  and hg =
     max (opt_val 1 att_val.height_att)
-      (2 * (band + xd.motif_border) + bfs.fheight)
-  and b = max 0 (opt_val button_border.val att_val.border_att) in
+      (2 * (band + xd.motif_border) + xftFont_height gi.ftfont)
+  in
   let w =
     match shortcut with
-    [ Some _ ->
-        let s = "Alt m" in w + xTextWidth (bfs.fs, s, String.length s) + 20
+    [ Some _ -> do {
+        let s = "Alt m" in
+        xftTextExtents8 (xd.dpy, gi.ftfont, s, String.length s, gi.extents);
+	wg + glyphinfo_width gi.extents + 20
+      }
     | None ->
         match try Some (String.index txt '\t') with [ Not_found -> None ] with
-        [ Some _ -> w + xTextWidth (bfs.fs, " ", 1)
-        | None -> w ] ]
+        [ Some _ -> do {
+	    let s = " " in
+            xftTextExtents8
+	      (xd.dpy, gi.ftfont, s, String.length s, gi.extents);
+	    wg + glyphinfo_width gi.extents
+	  }
+        | None -> wg ] ]
   in
-  {sh_width = w; sh_height = h; sh_border = b; base_width = w;
-   base_height = h; width_inc = -1; height_inc = -1}
-;
+  {sh_width = w; sh_height = hg; sh_border = b; base_width = w;
+   base_height = hg; width_inc = -1; height_inc = -1}
+};
 
 value select_mask =
   List.fold_left (fun x y -> x lor y) 0
@@ -187,11 +194,13 @@ value button_wcreate att_val (_, shortcut) xd pwin is_top in_popup wdesc x y
   [ None -> motif_backg xd win
   | _ -> () ];
   let gi = get_button_global_info (ginfo xd "button") in
-  let bfont =
-    if Array.length att_val.font_att >= 1 then att_val.font_att.(0)
-    else gi.dfont
+  let _s = xGetWindowAttributes(xd.dpy, win, gi.attrs) in
+  let draw =
+    xftDrawCreate
+      (xd.dpy, win, xWindowAttributes_visual gi.attrs,
+       xWindowAttributes_colormap gi.attrs)
   in
-  let li = {button_gi = gi; bfont = bfont; in_popup = in_popup} in
+  let li = {button_gi = gi; draw = draw; in_popup = in_popup} in
   let info = button_local_info li in
   let wid = create_widget xd win is_top x y wsh wdesc info [] in
   match shortcut with

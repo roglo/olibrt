@@ -12,7 +12,7 @@ type xdata =
     rootw : window;
     root_width : int;
     root_height : int;
-    root_width_mm : int;
+    root_size_mm : (int * int);
     depth : int;
     cmap : colormap;
     connection_number : int;
@@ -92,7 +92,8 @@ and font =
     descent : int;
     fwidth : int;
     fheight : int }
-and pixmap = { pixm_xd : xdata; pixmap : xpixmap }
+and pixmap =
+  { pixm_xd : xdata; pixmap : xpixmap; pixm_width : int; pixm_height : int }
 and color = { col_xd : xdata; pixel : int }
 and mouse = { curs_xd : xdata; cursor : cursor }
 and gc = { gc_xd : xdata; xgc : gC }
@@ -390,9 +391,9 @@ value rt_treat_pending_events = Obj.magic Rt_main.rt_treat_pending_events;
 value rt_display_name = Obj.magic Rt_main.rt_display_name;
 value is_colored = Obj.magic Rt_main.is_colored;
 value screen_width = Obj.magic Rt_main.screen_width;
-value screen_width_mm = Obj.magic Rt_main.screen_width_mm;
 value screen_height = Obj.magic Rt_main.screen_height;
 value screen_depth = Obj.magic Rt_main.screen_depth;
+value screen_size_mm = Obj.magic Rt_main.screen_size_mm;
 value xdata_of_widget = Obj.magic Rt_main.xdata_of_widget;
 value xdata_of_pixmap = Obj.magic Rt_main.xdata_of_pixmap;
 value widget_x = Obj.magic Rt_main.widget_x;
@@ -402,9 +403,12 @@ value widget_height = Obj.magic Rt_main.widget_height;
 value widget_border = Obj.magic Rt_main.widget_border;
 value widget_children = Obj.magic Rt_main.widget_children;
 value widget_named = Obj.magic Rt_main.widget_named;
+value pixmap_width = Obj.magic Rt_main.pixmap_width;
+value pixmap_height = Obj.magic Rt_main.pixmap_height;
 value is_mapped = Obj.magic Rt_main.is_mapped;
 value is_frozen = Obj.magic Rt_main.is_frozen;
 value widget_size = Obj.magic Rt_main.widget_size;
+value pix_of_mm = Obj.magic Rt_main.pix_of_mm;
 value arrow_desc = Obj.magic C_arrow.arrow_desc;
 value button_desc = Obj.magic C_button.button_desc;
 value button_border = Obj.magic C_button.button_border;
@@ -444,11 +448,11 @@ value term_emphasize_from = Obj.magic C_term.term_emphasize_from;
 value term_emphasize_to = Obj.magic C_term.term_emphasize_to;
 value term_emphasized_location = Obj.magic C_term.term_emphasized_location;
 value term_get_emphasized = Obj.magic C_term.term_get_emphasized;
-value term_font = Obj.magic C_term.term_font;
 value term_border = Obj.magic C_term.term_border;
 value term_inter = Obj.magic C_term.term_inter;
 value term_band = Obj.magic C_term.term_band;
 value term_blink = Obj.magic C_term.term_blink;
+value term_font = Obj.magic C_term.term_font;
 value term_send = Obj.magic Term.term_send;
 value title_change = Obj.magic C_title.title_change;
 value title_desc = Obj.magic C_title.title_desc;

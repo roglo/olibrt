@@ -1,5 +1,3 @@
-(* $Id: rtN.ml,v 1.17 2006/06/07 14:53:39 deraugla Exp $ *)
-
 type xdata = Rt.xdata;
 type widget = Rt.widget;
 type delete_callback = Rt.delete_callback;
@@ -51,6 +49,8 @@ type widget_desc =
   | TermDesc of
       list Rt.attribute and (int * int) and widget -> term_event -> unit ]
 ;
+
+value rt_xdata_of_xdata xd = xd;
 
 value alert_wid = ref None;
 value popup_wid = ref [];
@@ -297,8 +297,5 @@ value rt_unmap_alert _ = do {
   alert_wid.val := None
 };
 value rt_unmap_widget = Rt.rt_unmap_widget;
-
-value screen_width = Rt.screen_width;
-value screen_width_mm = Rt.screen_width_mm;
 
 value is_frozen = Rt.is_frozen;

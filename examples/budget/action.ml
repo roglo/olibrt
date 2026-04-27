@@ -245,7 +245,7 @@ value input ip hook_key kont_ret =
           else ()
     | ksym -> do {
         Printf.printf "<0x%x>" (int_of_keysym ksym);
-        flush Pervasives.stdout
+        flush stdout
       } ]
   }
 ;

@@ -188,7 +188,7 @@ value imprimer_bilan () = do {
   };
   printf "|\n";
   printf "%s\n" ligne;
-  printf "|%11sD E P E N S E S%11s|%11sR E C E T T E S%11s|\n" "" "" "" "";
+  printf "|%11sD É P E N S E S%11s|%11sR E C E T T E S%11s|\n" "" "" "" "";
   printf "%s\n" ligne;
   printf "|";
   if report_deb > 0 then do {

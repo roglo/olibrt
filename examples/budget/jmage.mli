@@ -37,8 +37,10 @@ value string_of_mois : int -> string;
 value string_of_somme : int -> int -> string;
 value string_of_date : int -> int -> int -> string;
 
-value mois_annee_large : int -> int -> string;
+value uppercase : string -> string;
 value capitalize : string -> string;
+
+value mois_annee_large : int -> int -> string;
 value large : string -> string;
 
 value term_goto : widget -> int -> int -> unit;

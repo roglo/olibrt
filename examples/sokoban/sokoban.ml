@@ -56,12 +56,7 @@ type config =
 ;
 value square_len = ref 56;
 
-Rt.button_font.val := "-*-terminus-bold-r-*-32-*";
-Rt.title_font.val := "-*-terminus-bold-o-*-32-*";
-Rt.term_font.(0) := "-*-terminus-medium-r-*-32-*";
-Rt.term_font.(1) := "-*-terminus-bold-r-*-32-*";
-Rt.term_font.(2) := "-*-terminus-medium-o-*-32-*";
-Rt.term_font.(3) := "-*-terminus-bold-o-*-32-*";
+Rt.term_font.val := "mono:size=15";
 
 value dsol = ref "usol";
 value file_level n = "screens/screen." ^ string_of_int n;
@@ -254,53 +249,55 @@ value rec interp_stream print lang strm =
       fun
       [ '#' ->
           let rec skip_to_eol c =
-            if c = '\n' then loop (Stream.next strm)
-            else skip_to_eol (Stream.next strm)
+            if c = '\n' then loop (Istream.next strm)
+            else skip_to_eol (Istream.next strm)
           in
-          skip_to_eol (Stream.next strm)
+          skip_to_eol (Istream.next strm)
       | '\\' ->
           let c =
-            match Stream.next strm with
+            match Istream.next strm with
             [ 't' -> '\t'
             | c -> c ]
           in
-          do { print c; loop (Stream.next strm) }
+          do { print c; loop (Istream.next strm) }
       | '[' ->
-          let c = Stream.next strm in
+          let c = Istream.next strm in
           if c = '\n' then do {
             let s =
               let b = Buffer.create 50 in
               let rec loop =
                 fun
                 [ '\n' ->
-                    let c = Stream.next strm in
+                    let c = Istream.next strm in
                     if c = ']' then do {
                       let s = Buffer.contents b in
                       Buffer.clear b;
                       interp_stream (Buffer.add_char b) lang
-                        (Stream.of_string s);
+                        (Istream.of_string s);
                       Buffer.contents b
                     }
                     else do { Buffer.add_char b '\n'; loop c }
-                | c -> do { Buffer.add_char b c; loop (Stream.next strm) } ]
+                | c -> do { Buffer.add_char b c; loop (Istream.next strm) } ]
               in
-              loop (Stream.next strm)
+              loop (Istream.next strm)
             in
             String.iter print (transl_inline lang '#' skip_comm s);
-            loop (Stream.next strm)
+            loop (Istream.next strm)
           }
           else do { print '['; loop c }
-      | c -> do { print c; loop (Stream.next strm) } ]
+      | c -> do { print c; loop (Istream.next strm) } ]
     in
-    loop (Stream.next strm)
+    loop (Istream.next strm)
   with
-  [ Stream.Failure -> () ]
+  [ Istream.Failure -> () ]
 ;
 
 value interp_file print lang fname =
-  try
+  try do {
     let ic = open_in fname in
-    do { interp_stream print lang (Stream.of_channel ic); close_in ic }
+    interp_stream print lang (Istream.of_channel ic);
+    close_in ic
+  }
   with
   [ Sys_error _ ->
       String.iter print (sprintf "Cannot open file \"%s\"" fname) ]
@@ -1648,7 +1645,7 @@ value key_pressed conf gm wid km =
         conf.state := Normal
       }
   | Help ->
-      if km.item = K_Ascii ' ' then do {
+      if km.item = K_Ascii ' ' || km.item = K_Ascii 'q' then do {
         display_level conf gm;
         display_blocked conf gm wid;
         rt_raise_widget (widget_named conf.xd "board_pack");
@@ -1763,18 +1760,18 @@ value speclist =
     sprintf "<dir>: solutions directory (default = %s)" dsol.val)];
 value anon_fun _ = do { Arg.usage speclist usage_msg; exit 1 };
 
-value main dname =
-  do {
-    Arg.parse speclist anon_fun usage_msg;
-    let xd = rt_initialize dname in
-    let xa = rt_args [xd] in
-    let (gm, slang, disp_block) = restore_state () in
-    let lang = if lang.val = "" then slang else lang.val in
-    let main_wid = make_widget xa xd (gm, lang, disp_block) in
-    rt_redirect_key_press_to (widget_named xd "board");
-    rt_map_widget main_wid;
-    rt_main_loop xa
-  }
-;
+value main dname = do {
+  Arg.parse speclist anon_fun usage_msg;
+  let xd = rt_initialize dname in
+  Rt.rt_select_char_set xd Rt.Utf_8;
+  let xa = rt_args [xd] in
+  square_len.val := pix_of_mm xd 9.0;
+  let (gm, slang, disp_block) = restore_state () in
+  let lang = if lang.val = "" then slang else lang.val in
+  let main_wid = make_widget xa xd (gm, lang, disp_block) in
+  rt_redirect_key_press_to (widget_named xd "board");
+  rt_map_widget main_wid;
+  rt_main_loop xa
+};
 
 main "";

@@ -130,7 +130,7 @@ EXTEND
         "]"; "}"; ";" -> do {
           let bloc_notes = List.map string_unescaped bloc_notes in
           if int_of_string version == budget_type_version then ()
-          else raise (Stream.Error "outdated version");
+          else raise (Istream.Error "outdated version");
           {report = report; noCheque = int_of_string nocheque;
            postesDebit = postes_debit; postesCredit = postes_credit;
            cartes = cartes; comptes = comptes; virAuto = virauto;
@@ -195,7 +195,7 @@ value charger_fichier () =
   match try Some (open_in source.val) with _ -> None with
   [ Some ic ->
       try do {
-        let b = Grammar.Entry.parse file_entry (Stream.of_channel ic) in
+        let b = Grammar.Entry.parse file_entry (Istream.of_channel ic) in
         let tm = Unix.localtime (Unix.time ()) in
         mois.val :=
           mois_courant b.listeMois where rec mois_courant =
