@@ -49,7 +49,7 @@ and break_string sep s =
       if c = String.get sep 0 then [mkw (List.rev w) :: break_rec [] (succ i)]
       else break_rec [c :: w] (succ i)
 and input_line ic =
-  String.sub line_buff 0
+  Bytes.sub line_buff 0
     (input_rec 0 where rec input_rec i =
        match input_char ic with
        [ '\n' -> i
@@ -66,8 +66,8 @@ and do_list_i f =
     [ [] -> ()
     | [x :: l] -> do { f i x; do_list_f (succ i) l } ]
 and output_line ch s = do {
-  output ch s 0 (String.length s);
-  output ch "\n" 0 1
+  output ch s 0 (Bytes.length s);
+  output ch (Bytes.of_string "\n") 0 1
 };
 value except_assq e =
   except_e where rec except_e =
@@ -90,12 +90,12 @@ value read_line ic =
     [ '\n' -> i0
     | c -> do { Bytes.set line_buff i0 c; input_rec (succ i0) } ]
   in
-  String.sub line_buff 0 (input_rec 0)
+  Bytes.sub line_buff 0 (input_rec 0)
 ;
 value random n = Random.int n;
 value implode_ascii l = do {
   let len = List.length l in
-  let s = String.make len ' ' in
+  let s = Bytes.make len ' ' in
   iterate
     (fun (i0, l) -> do {
        Bytes.set s i0 (Char.chr (List.hd l));
@@ -216,7 +216,7 @@ value patt_init xd =
   let sZ = 16 in
   let patt =
     make_array (Array.length patterns)
-      (fun i0 -> rt_create_pattern xd patterns.(i0) sZ sZ)
+      (fun i0 -> rt_create_pattern xd (Bytes.to_string patterns.(i0)) sZ sZ)
   in
   C'Pattern patt
 ;
@@ -563,9 +563,10 @@ and mark_explosions gd gm drw = do {
 value record_if_high_score gm = do {
   let rec score_list ch =
     try
-      let il = break_string "@" (input_line ch) in
-      let scv = int_of_string (nth il 2) in
-      [{player = List.hd il; bscore = scv} :: score_list ch]
+      let il = break_string "@" (Bytes.to_string (input_line ch)) in
+      let scv = int_of_string (Bytes.to_string (nth il 2)) in
+      [{player = Bytes.to_string (List.hd il); bscore = scv} ::
+       score_list ch]
     with _ -> []
   and add_score =
     fun
@@ -612,7 +613,9 @@ value record_if_high_score gm = do {
       do_list_i
         (fun i0 b0 ->
            if i0 <= 19 then
-             output_line ch (b0.player ^ "@" ^ string_of_int b0.bscore ^ "@")
+             output_line ch
+	       (Bytes.of_string
+	          (b0.player ^ "@" ^ string_of_int b0.bscore ^ "@"))
            else ())
         1 ls
     with _ -> ();
