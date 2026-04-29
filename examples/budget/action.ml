@@ -195,7 +195,7 @@ value input ip hook_key kont_ret =
     | Rt.K_Up ->
         prev_field ip.iPcur False
     | Rt.K_Right ->
-        if ip.iPind < String.length ip.iPstr - 1 then do {
+        if ip.iPind < Bytes.length ip.iPstr - 1 then do {
           ip.iPind := ip.iPind + 1;
           ip.iPcol := ip.iPcol + 1;
           term_send twid "\027[C"
@@ -205,7 +205,7 @@ value input ip hook_key kont_ret =
         next_field ip.iPcur False
     | Rt.K_Delete -> do {
         term_send twid "\0277";
-        for i = ip.iPind to String.length ip.iPstr - 1 do {
+        for i = ip.iPind to Bytes.length ip.iPstr - 1 do {
           ip.iPstr.[i] := ' ';
           term_send twid " ";
         };
@@ -238,7 +238,7 @@ value input ip hook_key kont_ret =
             term_send twid (String.make 1 c);
             ip.iPind := ip.iPind + 1;
             ip.iPcol := ip.iPcol + 1;
-            if ip.iPind == String.length ip.iPstr then
+            if ip.iPind == Bytes.length ip.iPstr then
               next_field ip.iPcur False
             else ()
           }

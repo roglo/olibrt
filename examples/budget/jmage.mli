@@ -9,7 +9,7 @@ type inputPic =
     iPcol : mutable int;
     iPtyp : mutable char;
     iPdec : mutable int;
-    iPstr : mutable string;
+    iPstr : mutable bytes;
     iPind : mutable int;
     iPwid : mutable widget }
 ;
@@ -27,7 +27,7 @@ value goto_field : inputPic -> int -> bool -> unit;
 
 value lock_field : inputPic -> int -> unit;
 value get_field : inputPic -> int -> field;
-value format_field : string -> char -> int -> field -> string -> unit;
+value format_field : string -> char -> int -> field -> bytes -> unit;
 value set_field : inputPic -> int -> field -> unit;
 
 value get_string : field -> string;

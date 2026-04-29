@@ -175,8 +175,8 @@ and init_maj_postes xd pdeb pcre = do {
   let ip2 = input_of_pic twid2 credit_pic in
   let ip =
     {iParr = Array.append ip1.iParr ip2.iParr; iPcur = 0; iPlin = 0;
-     iPcol = 0; iPtyp = ' '; iPdec = 0; iPstr = ""; iPind = 0;
-     iPwid = ip1.iPwid}
+     iPcol = 0; iPtyp = ' '; iPdec = 0; iPstr = Bytes.of_string "";
+     iPind = 0; iPwid = ip1.iPwid}
   in
   term_send twid1 "\027[H\027[2J\027[?35h";
   term_send twid2 "\027[H\027[2J\027[?35h";

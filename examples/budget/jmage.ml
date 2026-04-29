@@ -7,7 +7,7 @@ type inputPic =
     iPcol : mutable int;
     iPtyp : mutable char;
     iPdec : mutable int;
-    iPstr : mutable String.t;
+    iPstr : mutable bytes;
     iPind : mutable int;
     iPwid : mutable widget }
 ;
@@ -139,7 +139,7 @@ value input_of_pic wid pic =
   let a = Array.of_list l in
   let (_, _, lin, col, typ, dec, str, _) = a.(0) in
   {iParr = a; iPcur = 0; iPlin = lin; iPcol = col; iPtyp = typ; iPdec = dec;
-   iPstr = str; iPind = 0; iPwid = wid}
+   iPstr = Bytes.of_string str; iPind = 0; iPwid = wid}
 ;
 
 value strip_trailing_spaces (str : String.t) =
@@ -156,9 +156,11 @@ value goto_field ip i eof = do {
   ip.iPcur := i;
   let (_, _, lin, col, typ, dec, str, wid) = ip.iParr.(ip.iPcur) in
   term_send ip.iPwid "\027[?35h";
-  ip.iPstr := str;
+  ip.iPstr := Bytes.of_string str;
   ip.iPind :=
-    if eof then max 0 (String.length (strip_trailing_spaces ip.iPstr) - 1)
+    if eof then
+      max 0
+        (String.length (strip_trailing_spaces (Bytes.to_string ip.iPstr)) - 1)
     else 0;
   ip.iPlin := lin;
   ip.iPcol := col + ip.iPind;
@@ -214,8 +216,8 @@ value get_field ip n =
 
 value saved_blit_string src bsrc dst bdst len =
   try String.blit src bsrc dst bdst len with _ ->
-    String.blit (String.make (String.length dst) '*') 0
-      dst 0 (String.length dst)
+    String.blit (String.make (Bytes.length dst) '*') 0
+      dst 0 (Bytes.length dst)
 ;
 
 value format_field fmt typ dec f dst =
@@ -231,7 +233,7 @@ value format_field fmt typ dec f dst =
             if String.length fmt > 1 && fmt.[1] == '0' then '0' else ' '
           in
           let src = string_of_int n in
-          let start = String.length dst - String.length src in
+          let start = Bytes.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := gap };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -246,7 +248,7 @@ value format_field fmt typ dec f dst =
               else d
           in
           let src = string_of_int m ^ "," ^ Printf.sprintf "%02d" d in
-          let start = String.length dst - String.length src in
+          let start = Bytes.length dst - String.length src in
           for i = 0 to start - 1 do { dst.[i] := ' ' };
           saved_blit_string src 0 dst start (String.length src)
         }
@@ -257,7 +259,7 @@ value format_field fmt typ dec f dst =
 
 value set_field ip n f = do {
   let (_, fmt, lin, col, typ, dec, dst, twid) = ip.iParr.(n) in
-  format_field fmt typ dec f dst;
+  format_field fmt typ dec f (Bytes.of_string dst);
   term_goto twid lin col;
   term_send twid dst
 };
@@ -301,13 +303,14 @@ value string_of_mois =
 ;
 
 value string_of_date j m a = do {
-  let strj = String.make 2 ' ' in
+  let strj = Bytes.make 2 ' ' in
   format_field "%02d" 'd' 0 (Fint j) strj;
-  let strm = String.make 2 ' ' in
+  let strm = Bytes.make 2 ' ' in
   format_field "%02d" 'd' 0 (Fint m) strm;
-  let stra = String.make 4 ' ' in
+  let stra = Bytes.make 4 ' ' in
   format_field "%4d" 'd' 0 (Fint a) stra;
-  strj ^ "/" ^ strm ^ "/" ^ stra
+  Bytes.to_string strj ^ "/" ^ Bytes.to_string strm ^ "/" ^
+  Bytes.to_string stra
 };
 
 value mois_annee_large m a = do {
@@ -317,7 +320,7 @@ value mois_annee_large m a = do {
 };
 
 value large str = do {
-  let str2 = String.make (2 * String.length str - 1) ' ' in
+  let str2 = Bytes.make (2 * String.length str - 1) ' ' in
   for i = 0 to String.length str - 1 do { str2.[2 * i] := str.[i] };
   Bytes.to_string str2
 };

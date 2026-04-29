@@ -15,15 +15,15 @@ value texte_centre wid txt = do {
 value total xd = do {
   let tdebit_wid = rt_widget_named xd "Tdebit term" in
   let tcredit_wid = rt_widget_named xd "Tcredit term" in
-  let str10 = String.make 10 ' ' in
+  let str10 = Bytes.make 10 ' ' in
   List.iter (fun w -> term_send w "\027[H\027[2J\027[?35h\027[?7l")
     [tdebit_wid; tcredit_wid];
   format_field "%10.2f" 'f' 2
     (Fdecimal (state.tdebit / 100, state.tdebit mod 100, 2)) str10;
-  term_send tdebit_wid str10;
+  term_send tdebit_wid (Bytes.to_string str10);
   format_field "%10.2f" 'f' 2
     (Fdecimal (state.tcredit / 100, state.tcredit mod 100, 2)) str10;
-  term_send tcredit_wid str10
+  term_send tcredit_wid (Bytes.to_string str10)
 };
 
 value total_pt xd = do {
@@ -154,7 +154,7 @@ value lignes_gen xd page ecr lignes fl fm fa = do {
   let libelle_wid = rt_widget_named xd (ecr ^ "Libelle term") in
   let debit_wid = rt_widget_named xd (ecr ^ "Debit term") in
   let credit_wid = rt_widget_named xd (ecr ^ "Credit term") in
-  let str2 = ".." in
+  let str2 = Bytes.of_string ".." in
   let (nlin, _) = term_get_params date_wid in
   List.iter (fun w -> term_send w "\027[H\027[2J\027[?35h\027[?7l")
     [retire_wid; date_wid; nature_wid; poste_wid; libelle_wid; debit_wid;
@@ -168,13 +168,13 @@ value lignes_gen xd page ecr lignes fl fm fa = do {
            [ True -> term_send retire_wid "X"
            | _ -> () ];
            format_field "%02d" 'd' 0 (Fint l.ljour) str2;
-           term_send date_wid str2;
+           term_send date_wid (Bytes.to_string str2);
            term_send date_wid "/";
            format_field "%02d" 'd' 0 (Fint (fm ligne)) str2;
-           term_send date_wid str2;
+           term_send date_wid (Bytes.to_string str2);
            term_send date_wid "/";
            format_field "%02d" 'd' 0 (Fint (fa ligne mod 100)) str2;
-           term_send date_wid str2;
+           term_send date_wid (Bytes.to_string str2);
            match l.lnature with
            [ Some s -> term_send nature_wid s
            | _ -> () ];
