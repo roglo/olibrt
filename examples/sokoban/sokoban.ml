@@ -74,8 +74,8 @@ module Buff =
     value buff = ref (Bytes.create 80);
     value store len x =
       do {
-        if len >= String.length buff.val then
-          buff.val := buff.val ^ Bytes.create (String.length buff.val)
+        if len >= Bytes.length buff.val then
+          buff.val := Bytes.extend buff.val 0 (Bytes.length buff.val)
         else ();
         Bytes.set buff.val len x;
         succ len
@@ -86,7 +86,7 @@ module Buff =
         if i == String.length s then len
         else add_rec (store len s.[i]) (succ i)
     ;
-    value get len = String.sub buff.val 0 len;
+    value get len = Bytes.sub buff.val 0 len;
   end
 ;
 
@@ -220,9 +220,10 @@ value transl_inline lang macro_char macro s =
               in
               loop 0 (j + 1)
             in
-            if curr_lang = lang then s
+            if curr_lang = lang then Bytes.to_string s
             else
               let alt_version =
+	        let s = Bytes.to_string s in
                 if curr_lang = derived_lang then Some s
                 else if alt_version = None then
                   let s = if s = "" then s else "[" ^ s ^ "]" in

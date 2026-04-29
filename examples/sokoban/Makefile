@@ -26,7 +26,7 @@ OLIBDIR=/usr/local/lib/ocaml
 OLIBDIR=
 
 ZDEPFLAGS=-I $(RTDIR)
-ZFLAGS=-I $(RTDIR) -I `camlp5 -where` -unsafe-string
+ZFLAGS=-I $(RTDIR) -I `camlp5 -where`
 CFLAGS=-O -I$(OLIBDIR) -I/usr/X11R6/include
 
 all::
