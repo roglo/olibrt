@@ -6,7 +6,7 @@
 #include "caml/memory.h"
 #include <string.h>
 
-value alloc_uninitialized_string();
+value caml_alloc_string();
 #if 0
 static char stbuff[8192];
 static char stbuff2[1024];
@@ -18,7 +18,7 @@ value *v;
 	int len;
 	value r;
 	len = (int)iarv(1);
-	r = alloc_uninitialized_string(len);
+	r = caml_alloc_string(len);
 	bcopy((char *)aarv(0), (char *)r, len);
 	return r;
 }

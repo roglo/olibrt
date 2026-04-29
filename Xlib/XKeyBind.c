@@ -25,7 +25,7 @@ value v;
                             (char *)String_val (Field (v, 1)),
                             (int)Int_val (Field (v, 2)), &keysym_return,
                             NULL);
-	r = alloc_small (2, 0);
+	r = caml_alloc_small (2, 0);
 	Store_field (r, 0, Val_int (keysym_return));
 	Store_field (r, 1, Val_int (len));
 	CAMLreturn (r);

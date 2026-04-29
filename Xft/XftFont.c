@@ -161,7 +161,7 @@ value v;
 	  width_mm = DisplayWidthMM(dpy, DefaultScreen(dpy));
 	  height_mm = DisplayHeightMM(dpy, DefaultScreen(dpy));
 	}
-	r = alloc_small(2, 0);
+	r = caml_alloc_small(2, 0);
         Store_field(r, 0, Val_int(width_mm));
         Store_field(r, 1, Val_int(height_mm));
         CAMLreturn(r);

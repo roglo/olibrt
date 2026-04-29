@@ -54,7 +54,8 @@ value v;
 	custop.hash = custom_hash_default;
 	custop.serialize = custom_serialize_default;
 	custop.deserialize = custom_deserialize_default;
-	result = alloc_custom(&custop, 0, xim->width * xim->height, 1000000);
+	result = caml_alloc_custom(&custop, 0, xim->width * xim->height,
+				   1000000);
 #if 0
 	size = 1 + (sizeof (*xim) + sizeof (long) - 1) / sizeof (long) +
 		1 + (xim->data ?

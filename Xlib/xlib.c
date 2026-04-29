@@ -23,7 +23,7 @@ XErrorEvent* err;
 {
 	char msg[80];
 	XGetErrorText (dpy, err->error_code, msg, 80);
-	raise_with_string (x_error_exn_tag, msg);
+	caml_raise_with_string (x_error_exn_tag, msg);
 }
 
 static int io_error_handler (dpy, xerrev)
@@ -34,11 +34,11 @@ XErrorEvent *xerrev;
 	CAMLlocal1(r);
 	int err = errno;
 
-	r = alloc_small (3, 0);
+	r = caml_alloc_small (3, 0);
 	Field(r, 0) = xio_error_exn_tag;
-	Field(r, 1) = copy_string(XDisplayString (dpy));
-	Field(r, 2) = copy_string(strerror(err));
-	mlraise (r);
+	Field(r, 1) = caml_copy_string(XDisplayString (dpy));
+	Field(r, 2) = caml_copy_string(strerror(err));
+	caml_raise (r);
 }
 
 value ML_set_xerror_exn (v)
@@ -46,8 +46,8 @@ value *v;
 {
 	x_error_exn_tag = Field(v[0], 0);
 	xio_error_exn_tag = Field(v[1], 0);
-	register_global_root(&x_error_exn_tag);
-	register_global_root(&xio_error_exn_tag);
+	caml_register_global_root(&x_error_exn_tag);
+	caml_register_global_root(&xio_error_exn_tag);
 	XSetErrorHandler (error_handler);
 	XSetIOErrorHandler (io_error_handler);
 	return unit;
