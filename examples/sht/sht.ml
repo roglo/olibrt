@@ -9,7 +9,7 @@ open Time;
 
 value line_buff = Bytes.create 200 and seed = ref 0;
 value input_line ic =
-  String.sub line_buff 0
+  Bytes.sub line_buff 0
     (input_rec 0 where rec input_rec i =
        match input_char ic with
        [ '\n' -> i
@@ -71,7 +71,7 @@ and message s = do { print_string s; print_newline () }
 and gc_alarm _ = ()
 and implode_ascii l =
   let len = List.length l in
-  let s = String.make len ' ' in
+  let s = Bytes.make len ' ' in
   implode_rec l 0 where rec implode_rec p0 p1 =
     match (p0, p1) with
     [ ([x :: l], i) -> do {
@@ -151,14 +151,14 @@ value (wID, hEI, data) = do {
   let ic = open_in cards_file.val in
   let x =
     try do {
-      let width = int_of_string (input_line ic)
-      and height = int_of_string (input_line ic)
-      and data = Array.make 52 "" in
+      let width = int_of_string (Bytes.to_string (input_line ic))
+      and height = int_of_string (Bytes.to_string (input_line ic))
+      and data = Array.make 52 (Bytes.of_string "") in
       modify_vect
         (fun _ -> do {
            let len = (width + 7) / 8 * height in
            really_input ic buff 0 len;
-           String.sub buff 0 len
+           Bytes.sub buff 0 len
          })
         data;
       (width, height, data)
@@ -778,8 +778,9 @@ value gen_sht bw dname = do {
       else do {
         let pixm = rt_create_pixmap xd 8 8 in
         let image =
-          rt_create_image xd (implode_ascii [1; 8; 64; 4; 128; 16; 2; 32]) 8 8
-            1
+          rt_create_image xd
+	    (Bytes.to_string (implode_ascii [1; 8; 64; 4; 128; 16; 2; 32]))
+	    8 8 1
         in
         rt_put_image (PixmapDr pixm) image (0, 0, 8, 8) (0, 0);
         PixmapPn pixm
@@ -814,7 +815,7 @@ value gen_sht bw dname = do {
       prim_rec
         (fun widl i -> do {
            if i = 26 then rt_select_color red_col else ();
-           [create_card xd main_wid data.(i - 1) :: widl]
+           [create_card xd main_wid (Bytes.to_string data.(i - 1)) :: widl]
          })
         [] 52
     in
