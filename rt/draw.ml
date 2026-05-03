@@ -1,9 +1,10 @@
-(* $Id: draw.ml,v 1.12 2017/12/28 10:38:58 deraugla Exp $
+(* draw.ml
  *
  * Rogloglo Toolkit: drawing routines
  *)
 
 open Xlib;
+open Xft;
 open Std;
 open Rtdecl;
 open Util;
@@ -86,32 +87,44 @@ value rt_fill_rectangle draw (x, y, width, height) =
     | PixmapDr pixm -> (pixm.pixm_xd, pixm.pixmap) ]
   in
   xFillRectangle (xd.dpy, draw, xd.gc, x, y, width, height)
-and rt_draw_rectangle draw (x, y, width, height) =
+;
+
+value rt_draw_rectangle draw (x, y, width, height) =
   let (xd, draw) =
     match draw with
     [ WidgetDr wid -> (wid.wid_xd, wid.win)
     | PixmapDr pixm -> (pixm.pixm_xd, pixm.pixmap) ]
   in
   xDrawRectangle (xd.dpy, draw, xd.gc, x, y, width, height)
-and rt_fill_arc draw (x, y, width, height, a1, a2) =
+;
+
+value rt_fill_arc draw (x, y, width, height, a1, a2) =
   let (xd, draw) =
     match draw with
     [ WidgetDr wid -> (wid.wid_xd, wid.win)
     | PixmapDr pixm -> (pixm.pixm_xd, pixm.pixmap) ]
   in
   xFillArc (xd.dpy, draw, xd.gc, x, y, width, height, a1, a2)
-and rt_draw_arc draw (x, y, width, height, a1, a2) =
+;
+
+value rt_draw_arc draw (x, y, width, height, a1, a2) =
   let (xd, draw) =
     match draw with
     [ WidgetDr wid -> (wid.wid_xd, wid.win)
     | PixmapDr pixm -> (pixm.pixm_xd, pixm.pixmap) ]
   in
   xDrawArc (xd.dpy, draw, xd.gc, x, y, width, height, a1, a2)
-and rt_clear_area wid (x, y, width, height) =
+;
+
+value rt_clear_area wid (x, y, width, height) =
   let xd = wid.wid_xd in xClearArea (xd.dpy, wid.win, x, y, width, height, 0)
-and rt_clear_widget wid =
+;
+
+value rt_clear_widget wid =
   let xd = wid.wid_xd in xClearWindow (xd.dpy, wid.win)
-and rt_erase_draw_string draw (x, y) str =
+;
+
+value rt_erase_draw_string draw (x, y) str =
   let (xd, draw) =
     match draw with
     [ WidgetDr wid -> (wid.wid_xd, wid.win)
@@ -123,7 +136,9 @@ and rt_erase_draw_string draw (x, y) str =
     | Utf_8 -> latin_1_of_utf_8 str ]
   in
   xDrawImageString (xd.dpy, draw, xd.gc, x, y, str, String.length str)
-and rt_draw_string draw (x, y) str =
+;
+
+value rt_draw_string draw (x, y) str =
   let (xd, draw) =
     match draw with
     [ WidgetDr wid -> (wid.wid_xd, wid.win)
@@ -135,6 +150,11 @@ and rt_draw_string draw (x, y) str =
     | Utf_8 -> latin_1_of_utf_8 str ]
   in
   xDrawString (xd.dpy, draw, xd.gc, x, y, str, String.length str)
+;
+
+value rt_draw_string8 draw color font (x, y) str =
+  let slen = String.length str in
+  xftDrawString8 (draw, color, font, x, y, str, slen)
 ;
 
 value rt_copy_area draw1 draw2 (src_x, src_y, width, height)
