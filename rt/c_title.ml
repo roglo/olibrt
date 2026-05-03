@@ -4,6 +4,7 @@
  *)
 
 open Xlib;
+open Xft;
 open Std;
 open Rtdecl;
 open Font;
@@ -13,8 +14,14 @@ type title_event = [ TitleEvButtonPress of modified int ];
 type title_args = string;
 type title_event_handler = widget -> title_event -> unit;
 
-type title_global_info = { tfs : font; gc_title : gC };
-type title_local_info = { att_val : attribute_values };
+type title_global_info =
+  { ftfont : xftfont;
+    attrs : xWindowAttributes;
+    tascent : int; tdescent : int;
+    color : xftcolor; extents : glyphinfo;
+    gc_title : gC }
+;
+type title_local_info = { draw : xftdraw; att_val : attribute_values };
 
 value (title_global_info, get_title_global_info) =
   dynamo_global_info "title_global_info"
@@ -28,9 +35,9 @@ value (title_args, get_title_args) =
   dynamo_args_info "title_args_info" (ref None)
 ;
 
-value title_border = ref 1
-and title_band = ref 2
-and title_font = ref "*-helvetica-bold-o-*--14-*";
+value title_border = ref 1;
+value title_band = ref 2;
+value title_font = ref "mono:size=12";
 
 value latin_1_txt xd txt =
   match xd.char_set with
@@ -39,14 +46,26 @@ value latin_1_txt xd txt =
 ;
 
 value make_global_info xd = do {
-  let fs = rt_load_query_font xd title_font.val in
-  let mask = gCForeground lor gCBackground lor fs.gc_mask
-  and gstr = gstr () in
+  let ftfont = xftFontOpenName (xd.dpy, xd.scr, title_font.val) in
+  let attrs = alloc_XWindowAttributes () in
+  let tascent = xftFont_ascent ftfont in
+  let tdescent = xftFont_descent ftfont in
+  let color = alloc_XftColor () in
+  let _b = xftColorAllocName (xd.dpy, xd.vis, xd.cmap, "black", color) in
+  let extents = alloc_glyphinfo () in
+(*
+  let mask = gCForeground lor gCBackground lor fs.gc_mask in
+*)
+  let gstr = gstr () in
+(*
   set_XGCValues_font (fs.fid, gstr.xgcv);
   set_XGCValues_foreground (xd.black, gstr.xgcv);
   set_XGCValues_background (xd.white, gstr.xgcv);
-  let gc_title = xCreateGC (xd.dpy, xd.rootw, mask, gstr.xgcv) in
-  add_ginfo xd "title" title_global_info {tfs = fs; gc_title = gc_title}
+*)
+  let gc_title = xCreateGC (xd.dpy, xd.rootw, 0, gstr.xgcv) in
+  add_ginfo xd "title" title_global_info
+    {ftfont = ftfont; attrs = attrs; tascent = tascent; tdescent = tdescent;
+     color = color; extents = extents; gc_title = gc_title}
 };
 
 value expose_title xd wid txt = do {
@@ -61,22 +80,42 @@ value expose_title xd wid txt = do {
     | _ -> xd.black ]
   in
   xSetForeground (xd.dpy, gi.gc_title, w_foreg);
+  let slen = String.length txt in
+  xftTextExtents8 (xd.dpy, gi.ftfont, txt, slen, gi.extents);
+  let x = (wid.width - glyphinfo_width gi.extents) / 2 in
+  let y = (wid.height + gi.tascent - gi.tdescent) / 2 in
+  xftDrawString8 (li.draw, gi.color, gi.ftfont, x, y, txt, len);
+(*
+  let x = (wid.width - xTextWidth (gi.tfs.fs, txt, len)) / 2 in
+  let y = (wid.height + gi.tfs.ascent - gi.tfs.descent) / 2 in
   xDrawString
     (xd.dpy, wid.win, gi.gc_title,
      (wid.width - xTextWidth (gi.tfs.fs, txt, len)) / 2,
      (wid.height + gi.tfs.ascent - gi.tfs.descent) / 2, txt, len)
+*)
 };
 
 value title_desc attr args callb =
   let att_val = attribute_values attr in
   let args_ref = ref args in
-  {wsize xd =
+  {wsize xd = do {
      let gi =
        try get_title_global_info (ginfo xd "title") with _ ->
          make_global_info xd
      in
      let txt = args_ref.val in
      let txt = latin_1_txt xd txt in
+     xftTextExtents8 (xd.dpy, gi.ftfont, txt, String.length txt, gi.extents);
+     let w =
+       max (opt_val 1 att_val.width_att)
+         (2 * title_band.val + glyphinfo_width gi.extents)
+     in
+     let h =
+       max (opt_val 1 att_val.height_att)
+         (2 * title_band.val + glyphinfo_height gi.extents)
+     in
+     let b = opt_val title_border.val att_val.border_att in
+(*
      let w =
        max (opt_val 1 att_val.width_att)
          (2 * title_band.val + xTextWidth (gi.tfs.fs, txt, String.length txt))
@@ -84,14 +123,23 @@ value title_desc attr args callb =
        max (opt_val 1 att_val.height_att)
          (2 * title_band.val + gi.tfs.fheight)
      and b = opt_val title_border.val att_val.border_att in
+*)
      {sh_width = w; sh_height = h; sh_border = b; base_width = w;
       base_height = h; width_inc = -1; height_inc = -1};
+    };
    wcreate xd pwin is_top in_popup wdesc x y wsh =
      let win =
        create_window xd pwin is_top x y wsh att_val
          (exposureMask lor structureNotifyMask lor buttonPressMask)
      in
-     let li = {att_val = att_val} in
+     let gi = get_title_global_info (ginfo xd "title") in
+     let _s = xGetWindowAttributes(xd.dpy, win, gi.attrs) in
+     let draw =
+       xftDrawCreate
+         (xd.dpy, win, xWindowAttributes_visual gi.attrs,
+          xWindowAttributes_colormap gi.attrs)
+     in
+     let li = {draw = draw; att_val = att_val} in
      let info = title_local_info li in
      let wid = create_widget xd win is_top x y wsh wdesc info [] in
      add_widget att_val.name_att win wid;
